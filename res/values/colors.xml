@@ -1,21 +1,30 @@
-<!--
-  Copyright 2011 The Android Open Source Project
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="beerme_background">#f3efb9</color>
-    <color name="beerme_textColor">#663333</color>
+    <item type="color" name="common_signin_btn_dark_text_default">@*android:color/white</item>
+    <item type="color" name="common_signin_btn_dark_text_pressed">@*android:color/white</item>
+    <color name="common_signin_btn_dark_text_disabled">#ffaaaaaa</color>
+    <item type="color" name="common_signin_btn_dark_text_focused">@*android:color/white</item>
+    <color name="common_signin_btn_light_text_default">#ff737373</color>
+    <item type="color" name="common_signin_btn_light_text_pressed">@*android:color/white</item>
+    <color name="common_signin_btn_light_text_disabled">#ffaaaaaa</color>
+    <color name="common_signin_btn_light_text_focused">#ff737373</color>
+    <color name="common_signin_btn_default_background">#ffdd4b39</color>
+    <color name="common_action_bar_splitter">#ffd2d2d2</color>
+    <color name="ame_default_cluster_circle_color_small">#ff008cff</color>
+    <color name="ame_default_cluster_circle_color_medium">#ffffbf00</color>
+    <color name="ame_default_cluster_circle_color_large">#ffff0000</color>
+    <color name="ame_default_cluster_circle_color_extra_large">#ffff00ed</color>
+    <color name="ame_default_cluster_circle_shadow_color">#88000000</color>
+    <color name="ame_default_cluster_text_color">#ffffffff</color>
+    <color name="ame_default_cluster_text_shadow_color">#ff000000</color>
+    <color name="daidalos_gray">#ff888888</color>
+    <color name="daidalos_backgroud">#ff000000</color>
+    <color name="daidalos_active_file">#ffffffff</color>
+    <color name="daidalos_inactive_file">#ff888888</color>
+    <color name="abc_search_url_text_normal">#ff7fa87f</color>
+    <item type="color" name="abc_search_url_text_selected">@*android:color/black</item>
+    <item type="color" name="abc_search_url_text_pressed">@*android:color/black</item>
+    <color name="beerme_background">#fff3efb9</color>
+    <color name="beerme_textColor">#ff663333</color>
     <color name="beerme_background_inverse">#a0663333</color>
 </resources>

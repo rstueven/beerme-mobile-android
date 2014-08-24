@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.BreweryListFrag" >
-
-    <ProgressBar
-        android:id="@+id/brewerylist_progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:indeterminateOnly="true"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/brewerylist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
-
+<LinearLayout android:orientation="vertical" android:id="@id/layout" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ProgressBar android:id="@id/brewerylist_progress" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:indeterminateOnly="true" />
+    <ListView android:id="@id/brewerylist" android:layout_width="fill_parent" android:layout_height="fill_parent" />
 </LinearLayout>

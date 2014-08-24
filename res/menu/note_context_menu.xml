@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:beerme="http://schemas.android.com/apk/res-auto" >
-
-    <item
-        android:id="@+id/share"
-        android:icon="@drawable/social_share"
-        android:title="@string/Share"
-        beerme:showAsAction="always"/>
-    <item
-        android:id="@+id/edit"
-        android:icon="@drawable/content_edit"
-        android:title="@string/Edit"
-        beerme:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/delete"
-        android:icon="@drawable/content_discard"
-        android:title="@string/Delete"
-        beerme:showAsAction="ifRoom"/>
-
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:beerme="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@drawable/social_share" android:id="@id/share" android:title="@string/Share" beerme:showAsAction="always" />
+    <item android:icon="@drawable/content_edit" android:id="@id/edit" android:title="@string/Edit" beerme:showAsAction="ifRoom" />
+    <item android:icon="@drawable/content_discard" android:id="@id/delete" android:title="@string/Delete" beerme:showAsAction="ifRoom" />
 </menu>

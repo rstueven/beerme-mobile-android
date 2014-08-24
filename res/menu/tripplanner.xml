@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/action_directions"
-        android:icon="@android:drawable/ic_menu_directions"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_directions"/>
-    <item
-        android:id="@+id/action_clear_map"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_clear_map"/>
-    <item
-        android:id="@+id/action_zoom_to_route"
-        android:icon="@android:drawable/ic_menu_zoom"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_zoom_to_route"/>
-    <item
-        android:id="@+id/action_save"
-        android:icon="@android:drawable/ic_menu_save"
-        android:showAsAction="never"
-        android:title="@string/action_save"/>
-    <item
-        android:id="@+id/action_load"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:showAsAction="never"
-        android:title="@string/action_load"/>
-
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:icon="@*android:drawable/ic_menu_directions" android:id="@id/action_directions" android:title="@string/action_directions" android:showAsAction="ifRoom" />
+    <item android:icon="@*android:drawable/ic_menu_delete" android:id="@id/action_clear_map" android:title="@string/action_clear_map" android:showAsAction="ifRoom" />
+    <item android:icon="@*android:drawable/ic_menu_zoom" android:id="@id/action_zoom_to_route" android:title="@string/action_zoom_to_route" android:showAsAction="ifRoom" />
+    <item android:icon="@*android:drawable/ic_menu_save" android:id="@id/action_save" android:title="@string/action_save" android:showAsAction="never" />
+    <item android:icon="@*android:drawable/ic_menu_myplaces" android:id="@id/action_load" android:title="@string/action_load" android:showAsAction="never" />
 </menu>

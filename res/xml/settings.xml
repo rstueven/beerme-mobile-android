@@ -1,14 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/dist_unit_name"
-        android:entryValues="@array/dist_unit_index"
-        android:key="dist_unit"
-        android:negativeButtonText="@null"
-        android:persistent="true"
-        android:positiveButtonText="@null"
-        android:title="@string/Distance_unit" />
 
     <EditTextPreference
         android:dialogMessage="@string/defaultLocationTitle"
@@ -24,6 +15,16 @@
         android:key="status_filter"
         android:persistent="true"
         android:title="@string/Brewery_status_filter" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/dist_unit_name"
+        android:entryValues="@array/dist_unit_index"
+        android:key="dist_unit"
+        android:negativeButtonText="@null"
+        android:persistent="true"
+        android:positiveButtonText="@null"
+        android:title="@string/Distance_unit" />
 
     <ListPreference
         android:defaultValue="0"

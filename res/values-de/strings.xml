@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="common_google_play_services_install_title">Google Play-Dienste installieren</string>
+    <string name="common_google_play_services_install_text_phone">Zur Nutzung dieser App sind Google Play-Dienste erforderlich, die auf Ihrem Telefon nicht installiert sind.</string>
+    <string name="common_google_play_services_install_text_tablet">Zur Nutzung dieser App sind Google Play-Dienste erforderlich, die auf Ihrem Tablet nicht installiert sind.</string>
+    <string name="common_google_play_services_install_button">Google Play-Dienste installieren</string>
+    <string name="common_google_play_services_enable_title">Google Play-Dienste aktivieren</string>
+    <string name="common_google_play_services_enable_text">Diese App funktioniert nur, wenn Sie die Google Play-Dienste aktivieren.</string>
+    <string name="common_google_play_services_enable_button">Google Play-Dienste aktivieren</string>
+    <string name="common_google_play_services_update_title">Google Play-Dienste aktualisieren</string>
+    <string name="common_google_play_services_update_text">Diese App wird nur ausgeführt, wenn Sie die Google Play-Dienste aktualisieren.</string>
+    <string name="common_google_play_services_network_error_title">Netzwerkfehler</string>
+    <string name="common_google_play_services_network_error_text">Um eine Verbindung zu den Google Play-Diensten herzustellen, ist eine Datenverbindung erforderlich.</string>
+    <string name="common_google_play_services_invalid_account_title">Ungültiges Konto</string>
+    <string name="common_google_play_services_invalid_account_text">Das angegebene Konto ist auf diesem Gerät nicht vorhanden. Bitte wählen Sie ein anderes Konto aus.</string>
+    <string name="common_google_play_services_unknown_issue">Unbekanntes Problem mit Google Play-Diensten</string>
+    <string name="common_google_play_services_unsupported_title">Google Play-Dienste</string>
+    <string name="common_google_play_services_unsupported_text">Google Play-Dienste, auf denen einige Ihrer Apps basieren, werden von diesem Gerät nicht unterstützt. Wenden Sie sich für weitere Informationen an den Hersteller.</string>
+    <string name="common_google_play_services_unsupported_date_text">Das Datum auf dem Gerät scheint falsch zu sein. Bitte überprüfen Sie das Datum auf dem Gerät.</string>
+    <string name="common_google_play_services_update_button">Aktualisieren</string>
+    <string name="common_signin_button_text">Anmelden</string>
+    <string name="common_signin_button_text_long">Über Google anmelden</string>
+    <string name="auth_client_using_bad_version_title">Anwendung versuchte, defekte Google Play-Dienste-Version zu verwenden</string>
+    <string name="auth_client_needs_enabling_title">Anwendung erfordert aktivierte Google Play-Dienste</string>
+    <string name="auth_client_needs_installation_title">Anwendung erfordert die Installation von Google Play-Diensten</string>
+    <string name="auth_client_needs_update_title">Anwendung erfordert ein Update für Google Play-Dienste</string>
+    <string name="auth_client_play_services_err_notification_msg">Fehler bei Google Play-Diensten</string>
+    <string name="auth_client_requested_by_msg">Angefordert von %1$s</string>
+    <string name="app_name">Beer Me!™ mobile (free)</string>
+    <string name="abc_action_mode_done">Fertig</string>
+    <string name="abc_action_bar_home_description">Zur Startseite</string>
+    <string name="abc_action_bar_up_description">Nach oben</string>
+    <string name="abc_action_menu_overflow_description">Weitere Optionen</string>
+    <string name="abc_searchview_description_search">Suchen</string>
+    <string name="abc_searchview_description_query">Suchanfrage</string>
+    <string name="abc_searchview_description_clear">Suchanfrage löschen</string>
+    <string name="abc_searchview_description_submit">Suchanfrage senden</string>
+    <string name="abc_searchview_description_voice">Sprachsuche</string>
+    <string name="abc_activitychooserview_choose_application">App auswählen</string>
+    <string name="abc_activity_chooser_view_see_all">Alle ansehen</string>
+    <string name="abc_shareactionprovider_share_with_application">Freigeben für %s</string>
+    <string name="abc_shareactionprovider_share_with">Freigeben für</string>
     <string name="About">Über diese App / Kontakt</string>
     <string name="about_translationGerman">Deutsche Übersetzung: Mario Kornmesser, Matthias Krümberg</string>
     <string name="action_clear_map">Karte leeren</string>
@@ -15,7 +54,6 @@
     <string name="Analyzing_route">Route wird berechnet.</string>
     <string name="Appearance">Aussehen</string>
     <string name="Application_error">Appfehler: %d</string>
-    <string name="app_name">Beer Me!™ mobile (free)</string>
     <string name="App_not_licensed">Diese App ist nicht lizenziert.</string>
     <string name="Aroma">Aroma</string>
     <string name="Bar">Bar oder Ausschank</string>
@@ -36,7 +74,8 @@
     <string name="Brewery_details">Brauereidetails</string>
     <string name="brewery_image">Brauereibild</string>
     <string name="Brewery_note">Brauereinotiz</string>
-    <string name="brewerynote_date_hint">Wann haben Sie diese\nBrauerei besucht?</string>
+    <string name="brewerynote_date_hint">"Wann haben Sie diese
+Brauerei besucht?"</string>
     <string name="Brewery_notes">Brauereinotizen</string>
     <string name="Brewery_status_filter">Brauereifilter</string>
     <string name="Brewery_status_filter_summary">Wählen Sie den Status der Brauereien aus, die angezeigt werden sollen.</string>
@@ -96,7 +135,7 @@
     <string name="Export">Exportieren</string>
     <string name="Failed_to_update_TABLE_data">Update %s fehlgeschlagen.</string>
     <string name="file_exists">Datei existiert bereits.</string>
-    <string name="File_exists">Datei \'%s\' existiert bereits.</string>
+    <string name="File_exists">"Datei '%s' existiert bereits."</string>
     <string name="fixError1">Die aktualisierten Informationen werden an Beer Me!™ gesendet. Es kann mehrere Tage dauern bis die Informationen in der Datenbank erscheinen.</string>
     <string name="fixError2">Bitte verwenden Sie dieses Formular nicht, um die Brauerei zu kontaktieren.</string>
     <string name="fixError3">Vielen Dank für Ihre Hilfe!</string>
@@ -231,9 +270,9 @@
     <string name="Requires_network_access">Netzwerkverbindung fehlt.</string>
     <string name="Retail">Brauereiverkauf</string>
     <string name="Save">Speichern</string>
+    <string name="Score">Gesamtbewertung</string>
     <string name="search_hint">Was suchen Sie?</string>
     <string name="Search">Suchen</string>
-    <string name="Score">Gesamtbewertung</string>
     <string name="Settings">Einstellungen</string>
     <string name="Share">Weitergeben</string>
     <string name="southeast">SO</string>
@@ -265,5 +304,4 @@
     <string name="Yes">Ja</string>
     <string name="zero">0</string>
     <string name="Zoom_here">Hier zoomen.</string>
-
 </resources>

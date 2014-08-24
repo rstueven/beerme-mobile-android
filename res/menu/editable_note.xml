@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:beerme="http://schemas.android.com/apk/res-auto" >
-
-    <item
-        android:id="@+id/action_save"
-        android:icon="@drawable/content_save"
-        android:orderInCategory="2"
-        android:title="@string/Save"
-        beerme:showAsAction="always"/>
-    <item
-        android:id="@+id/action_cancel"
-        android:icon="@drawable/content_remove"
-        android:orderInCategory="3"
-        android:title="@string/Cancel"
-        beerme:showAsAction="always"/>
-
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:beerme="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@drawable/content_save" android:id="@id/action_save" android:orderInCategory="2" android:title="@string/Save" beerme:showAsAction="always" />
+    <item android:icon="@drawable/content_remove" android:id="@id/action_cancel" android:orderInCategory="3" android:title="@string/Cancel" beerme:showAsAction="always" />
 </menu>

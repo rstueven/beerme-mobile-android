@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="About">Über diese App / Kontakt</string>
+    <string name="About">Über diese App</string>
     <string name="about_translationGerman">Deutsche Übersetzung: Mario Kornmesser, Matthias Krümberg</string>
     <string name="action_clear_map">Karte leeren</string>
     <string name="action_directions">Reiseplanung</string>
@@ -15,7 +15,7 @@
     <string name="Analyzing_route">Route wird berechnet.</string>
     <string name="Appearance">Aussehen</string>
     <string name="Application_error">Appfehler: %d</string>
-    <string name="app_name">Beer Me!™ mobile (free)</string>
+    <string name="app_name">Beer Me!™ mobile</string>
     <string name="App_not_licensed">Diese App ist nicht lizenziert.</string>
     <string name="Aroma">Aroma</string>
     <string name="Bar">Bar oder Ausschank</string>

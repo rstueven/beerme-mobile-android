@@ -1,40 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:textAppearance="?android:textAppearanceMedium" android:id="@id/hours_view" android:layout_width="fill_parent" android:layout_height="wrap_content" />
-    <View android:background="@*android:color/darker_gray" android:layout_width="fill_parent" android:layout_height="1.0dip" />
-    <TableLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <TableRow android:id="@id/hours_bar">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/bar" android:contentDescription="@string/Bar" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Bar" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/hours_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TableRow android:id="@+id/hours_bar" >
+
+            <ImageView
+                android:contentDescription="@string/Bar"
+                android:src="@drawable/bar"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Bar"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_beergarden">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/beergarden" android:contentDescription="@string/Beer_garden" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Beer_garden" />
+
+        <TableRow android:id="@+id/hours_beergarden" >
+
+            <ImageView
+                android:contentDescription="@string/Beer_garden"
+                android:src="@drawable/beergarden"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Beer_garden"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_food">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/food" android:contentDescription="@string/Food" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Food" />
+
+        <TableRow android:id="@+id/hours_food" >
+
+            <ImageView
+                android:contentDescription="@string/Food"
+                android:src="@drawable/food"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Food"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_giftshop">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/giftshop" android:contentDescription="@string/Gift_shop" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Gift_shop" />
+
+        <TableRow android:id="@+id/hours_giftshop" >
+
+            <ImageView
+                android:contentDescription="@string/Gift_shop"
+                android:src="@drawable/giftshop"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Gift_shop"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_hotel">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/hotel" android:contentDescription="@string/Hotel" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Hotel" />
+
+        <TableRow android:id="@+id/hours_hotel" >
+
+            <ImageView
+                android:contentDescription="@string/Hotel"
+                android:src="@drawable/hotel"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Hotel"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_internet">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/internet" android:contentDescription="@string/Internet" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Internet" />
+
+        <TableRow android:id="@+id/hours_internet" >
+
+            <ImageView
+                android:contentDescription="@string/Internet"
+                android:src="@drawable/internet"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Internet"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_retail">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/retail" android:contentDescription="@string/Retail" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Retail" />
+
+        <TableRow android:id="@+id/hours_retail" >
+
+            <ImageView
+                android:contentDescription="@string/Retail"
+                android:src="@drawable/retail"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Retail"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
-        <TableRow android:id="@id/hours_tours">
-            <ImageView android:paddingLeft="6.0dip" android:paddingRight="6.0dip" android:src="@drawable/tours" android:contentDescription="@string/Tours" />
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:text="@string/Tours" />
+
+        <TableRow android:id="@+id/hours_tours" >
+
+            <ImageView
+                android:contentDescription="@string/Tours"
+                android:src="@drawable/tours"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+
+            <TextView
+                android:text="@string/Tours"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
     </TableLayout>
+
 </LinearLayout>

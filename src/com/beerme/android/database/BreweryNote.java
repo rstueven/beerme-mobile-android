@@ -13,8 +13,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
+import com.beerme.android.R;
 
 public class BreweryNote implements Serializable {
 	private static final long serialVersionUID = -8656135024844476668L;

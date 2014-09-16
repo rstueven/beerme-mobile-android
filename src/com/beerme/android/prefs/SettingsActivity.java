@@ -17,9 +17,9 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.widget.ArrayAdapter;
 
-import com.beerme.android.R;
 import com.beerme.android.location.LocationList;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity implements

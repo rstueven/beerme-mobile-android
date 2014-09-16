@@ -23,10 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.beerme.android.R;
 import com.beerme.android.database.Beer;
 import com.beerme.android.database.BeerList;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class BeerListFrag extends Fragment {
 	private static final String TAG_ID = "id";

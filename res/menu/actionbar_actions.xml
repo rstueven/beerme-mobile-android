@@ -1,17 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:beerme="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@drawable/ic_action_search" android:id="@id/action_search" android:orderInCategory="0" android:title="@string/Search" beerme:showAsAction="always" />
-    <item android:icon="@drawable/content_edit" android:id="@id/action_update" android:orderInCategory="5" android:title="@string/Update" beerme:showAsAction="ifRoom" />
-    <item android:id="@id/action_database" android:orderInCategory="9996" android:title="@string/Database" beerme:showAsAction="never">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beerme="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_search"
+        android:orderInCategory="0"
+        android:title="@string/Search"
+        beerme:showAsAction="always"/>
+    <item
+        android:id="@+id/action_update"
+        android:icon="@drawable/content_edit"
+        android:orderInCategory="5"
+        android:title="@string/Update"
+        beerme:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_database"
+        android:orderInCategory="9996"
+        android:title="@string/Database"
+        beerme:showAsAction="never">
         <menu>
-            <item android:id="@id/action_database_update" android:title="@string/Force_data_update_summary" android:titleCondensed="@string/Force_data_update" beerme:showAsAction="never" />
-            <item android:id="@id/action_database_load" android:title="@string/Force_data_reload_summary" android:titleCondensed="@string/Force_data_reload" beerme:showAsAction="never" />
-            <item android:id="@id/action_database_export" android:title="@string/Export_database" android:titleCondensed="@string/Export" beerme:showAsAction="never" />
-            <item android:id="@id/action_database_import" android:title="@string/Import_database" android:titleCondensed="@string/Import" beerme:showAsAction="never" />
+            <item
+                android:id="@+id/action_database_update"
+                android:title="@string/Force_data_update_summary"
+                android:titleCondensed="@string/Force_data_update"
+                beerme:showAsAction="never"/>
+            <item
+                android:id="@+id/action_database_load"
+                android:title="@string/Force_data_reload_summary"
+                android:titleCondensed="@string/Force_data_reload"
+                beerme:showAsAction="never"/>
+            <item
+                android:id="@+id/action_database_export"
+                android:title="@string/Export_database"
+                android:titleCondensed="@string/Export"
+                beerme:showAsAction="never"/>
+            <item
+                android:id="@+id/action_database_import"
+                android:title="@string/Import_database"
+                android:titleCondensed="@string/Import"
+                beerme:showAsAction="never"/>
         </menu>
     </item>
-    <item android:id="@id/action_settings" android:orderInCategory="9997" android:title="@string/Settings" beerme:showAsAction="never" />
-    <item android:id="@id/action_help" android:orderInCategory="9998" android:title="@string/Help" beerme:showAsAction="never" />
-    <item android:id="@id/action_about" android:orderInCategory="9999" android:title="@string/About" beerme:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="9997"
+        android:title="@string/Settings"
+        beerme:showAsAction="never"/>
+    <item
+        android:id="@+id/action_help"
+        android:orderInCategory="9998"
+        android:title="@string/Help"
+        beerme:showAsAction="never"/>
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="9999"
+        android:title="@string/About"
+        beerme:showAsAction="never"/>
+
 </menu>

@@ -23,12 +23,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beerme.android.R;
 import com.beerme.android.ui.tripplanner.directions.Directions;
 import com.beerme.android.ui.tripplanner.directions.Leg;
 import com.beerme.android.ui.tripplanner.directions.Route;
 import com.beerme.android.ui.tripplanner.directions.Step;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 import com.google.android.gms.maps.model.LatLng;
 
 public class DirectionsDisplayFragment extends Fragment {

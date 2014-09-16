@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.beerme.android.R;
 import com.beerme.android.prefs.BreweryStatusFilterPreference;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class Brewery implements Serializable {
 	private static final long serialVersionUID = 6814750021557887747L;

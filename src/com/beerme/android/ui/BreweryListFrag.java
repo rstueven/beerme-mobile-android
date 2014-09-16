@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +12,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
 import com.beerme.android.database.BreweryList;
 import com.beerme.android.location.LocationFragment;
 import com.beerme.android.prefs.BreweryStatusFilterPreference;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 import com.google.android.gms.maps.model.LatLng;
 
 public class BreweryListFrag extends Fragment implements

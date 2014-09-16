@@ -14,10 +14,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.beerme.android.R;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.beerme.android.R;
 
 /**
  * @author rstueven

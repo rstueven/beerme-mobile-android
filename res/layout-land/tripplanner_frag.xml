@@ -1,28 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="horizontal" android:id="@id/tripplanner_layout" android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingTop="@dimen/activity_vertical_margin" android:paddingRight="@dimen/activity_horizontal_margin" android:paddingBottom="@dimen/activity_vertical_margin" android:layout_width="fill_parent" android:layout_height="fill_parent" android:baselineAligned="false"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0">
-        <TableLayout android:id="@id/tripplanner_table" android:layout_width="fill_parent" android:layout_height="wrap_content" android:stretchColumns="1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tripplanner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".tripplanner.TripPlannerFrag" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:id="@+id/tripplanner_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1" >
+
             <TableRow>
-                <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/startLabel" android:text="@string/start_label" />
-                <AutoCompleteTextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/start" android:hint="@string/current_location" />
+
+                <TextView
+                    android:id="@+id/startLabel"
+                    android:text="@string/start_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/start"
+                    android:hint="@string/current_location"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </TableRow>
+
             <TableRow>
-                <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/endLabel" android:text="@string/end_label" />
-                <AutoCompleteTextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/end" android:hint="@string/Enter_ending_location" />
+
+                <TextView
+                    android:id="@+id/endLabel"
+                    android:text="@string/end_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/end"
+                    android:hint="@string/Enter_ending_location"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </TableRow>
+
             <TableRow>
-                <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/dLabel" android:text="@string/dist_label" />
-                <EditText android:textAppearance="?android:textAppearanceSmall" android:id="@id/dist" android:text="@string/default_distance" android:hint="@string/Enter_distance" android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/dLabel"
+                    android:text="@string/dist_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <EditText
+                    android:id="@+id/dist"
+                    android:hint="@string/Enter_distance"
+                    android:inputType="number"
+                    android:text="@string/default_distance"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </TableRow>
+
             <TableRow>
-                <TextView android:textAppearance="?android:textAppearanceSmall" android:gravity="center_horizontal" android:id="@id/progressText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_span="2" />
+
+                <TextView
+                    android:id="@+id/progressText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </TableRow>
+
             <TableRow>
-                <ProgressBar android:id="@id/progressBar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_span="2" style="?android:attr/progressBarStyleHorizontal" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2" />
             </TableRow>
         </TableLayout>
-        <Button android:textAppearance="?android:textAppearanceSmall" android:id="@id/go" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Go" />
+
+        <Button
+            android:id="@+id/go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Go"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-    <FrameLayout android:id="@id/tripplanner_map" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+
+    <FrameLayout
+        android:id="@+id/tripplanner_map"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
 </LinearLayout>

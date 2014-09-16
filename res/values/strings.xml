@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="common_google_play_services_install_title">Get Google Play services</string>
-    <string name="common_google_play_services_install_text_phone">"This app won't run without Google Play services, which are missing from your phone."</string>
-    <string name="common_google_play_services_install_text_tablet">"This app won't run without Google Play services, which are missing from your tablet."</string>
-    <string name="common_google_play_services_install_button">Get Google Play services</string>
-    <string name="common_google_play_services_enable_title">Enable Google Play services</string>
-    <string name="common_google_play_services_enable_text">"This app won't work unless you enable Google Play services."</string>
-    <string name="common_google_play_services_enable_button">Enable Google Play services</string>
-    <string name="common_google_play_services_update_title">Update Google Play services</string>
-    <string name="common_google_play_services_update_text">"This app won't run unless you update Google Play services."</string>
-    <string name="common_google_play_services_network_error_title">Network Error</string>
-    <string name="common_google_play_services_network_error_text">A data connection is required to connect to Google Play services.</string>
-    <string name="common_google_play_services_invalid_account_title">Invalid Account</string>
-    <string name="common_google_play_services_invalid_account_text">The specified account does not exist on this device. Please choose a different account.</string>
-    <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
-    <string name="common_google_play_services_unsupported_title">Google Play services</string>
-    <string name="common_google_play_services_unsupported_text">Google Play services, which some of your applications rely on, is not supported by your device. Please contact the manufacturer for assistance.</string>
-    <string name="common_google_play_services_unsupported_date_text">The date on the device appears to be incorrect. Please check the date on the device.</string>
-    <string name="common_google_play_services_update_button">Update</string>
-    <string name="common_signin_button_text">Sign in</string>
-    <string name="common_signin_button_text_long">Sign in with Google</string>
-    <string name="auth_client_using_bad_version_title">An application attempted to use a bad version of Google Play Services.</string>
-    <string name="auth_client_needs_enabling_title">An application requires Google Play Services to be enabled.</string>
-    <string name="auth_client_needs_installation_title">An application requires installation of Google Play Services.</string>
-    <string name="auth_client_needs_update_title">An application requires an update for Google Play Services.</string>
-    <string name="auth_client_play_services_err_notification_msg">Google Play services error</string>
-    <string name="auth_client_requested_by_msg">Requested by %1$s</string>
-    <string name="app_name">Beer Me!™ mobile (free)</string>
-    <string name="daidalos_hello">Hello World!</string>
-    <string name="daidalos_app_name">aFileDialog</string>
-    <string name="daidalos_select">Select</string>
-    <string name="daidalos_cancel">Cancel</string>
-    <string name="daidalos_ok">OK</string>
-    <string name="daidalos_new_file">New</string>
-    <string name="daidalos_create_file">Create file</string>
-    <string name="daidalos_create_folder">Create folder</string>
-    <string name="daidalos_accept">Accept</string>
-    <string name="daidalos_enter_file_name">Enter the name of the file that you want to create</string>
-    <string name="daidalos_enter_folder_name">Enter the name of the folder that you want to create</string>
-    <string name="daidalos_yes">Yes</string>
-    <string name="daidalos_no">No</string>
-    <string name="daidalos_confirm_select_file">"Are you sure that you want to select the file '$file_name'?"</string>
-    <string name="daidalos_confirm_create_file">"The file '$file_name' do not exists, are you sure that you want to create it?"</string>
-    <string name="daidalos_confirm_select_folder">"Are you sure that you want to select the folder '$file_name'?"</string>
-    <string name="daidalos_confirm_create_folder">"The folder '$file_name' do not exists, are you sure that you want to create it?"</string>
-    <string name="abc_action_mode_done">Done</string>
-    <string name="abc_action_bar_home_description">Navigate home</string>
-    <string name="abc_action_bar_up_description">Navigate up</string>
-    <string name="abc_action_menu_overflow_description">More options</string>
-    <string name="abc_searchview_description_search">Search</string>
-    <string name="abc_searchview_description_query">Search query</string>
-    <string name="abc_searchview_description_clear">Clear query</string>
-    <string name="abc_searchview_description_submit">Submit query</string>
-    <string name="abc_searchview_description_voice">Voice search</string>
-    <string name="abc_activitychooserview_choose_application">Choose an app</string>
-    <string name="abc_activity_chooser_view_see_all">See all</string>
-    <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
-    <string name="abc_shareactionprovider_share_with">Share with</string>
-    <string name="ga_trackingId">UA-11700291-2</string>
-    <string name="com.beerme.android_free.ui.BeerActivity">BeerActivity</string>
-    <string name="com.beerme.android_free.ui.BeerMeMapActivity">BeerMeMapActivity</string>
-    <string name="com.beerme.android_free.ui.BreweryActivity">BreweryActivity</string>
-    <string name="com.beerme.android_free.ui.BreweryListActivity">BreweryListActivity</string>
-    <string name="com.beerme.android_free.ui.MainActivity">MainActivity</string>
-    <string name="com.beerme.android_free.ui.Splash">Splash</string>
+
     <string name="About">About / Contact</string>
     <string name="about_translationGerman">German translation: Mario Kornmesser, Matthias Krümberg</string>
     <string name="action_clear_map">Clear map</string>
@@ -78,6 +15,7 @@
     <string name="Analyzing_route">Analyzing route</string>
     <string name="Appearance">Appearance</string>
     <string name="Application_error">Application error: %d</string>
+    <string name="app_name">Beer Me!™ mobile</string>
     <string name="App_not_licensed">This application is not licensed.</string>
     <string name="Aroma">Aroma</string>
     <string name="Bar">Bar / Tasting Room</string>
@@ -86,11 +24,11 @@
     <string name="beer_image">beer image</string>
     <string name="Beer_list">Beer List</string>
     <string name="Beerme_notes">Beer Me! notes</string>
-    <string name="beernote_appearance_hint">"Notes on the beer's appearance"</string>
-    <string name="beernote_aroma_hint">"Notes on the beer's aroma"</string>
+    <string name="beernote_appearance_hint">Notes on the beer\'s appearance</string>
+    <string name="beernote_aroma_hint">Notes on the beer\'s aroma</string>
     <string name="Beer_note">Beer note</string>
     <string name="beernote_date_hint">When did you taste this beer?</string>
-    <string name="beernote_mouthfeel_hint">"Notes on the beer's mouthfeel and flavor"</string>
+    <string name="beernote_mouthfeel_hint">Notes on the beer\'s mouthfeel and flavor</string>
     <string name="beernote_overall_hint">Overall impression</string>
     <string name="beernote_package_hint">Can, bottle, draught?</string>
     <string name="beernote_place_hint">Where did you find it?</string>
@@ -98,8 +36,7 @@
     <string name="Brewery_details">Brewery details</string>
     <string name="brewery_image">brewery image</string>
     <string name="Brewery_note">Brewery note</string>
-    <string name="brewerynote_date_hint">"When did you visit
-this brewery?"</string>
+    <string name="brewerynote_date_hint">When did you visit\nthis brewery?</string>
     <string name="Brewery_notes">Brewery notes</string>
     <string name="Brewery_status_filter">Brewery status filter</string>
     <string name="Brewery_status_filter_summary">Filter breweries by status</string>
@@ -159,7 +96,7 @@ this brewery?"</string>
     <string name="Export">Export</string>
     <string name="Failed_to_update_TABLE_data">Failed to update %s data</string>
     <string name="file_exists">File exists!</string>
-    <string name="File_exists">"The file '%s' already exists."</string>
+    <string name="File_exists">The file \'%s\' already exists.</string>
     <string name="fixError1">Submitting this form will send the information to Beer Me!™. It may take several days for the information to appear in the database.</string>
     <string name="fixError2">Please do not use this form to try to contact a brewery.</string>
     <string name="fixError3">Thanks for your help!</string>
@@ -172,7 +109,7 @@ this brewery?"</string>
     <string name="fixErrorNameHint">Name of the brewery</string>
     <string name="fixErrorName">Name</string>
     <string name="fixErrorOpenPublic">Open to the Public?</string>
-    <string name="fixErrorPhoneHint">"Brewery's telephone number"</string>
+    <string name="fixErrorPhoneHint">Brewery\'s telephone number</string>
     <string name="fixErrorPhone">Telephone</string>
     <string name="fixErrorStatusHint">Select a status</string>
     <string name="fixErrorStatus">Status</string>
@@ -189,11 +126,11 @@ this brewery?"</string>
     <string name="Google_stops_limit">Google Maps limits you to only 8 stops</string>
     <string name="hand_pumped">hand-pumped</string>
     <string name="helpBeerAddNote">Write your own review of this beer.</string>
-    <string name="helpBeerMain">"Touch the brewery's name to see more information about the brewery. Touch 'My Notes' to write and view your notes on this beer. Press and hold a note to edit or delete it."</string>
+    <string name="helpBeerMain">Touch the brewery\'s name to see more information about the brewery. Touch \'My Notes\' to write and view your notes on this beer. Press and hold a note to edit or delete it.</string>
     <string name="helpBeerNoteCancel">Discard your note.</string>
     <string name="helpBeerNoteMain">Tap on the various fields to complete the form. Be sure to add ratings by tapping on the numbers in the column on the right.</string>
     <string name="helpBeerNoteSave">Save your note.</string>
-    <string name="helpBeerNotesMain">"Tap on Beer Me! notes to see the tasting notes. Tap on My notes to see your tasting notes. Tap on the brewery's name to find it on a map."</string>
+    <string name="helpBeerNotesMain">Tap on Beer Me! notes to see the tasting notes. Tap on My notes to see your tasting notes. Tap on the brewery\'s name to find it on a map.</string>
     <string name="helpBeerNotesTitle">Help: Beer notes</string>
     <string name="helpBeerNoteTitle">Help: Beer note</string>
     <string name="helpBeerTitle">Help: Beer</string>
@@ -209,7 +146,7 @@ this brewery?"</string>
     <string name="helpBreweryNoteTitle">Help: Brewery note</string>
     <string name="helpBreweryTitle">Help: Brewery</string>
     <string name="helpBreweryUpdate">Send updated brewery information to beerme.com</string>
-    <string name="helpBreweryWeb">"View the brewery's website."</string>
+    <string name="helpBreweryWeb">View the brewery\'s website.</string>
     <string name="Help">Help</string>
     <string name="helpMainAbout">Information about the app.</string>
     <string name="helpMainDatabase">Refresh, save, or reload your database.</string>
@@ -217,7 +154,7 @@ this brewery?"</string>
     <string name="helpMainNearby">A map (or list) showing breweries within 100km of your location. Tap on a brewery for more information.</string>
     <string name="helpMainNews">A list of recent brewery news articles.</string>
     <string name="helpMainSearch">Search for breweries, beers, and locales.</string>
-    <string name="helpMainSettings">"Change the app's settings."</string>
+    <string name="helpMainSettings">Change the app\'s settings.</string>
     <string name="helpMainTitle">Help: Main</string>
     <string name="helpMainTripPlanner">Specify a route, and get directions to the breweries along the way.</string>
     <string name="helpMainUpdate">Notify beerme.com of new breweries.</string>
@@ -316,7 +253,7 @@ this brewery?"</string>
     <string name="Tours">Tours</string>
     <string name="Trip_Planner">Trip Planner</string>
     <string name="Unknown">Unknown</string>
-    <string name="Unknown_location">"I don't know where we are."</string>
+    <string name="Unknown_location">I don\'t know where we are.</string>
     <string name="Update_in_progress">Update is already in progress</string>
     <string name="Updates">Updates</string>
     <string name="Update">Update</string>
@@ -329,4 +266,5 @@ this brewery?"</string>
     <string name="Yes">Yes</string>
     <string name="zero">0</string>
     <string name="Zoom_here">Zoom here</string>
+
 </resources>

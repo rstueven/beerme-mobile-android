@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
+import com.beerme.android.R;
 
 public class Beer {
 	private static final String sql = "SELECT beer.breweryid, brewery.name AS brewery, beer.name, style.name AS style, beer.abv, beer.image, beer.beermerating FROM brewery LEFT JOIN beer ON brewery._id = beer.breweryid LEFT JOIN style ON beer.style = style._id WHERE beer._id = ? ORDER BY beer.name";

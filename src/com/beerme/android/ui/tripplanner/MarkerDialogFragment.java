@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class MarkerDialogFragment extends DialogFragment {
 

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:beerme="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@drawable/location_directions" android:id="@id/action_navigation" android:orderInCategory="2" android:title="@string/Navigation" beerme:showAsAction="always" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beerme="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_navigation"
+        android:orderInCategory="2"
+        android:icon="@drawable/location_directions"
+        android:title="@string/Navigation"
+        beerme:showAsAction="always"/>
+
 </menu>

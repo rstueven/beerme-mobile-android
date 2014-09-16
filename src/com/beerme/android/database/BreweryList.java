@@ -12,8 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.location.Location;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
+import com.beerme.android.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 

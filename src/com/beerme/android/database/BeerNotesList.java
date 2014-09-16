@@ -13,9 +13,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class BeerNotesList extends ArrayList<BeerNote> {
 	private static final long serialVersionUID = -7427457104756970882L;

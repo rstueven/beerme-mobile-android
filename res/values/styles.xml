@@ -1,11 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light" />
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
 
-    <style name="AppTheme" parent="@style/AppBaseTheme" />
+    <!-- Application theme. -->
+    <style name="BeerMeTheme" parent="AppBaseTheme">
 
-    <style name="BeerMeTheme" parent="@style/AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/beerme_background</item>
         <item name="android:textColor">@color/beerme_textColor</item>
     </style>

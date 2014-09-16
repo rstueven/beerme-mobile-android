@@ -41,6 +41,9 @@ import android.widget.TextView;
 import com.beerme.android.R;
 import com.beerme.android.prefs.BreweryStatusFilterPreference;
 import com.beerme.android.prefs.Prefs;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -450,25 +453,22 @@ public class Utils {
 
 	public static void trackFragment(Fragment fragment) {
 		if (!DEBUG) {
-			// TODO: implement tracker
-//			Activity activity = fragment.getActivity();
-//			EasyTracker tracker = EasyTracker.getInstance(activity);
-//			tracker.set(Fields.SCREEN_NAME, activity.getClass().getName());
-//			tracker.send(MapBuilder.createAppView().build());
+			Activity activity = fragment.getActivity();
+			EasyTracker tracker = EasyTracker.getInstance(activity);
+			tracker.set(Fields.SCREEN_NAME, activity.getClass().getName());
+			tracker.send(MapBuilder.createAppView().build());
 		}
 	}
 
 	public static void trackActivityStart(Activity activity) {
 		if (!DEBUG) {
-			// TODO: implement tracker
-//			EasyTracker.getInstance(activity).activityStart(activity);
+			EasyTracker.getInstance(activity).activityStart(activity);
 		}
 	}
 
 	public static void trackActivityStop(Activity activity) {
 		if (!DEBUG) {
-			// TODO: implement tracker
-//			EasyTracker.getInstance(activity).activityStop(activity);
+			EasyTracker.getInstance(activity).activityStop(activity);
 		}
 	}
 

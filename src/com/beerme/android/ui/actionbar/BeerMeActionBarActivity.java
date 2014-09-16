@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Toast;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 
-import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.prefs.SettingsActivity;
@@ -28,6 +27,7 @@ import com.beerme.android.utils.FileUtils;
 import com.beerme.android.utils.Help;
 import com.beerme.android.utils.SendUpdateDialog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;

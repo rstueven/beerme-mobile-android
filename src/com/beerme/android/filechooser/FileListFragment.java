@@ -19,10 +19,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.Utils;
 import com.beerme.android.utils.YesNoDialog;
 import com.beerme.android.utils.YesNoDialog.YesNoListener;
+import com.beerme.android.R;
 
 public class FileListFragment extends DialogFragment implements YesNoListener {
 	private static final String DIRECTORY_KEY = "directory";
@@ -93,7 +93,7 @@ public class FileListFragment extends DialogFragment implements YesNoListener {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.daidalos_file_chooser, null);
+		View view = inflater.inflate(R.layout.filelist, null);
 		ListView listView = (ListView) view.findViewById(R.id.filelist);
 		mFileNames = new ArrayList<String>();
 

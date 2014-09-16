@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:textAppearance="?android:textAppearanceSmall" android:textStyle="bold" android:id="@id/brewerylist_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" />
-    <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/brewerylist_address" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/brewerylist_name" android:layout_alignParentLeft="true" />
-    <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/brewerylist_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/brewerylist_address" android:layout_alignParentLeft="true" />
-    <LinearLayout android:orientation="horizontal" android:id="@id/brewery_services" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBottom="@id/brewerylist_distance" android:layout_alignParentRight="true" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.BreweryListFrag" >
+
+    <TextView
+        android:id="@+id/brewerylist_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:maxLines="1"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/brewerylist_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/brewerylist_name"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/brewerylist_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/brewerylist_address"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
+        android:id="@+id/brewery_services"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/brewerylist_distance"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
 </RelativeLayout>

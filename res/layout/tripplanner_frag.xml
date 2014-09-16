@@ -1,27 +1,99 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:id="@id/tripplanner_layout" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TableLayout android:id="@id/tripplanner_table" android:layout_width="fill_parent" android:layout_height="wrap_content" android:stretchColumns="1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tripplanner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".tripplanner.TripPlannerFrag" >
+
+    <TableLayout
+        android:id="@+id/tripplanner_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1" >
+
         <TableRow>
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/startLabel" android:text="@string/start_label" />
-            <AutoCompleteTextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/start" android:hint="@string/current_location" />
+
+            <TextView
+                android:id="@+id/startLabel"
+                android:text="@string/start_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <AutoCompleteTextView
+                android:id="@+id/start"
+                android:hint="@string/current_location"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
+
         <TableRow>
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/endLabel" android:text="@string/end_label" />
-            <AutoCompleteTextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/end" android:hint="@string/Enter_ending_location" />
+
+            <TextView
+                android:id="@+id/endLabel"
+                android:text="@string/end_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <AutoCompleteTextView
+                android:id="@+id/end"
+                android:hint="@string/Enter_ending_location"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
+
         <TableRow>
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:id="@id/dLabel" android:text="@string/dist_label" />
-            <EditText android:textAppearance="?android:textAppearanceSmall" android:id="@id/dist" android:text="@string/default_distance" android:hint="@string/Enter_distance" android:inputType="number" />
+
+            <TextView
+                android:id="@+id/dLabel"
+                android:text="@string/dist_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <EditText
+                android:id="@+id/dist"
+                android:hint="@string/Enter_distance"
+                android:inputType="number"
+                android:text="@string/default_distance"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
     </TableLayout>
-    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
-        <Button android:textAppearance="?android:textAppearanceSmall" android:id="@id/go" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Go" />
-        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
-            <TextView android:textAppearance="?android:textAppearanceSmall" android:gravity="center_horizontal" android:id="@id/progressText" android:layout_width="fill_parent" android:layout_height="wrap_content" />
-            <ProgressBar android:id="@id/progressBar" android:layout_width="fill_parent" android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Go"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/progressText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
-    <FrameLayout android:id="@id/tripplanner_map" android:layout_width="fill_parent" android:layout_height="fill_parent" />
-    <ListView android:id="@id/tripplanner_place_suggestions_list" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/tripplanner_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ListView
+        android:id="@+id/tripplanner_place_suggestions_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

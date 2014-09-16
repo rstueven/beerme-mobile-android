@@ -18,10 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.beerme.android.R;
 import com.beerme.android.database.BreweryNotesList;
 import com.beerme.android.ui.BreweryNoteFrag.BreweryNoteCallbacks;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class BreweryNotesFrag extends Fragment implements BreweryNoteCallbacks {
 	private static final String TAG_ID = "id";

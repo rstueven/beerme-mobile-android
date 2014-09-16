@@ -25,11 +25,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.UrlToFileDownloader;
 import com.beerme.android.utils.Utils;
 import com.beerme.android.utils.UrlToFileDownloader.UrlToFileDownloadListener;
+import com.beerme.android.R;
 
 public class TableDefs_5 extends TableDefs {
 	protected static final String URL_INIT_BREWERY_LIST = "breweryList.php";

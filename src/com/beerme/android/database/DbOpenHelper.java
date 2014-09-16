@@ -10,10 +10,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.beerme.android.R;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.prefs.SharedPreferenceSaver;
 import com.beerme.android.utils.ErrLog;
+import com.beerme.android.R;
 
 public class DbOpenHelper extends SQLiteOpenHelper implements
 		TableDefs.UpdateListener {

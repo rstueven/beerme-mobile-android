@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.beerme.android.R;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class AboutFrag extends DialogFragment {
 

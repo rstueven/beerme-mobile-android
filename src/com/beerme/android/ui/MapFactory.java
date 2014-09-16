@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MapFactory {

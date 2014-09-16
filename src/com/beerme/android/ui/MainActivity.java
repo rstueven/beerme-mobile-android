@@ -10,11 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.beerme.android.R;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.ui.tripplanner.TripPlannerFrag;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class MainActivity extends BeerMeActionBarActivity {
 	private ViewPager mViewPager;

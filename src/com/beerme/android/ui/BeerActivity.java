@@ -19,11 +19,11 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
-import com.beerme.android.R;
 import com.beerme.android.database.Beer;
 import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.DownloadImageTask;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.R;
 
 public class BeerActivity extends BeerMeActionBarActivity {
 	private final static String TAG_BEERDETAIL_FRAG = "beerdetailFrag";

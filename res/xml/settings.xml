@@ -1,20 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <EditTextPreference
-        android:dialogMessage="@string/defaultLocationTitle"
-        android:dialogTitle="@string/defaultLocation"
-        android:hint="@string/defaultLocation"
-        android:key="default_location"
-        android:persistent="true"
-        android:summary="@string/defaultLocationSummary"
-        android:title="@string/defaultLocation" />
-
-    <com.beerme.android_free.prefs.BreweryStatusFilterPreference
-        android:defaultValue="3"
-        android:key="status_filter"
-        android:persistent="true"
-        android:title="@string/Brewery_status_filter" />
 
     <ListPreference
         android:defaultValue="0"
@@ -25,6 +9,21 @@
         android:persistent="true"
         android:positiveButtonText="@null"
         android:title="@string/Distance_unit" />
+
+    <EditTextPreference
+        android:dialogMessage="@string/defaultLocationTitle"
+        android:dialogTitle="@string/defaultLocation"
+        android:hint="@string/defaultLocation"
+        android:key="default_location"
+        android:persistent="true"
+        android:summary="@string/defaultLocationSummary"
+        android:title="@string/defaultLocation" />
+
+    <com.beerme.android.prefs.BreweryStatusFilterPreference
+        android:defaultValue="3"
+        android:key="status_filter"
+        android:persistent="true"
+        android:title="@string/Brewery_status_filter" />
 
     <ListPreference
         android:defaultValue="0"

@@ -11,11 +11,11 @@
     <bool name="ga_reportUncaughtExceptions">true</bool>
     
 	<!-- The screen names that will appear in your reporting -->
-	<string name="com.beerme.android.ui.BeerActivity">BeerActivity</string>
-	<string name="com.beerme.android.ui.BeerMeMapActivity">BeerMeMapActivity</string>
-	<string name="com.beerme.android.ui.BreweryActivity">BreweryActivity</string>
-	<string name="com.beerme.android.ui.BreweryListActivity">BreweryListActivity</string>
-	<string name="com.beerme.android.ui.MainActivity">MainActivity</string>
-	<string name="com.beerme.android.ui.Splash">Splash</string>
+	<string name="com.beerme.android_free.ui.BeerActivity">BeerActivity</string>
+	<string name="com.beerme.android_free.ui.BeerMeMapActivity">BeerMeMapActivity</string>
+	<string name="com.beerme.android_free.ui.BreweryActivity">BreweryActivity</string>
+	<string name="com.beerme.android_free.ui.BreweryListActivity">BreweryListActivity</string>
+	<string name="com.beerme.android_free.ui.MainActivity">MainActivity</string>
+	<string name="com.beerme.android_free.ui.Splash">Splash</string>
 					
 </resources>

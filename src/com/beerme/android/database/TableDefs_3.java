@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class TableDefs_3 extends TableDefs {
 	public TableDefs_3() {

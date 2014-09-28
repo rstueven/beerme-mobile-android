@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.beerme.android.utils.ErrLog;
 import com.beerme.android.R;
+import com.beerme.android.utils.ErrLog;
 
 public class BreweryNotesList extends ArrayList<BreweryNote> {
 	private static final long serialVersionUID = -2810537115303896L;

@@ -29,10 +29,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.NewsItem;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class NewsFrag extends Fragment {
 	private final static int LOAD_START = 1;

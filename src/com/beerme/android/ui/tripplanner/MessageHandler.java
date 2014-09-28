@@ -7,8 +7,8 @@ import android.os.Message;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.beerme.android.utils.ErrLog;
 import com.beerme.android.R;
+import com.beerme.android.utils.ErrLog;
 
 public class MessageHandler extends Handler {
 	public static final int DIRECTIONS_START = 1;

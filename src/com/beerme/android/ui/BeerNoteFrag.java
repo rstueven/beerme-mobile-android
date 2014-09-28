@@ -24,14 +24,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.beerme.android.R;
 import com.beerme.android.database.BeerNote;
+import com.beerme.android.database.BeerNote.Source;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.database.TableDefs;
-import com.beerme.android.database.BeerNote.Source;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.URIDispatcher;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class BeerNoteFrag extends Fragment {
 	private static final String TAG_NOTE = "note";

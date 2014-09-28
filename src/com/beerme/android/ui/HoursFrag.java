@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class HoursFrag extends Fragment {
 	private static final String TAG_ID = "id";

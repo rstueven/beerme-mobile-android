@@ -15,11 +15,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.beerme.android.R;
 import com.beerme.android.ui.tripplanner.MessageHandler.MessageListener;
 import com.beerme.android.ui.tripplanner.directions.Directions;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class DirectionsFragment extends Fragment {
 	private static final String DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json?";

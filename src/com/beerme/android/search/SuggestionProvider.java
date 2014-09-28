@@ -16,11 +16,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.database.TableDefs;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 // http://mobile.tutsplus.com/tutorials/android/android-sdk_content-providers/
 

@@ -13,8 +13,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Toast;
 
-import com.beerme.android.utils.Utils;
 import com.beerme.android.R;
+import com.beerme.android.utils.Utils;
 
 public class DialogFrag extends DialogFragment {
 	private static final String TAG_MODE = "mode";

@@ -19,10 +19,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.beerme.android.R;
 import com.beerme.android.utils.Utils;
 import com.beerme.android.utils.YesNoDialog;
 import com.beerme.android.utils.YesNoDialog.YesNoListener;
-import com.beerme.android.R;
 
 public class FileListFragment extends DialogFragment implements YesNoListener {
 	private static final String DIRECTORY_KEY = "directory";

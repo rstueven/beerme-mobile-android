@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.beerme.android.R;
 import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class BeerMeMapActivity extends BeerMeActionBarActivity {
 	public static final String LAT_KEY = "latitude";

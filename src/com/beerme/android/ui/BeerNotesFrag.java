@@ -22,11 +22,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 
-import com.beerme.android.database.BeerNotesList;
+import com.beerme.android.R;
 import com.beerme.android.database.BeerNote.Source;
+import com.beerme.android.database.BeerNotesList;
 import com.beerme.android.ui.BeerNoteFrag.BeerNoteCallbacks;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.R;
 
 public class BeerNotesFrag extends Fragment implements BeerNoteCallbacks {
 	private static final String TAG_ID = "id";

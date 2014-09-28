@@ -17,15 +17,15 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 
+import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.prefs.SharedPreferenceSaver;
 import com.beerme.android.utils.CheckLicenseTask;
 import com.beerme.android.utils.DatabaseUpdateAlert;
+import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
-import com.beerme.android.R;
 
 /**
  * @author rstueven

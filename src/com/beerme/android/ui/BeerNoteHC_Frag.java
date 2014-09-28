@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 
-import com.beerme.android.utils.Utils;
 import com.beerme.android.R;
+import com.beerme.android.utils.Utils;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class BeerNoteHC_Frag extends BeerNoteFrag implements

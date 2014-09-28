@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.beerme.android_free.utils.TouchableWrapper xmlns:android="http://schemas.android.com/apk/res/android"
+<com.beerme.android.utils.TouchableWrapper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mapLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.beerme.android_free.ui.maps.BeerMeSupportMapFragment"
+        android:name="com.beerme.android.ui.maps.BeerMeSupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:tag="mapFragment" />
 
-</com.beerme.android_free.utils.TouchableWrapper>
+</com.beerme.android.utils.TouchableWrapper>

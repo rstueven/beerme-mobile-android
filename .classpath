@@ -6,5 +6,6 @@
 	<classpathentry kind="src" path="/JSON_Java"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="/home/rstueven/src/JSON_Java/JSON_Java.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

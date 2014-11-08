@@ -1,0 +1,4 @@
+BEGIN TRANSACTION;
+ALTER TABLE brewerynotes RENAME TO brewerynotes_backup;
+ALTER TABLE beernotes RENAME TO beernotes_backup;
+COMMIT;

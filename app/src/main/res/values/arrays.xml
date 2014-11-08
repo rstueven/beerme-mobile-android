@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dist_unit_name">
+        <item>@string/miles</item>
+        <item>@string/kilometers</item>
+        <item>@string/yards</item>
+        <item>@string/meters</item>
+    </string-array>
+    <string-array name="dist_unit_index">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="nearby_display_index">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="nearby_display">
+        <item>@string/Map</item>
+        <item>@string/List</item>
+    </string-array>
+
+</resources>

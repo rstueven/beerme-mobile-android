@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="beerme_background">#fff3efb9</color>
+    <color name="beerme_textColor">#ff663333</color>
+    <color name="beerme_background_inverse">#a0663333</color>
+</resources>

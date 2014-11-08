@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <!--
+        com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-2808758250833616/9157858591"
+        android:visibility="gone" /
+    -->
+
+    <TextView
+        android:id="@+id/statusLineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/installing_database"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/statusLineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statusLineTop"
+        android:layout_centerHorizontal="true"
+        android:text="@string/may_take_time"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="visible" />
+
+</RelativeLayout>

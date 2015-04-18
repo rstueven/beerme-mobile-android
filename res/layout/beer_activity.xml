@@ -37,8 +37,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/beer_image"
-                android:scaleType="fitStart"
-                android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+                android:scaleType="fitStart" />
         </LinearLayout>
 
         <FrameLayout

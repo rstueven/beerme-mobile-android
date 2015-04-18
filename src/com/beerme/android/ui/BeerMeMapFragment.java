@@ -164,11 +164,9 @@ public class BeerMeMapFragment extends Fragment implements
 		}
 
 		try {
-			mMapView = inflater
-					.inflate(R.layout.map_fragment, container, false);
+			mMapView = inflater.inflate(R.layout.map_fragment, container, false);
 
-			TouchableWrapper mapLayout = (TouchableWrapper) mMapView
-					.findViewById(R.id.mapLayout);
+			TouchableWrapper mapLayout = (TouchableWrapper) mMapView.findViewById(R.id.mapLayout);
 			mapLayout.setUpdateMapAfterUserInteraction(this);
 		} catch (InflateException e) {
 			// MapFactory is already there, ignore.
@@ -189,11 +187,9 @@ public class BeerMeMapFragment extends Fragment implements
 
 		mFragMgr = getActivity().getSupportFragmentManager();
 
-		mMapFrag = (SupportMapFragment) mFragMgr
-				.findFragmentById(R.id.mapFragment);
+		mMapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
 
-		LocationFragment locationFragment = LocationFragment
-				.getInstance(getActivity());
+		LocationFragment locationFragment = LocationFragment.getInstance(getActivity());
 		locationFragment.registerListener(this);
 		FragmentTransaction trans = mFragMgr.beginTransaction();
 		trans.add(locationFragment, LOCATION_FRAGMENT_TAG);

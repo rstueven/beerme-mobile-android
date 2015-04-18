@@ -99,11 +99,11 @@ public class LocationFragment_Legacy extends LocationFragment {
 		}
 	};
 
-	@Override
-	public void setTimeout(int timeout) {
-		if (timeout >= 0) {
-			mTimeout = timeout;
-			mListener.onProviderDisabled(mProvider);
-		}
-	}
+//	@Override
+//	public void setTimeout(int timeout) {
+//		if (timeout >= 0) {
+//			mTimeout = timeout;
+//			mListener.onProviderDisabled(mProvider);
+//		}
+//	}
 }

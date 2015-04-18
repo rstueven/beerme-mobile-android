@@ -42,7 +42,6 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/beer_image"
         android:scaleType="centerInside"
-        android:src="@drawable/abc_ab_bottom_solid_dark_holo"
         android:visibility="gone" />
 
 </LinearLayout>

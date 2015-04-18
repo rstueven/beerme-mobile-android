@@ -3,77 +3,84 @@ package com.beerme.android.location;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.beerme.android.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
-public class LocationFragment_Services extends LocationFragment implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
-	private LocationRequest mRequest;
-	private LocationClient mClient;
+public class LocationFragment_Services extends LocationFragment implements GoogleApiClient
+.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+	private LocationRequest mLocationRequest;
 	private boolean mFirstLocation = true;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Utils.trackFragment(this);
 
-		mRequest = LocationRequest.create();
-		mRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-		mRequest.setInterval(0);
-		mRequest.setFastestInterval(0);
-		mRequest.setSmallestDisplacement(0);
+		mLocationRequest = LocationRequest.create();
+		mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+		mLocationRequest.setInterval(0);
+		mLocationRequest.setFastestInterval(0);
+		mLocationRequest.setSmallestDisplacement(0);
 
-		mClient = new LocationClient(getActivity(), this, this);
+		buildGoogleApiClient();
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+	public void onStart() {
+        super.onStart();
+        
+        mGoogleApiClient.connect();
+    }
 
-		if (!Utils.isLocationServiceEnabled(getActivity())) {
-			publishLocation(getDefaultLocation());
-		}
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        if (mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+        }
+    }
 
-		mClient.connect();
-	}
+    @Override
+    public void onPause() {
+        if (mGoogleApiClient.isConnected()) {
+            stopLocationUpdates();
+        }
+        
+        super.onPause();
+    }
 
-	@Override
-	public void onPause() {
-		if (mClient.isConnected()) {
-			mClient.removeLocationUpdates(this);
-		}
+    @Override
+    public void onStop() {
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        
+        super.onStop();
+    }
 
-		mClient.disconnect();
-
-		super.onPause();
-	}
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation == null) {
+            Toast.makeText(this.getActivity(), "No location", Toast.LENGTH_LONG).show();
+        }
+        
+        onLocationChanged(mLastLocation);
+        startLocationUpdates();
+    }
 
 	@Override
 	public Location getLocation() {
-		return Utils.isLocationServiceEnabled(getActivity()) ? mClient
-				.getLastLocation() : getDefaultLocation();
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-		Log.e("beerme", "LocationFragment_Services.onConnectionFailed("
-				+ connectionResult.getErrorCode() + ")");
-	}
-
-	@Override
-	public void onConnected(Bundle dataBundle) {
-		mClient.requestLocationUpdates(mRequest, this);
-	}
-
-	@Override
-	public void onDisconnected() {
-		mClient.removeLocationUpdates(this);
+		return Utils.isLocationServiceEnabled(getActivity()) ? mLastLocation : getDefaultLocation();
 	}
 
 	@Override
@@ -82,31 +89,71 @@ public class LocationFragment_Services extends LocationFragment implements
 		if (timestamp - mLastUpdateTime >= mTimeout) {
 			mLastUpdateTime = timestamp;
 
-			if (mFirstLocation) {
-				mClient.removeLocationUpdates(this);
-				mRequest.setInterval(mTimeout);
-				mRequest.setFastestInterval(FAST_INTERVAL);
-				mRequest.setSmallestDisplacement(MIN_DIST);
-				mClient.requestLocationUpdates(mRequest, this);
-				mFirstLocation = false;
-			}
+//			if (mFirstLocation) {
+//				mClient.removeLocationUpdates(this);
+//				mLocationRequest.setInterval(mTimeout);
+//				mLocationRequest.setFastestInterval(FAST_INTERVAL);
+//				mLocationRequest.setSmallestDisplacement(MIN_DIST);
+//				mClient.requestLocationUpdates(mLocationRequest, this);
+//				mFirstLocation = false;
+//			}
 
+			mLastLocation = location;
 			if (Utils.isLocationServiceEnabled(getActivity())) {
-				publishLocation(location);
+				publishLocation(mLastLocation);
 			} else {
 				publishLocation(getDefaultLocation());
 			}
 		}
 	}
 
+//	@Override
+//	public void setTimeout(int timeout) {
+//		if (timeout >= 0) {
+//			mTimeout = timeout;
+//			if (mClient.isConnected()) {
+//				mLocationRequest.setInterval(mTimeout);
+//				mClient.requestLocationUpdates(mLocationRequest, this);
+//			}
+//		}
+//	}
+
+    private synchronized void buildGoogleApiClient() {
+    	mGoogleApiClient = new GoogleApiClient.Builder(getActivity(), this, this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    	
+        createLocationRequest();
+        startLocationUpdates();
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
 	@Override
-	public void setTimeout(int timeout) {
-		if (timeout >= 0) {
-			mTimeout = timeout;
-			if (mClient.isConnected()) {
-				mRequest.setInterval(mTimeout);
-				mClient.requestLocationUpdates(mRequest, this);
-			}
-		}
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(Utils.APPTAG, "LocationFragment_Services.onConnectionFailed(" + connectionResult.getErrorCode() + ")");
+	}
+
+	@Override
+	public void onConnectionSuspended(int arg0) {
+        mGoogleApiClient.connect();
 	}
 }

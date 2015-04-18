@@ -42,8 +42,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/beer_image"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+                    android:scaleType="fitStart" />
             </LinearLayout>
 
             <FrameLayout

@@ -344,7 +344,7 @@ public class BreweryListFrag extends Fragment implements
 			if (mTrackLocation) {
 				mLocation = new LatLng(location.getLatitude(),
 						location.getLongitude());
-				mLocationFrag.setTimeout(60000);
+				// mLocationFrag.setTimeout(60000);
 
 				if (mOKtoLoad) {
 					new Thread(new LoadBreweryList(mLocation, mStatusFilter),

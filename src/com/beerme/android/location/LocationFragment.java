@@ -18,7 +18,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 public abstract class LocationFragment extends Fragment {
 	protected static final int MIN_TIME = 10000;
 	protected static final int MIN_DIST = 100;
-	protected static final int FAST_INTERVAL = 1000;
+	protected static final int UPDATE_INTERVAL = 10000;
+    protected static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL / 2;
 	protected static final String KEY_LOCATION_UPDATES_ON = "KEY_LOCATION_UPDATES_ON";
 	protected Activity mActivity;
 	protected ArrayList<LocationCallbacks> mCallbacks = new ArrayList<LocationCallbacks>();
@@ -95,5 +96,5 @@ public abstract class LocationFragment extends Fragment {
 
 	public abstract Location getLocation();
 
-	public abstract void setTimeout(int timeout);
+	//public abstract void setTimeout(int timeout);
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dist_unit_index">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="dist_unit_name">
+        <item>@string/miles</item>
+        <item>@string/kilometers</item>
+        <item>@string/yards</item>
+        <item>@string/meters</item>
+    </string-array>
+    <string-array name="dist_unit_conversion">
+        <item>0.000621371</item>
+        <item>0.001</item>
+        <item>1.09361</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="pkg_value">
+        <item>@string/bottled</item>
+        <item>@string/canned</item>
+        <item>@string/cask_conditioned</item>
+        <item>@string/draught</item>
+        <item>@string/hand_pumped</item>
+        <item>@string/nitrogenated</item>
+        <item>@string/real_ale</item>
+    </string-array>
+    <string-array name="status_value">
+        <item>@string/Open</item>
+        <item>@string/Planned</item>
+        <item>@string/No_longer_brewing</item>
+        <item>@string/Closed</item>
+        <item>@string/Delete</item>
+    </string-array>
+    <string-array name="nearby_display_index">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="nearby_display">
+        <item>@string/Map</item>
+        <item>@string/List</item>
+    </string-array>
+
+</resources>

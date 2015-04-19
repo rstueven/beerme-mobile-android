@@ -62,18 +62,16 @@ public class DirectionsFragment extends Fragment {
 		Utils.trackFragment(this);
 	}
 
-	public void fetchDirections(String startString, String endString,
-			int distance, HashMap<Long, String> stops, Location here) {
+	public void fetchDirections(String startString, String endString, int distance, HashMap<Long, String> stops,
+			Location here) {
 		URL url = buildDirectionsUrl(startString, endString, stops, here);
 		mDirections = null;
 
-		fetcherThread = new Thread(new DirectionsFetcher(url, distance),
-				"DirectionsFetcher");
+		fetcherThread = new Thread(new DirectionsFetcher(url, distance), "DirectionsFetcher");
 		fetcherThread.start();
 	}
 
-	private URL buildDirectionsUrl(String start, String end,
-			HashMap<Long, String> stops, Location here) {
+	private URL buildDirectionsUrl(String start, String end, HashMap<Long, String> stops, Location here) {
 		URL url = null;
 
 		if ("".equals(start)) {
@@ -82,8 +80,7 @@ public class DirectionsFragment extends Fragment {
 				double startLng = here.getLongitude();
 				start = startLat + "," + startLng;
 			} else {
-				ErrLog.log(getActivity(), "DirectionsFragment.buildDirections",
-						null, R.string.Unknown_location);
+				ErrLog.log(getActivity(), "DirectionsFragment.buildDirections", null, R.string.Unknown_location);
 			}
 		}
 
@@ -97,8 +94,7 @@ public class DirectionsFragment extends Fragment {
 				if (stops.size() > 0) {
 					urlBuf.append("&waypoints=optimize:true");
 					for (long id : stops.keySet()) {
-						urlBuf.append("|"
-								+ URLEncoder.encode(stops.get(id), "UTF-8"));
+						urlBuf.append("|" + URLEncoder.encode(stops.get(id), "UTF-8"));
 					}
 				}
 			} catch (UnsupportedEncodingException e) {
@@ -150,22 +146,19 @@ public class DirectionsFragment extends Fragment {
 					mDirections = null;
 					Log.e(Utils.APPTAG, url.toString());
 					for (MessageListener l : mMessageListeners) {
-						l.postException(new MalformedURLException(
-								"Failed to download directions"));
+						l.postException(new MalformedURLException("Failed to download directions"));
 					}
 				} catch (JSONException e) {
 					mDirections = null;
 					Log.e(Utils.APPTAG, url.toString());
 					for (MessageListener l : mMessageListeners) {
-						l.postException(new JSONException(
-								"Failed to download directions"));
+						l.postException(new JSONException("Failed to download directions"));
 					}
 				} catch (IOException e) {
 					mDirections = null;
 					Log.e(Utils.APPTAG, url.toString());
 					for (MessageListener l : mMessageListeners) {
-						l.postException(new IOException(
-								"Failed to download directions"));
+						l.postException(new IOException("Failed to download directions"));
 					}
 				} finally {
 					for (MessageListener l : mMessageListeners) {

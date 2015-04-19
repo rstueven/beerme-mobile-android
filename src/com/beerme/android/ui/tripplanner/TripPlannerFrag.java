@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 
@@ -97,6 +98,7 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	private Location mHere;
 	protected Directions mDirections;
 	private HashMap<Long, Brewery> mBreweries;
+	private List<Long> mDeletedBreweries = new ArrayList<Long>();
 	private MessageHandler mHandler = new MessageHandler(this);
 	private HashMap<Long, Marker> mMarkers;
 	private Polyline currentSegment = null;
@@ -334,7 +336,7 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	@Override
 	public void onBreweriesFetched(HashMap<Long, Brewery> breweries) {
 		this.mBreweries = breweries;
-		getActivity().runOnUiThread(new BreweriesDisplayer(getActivity(), mMapFrag, breweries, this, this));
+		getActivity().runOnUiThread(new BreweriesDisplayer(getActivity(), mMapFrag, breweries, mDeletedBreweries, this, this));
 	}
 
 	public void onBreweriesFetched(ArrayList<Long> breweryIds) {
@@ -711,8 +713,9 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 			Marker marker = mMarkers.get(data);
 			marker.remove();
 			mMarkers.remove(data);
-			
+
 			mBreweries.remove(data);
+			mDeletedBreweries.add(data);
 
 			if (mStops.containsKey(data)) {
 				performRemoveFromRoute(data);

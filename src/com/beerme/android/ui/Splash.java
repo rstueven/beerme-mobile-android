@@ -94,7 +94,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 
 	private final static class SplashHandler extends Handler {
 		WeakReference<Splash> mRef;
-		private ProgressDialog mLicenseDialog = null;
+		private ProgressDialog mProgressDialog = null;
 		SQLiteDatabase mDb = null;
 
 		public SplashHandler(Splash instance) {
@@ -135,7 +135,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 					instance.mLicensed = true;
 					mHandler.sendEmptyMessage(LICENSE_OK);
 				} else {
-					mLicenseDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
+					mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
 							true);
 					new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
 				}
@@ -144,22 +144,29 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				mHandler.sendEmptyMessage(LICENSE_DONE);
 				break;
 			case NOT_LICENSED:
-				if (mLicenseDialog != null) {
-					mLicenseDialog.dismiss();
+				if (mProgressDialog != null) {
+					mProgressDialog.dismiss();
 				}
+				
 				DialogFrag.newInstance(DialogFrag.Mode.UNLICENSED).show(instance.getSupportFragmentManager(),
 						"unlicensed");
 				mHandler.sendEmptyMessage(LICENSE_DONE);
 				break;
 			case LICENSE_DONE:
-				if (mLicenseDialog != null) {
-					mLicenseDialog.dismiss();
+				if (mProgressDialog != null) {
+					mProgressDialog.dismiss();
 				}
 				if (instance.mLicensed) {
 					instance.checkDatabase();
 				}
 				break;
 			case DATABASE_CHECK:
+				if (mProgressDialog != null) {
+					mProgressDialog.dismiss();
+				}
+				
+				mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Database_update), "",
+						true);
 				if (DbOpenHelper.isUpdating(instance)) {
 					if (Prefs.getSettings(instance).getBoolean(DatabaseUpdateAlert.SHOW_DB_UPDATE_ALERT_PREF, true)) {
 						new DatabaseUpdateAlert().show(instance.getSupportFragmentManager(), "databaseUpdateAlert");
@@ -172,6 +179,10 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				}
 				break;
 			case DATABASE_DONE:
+				if (mProgressDialog != null) {
+					mProgressDialog.dismiss();
+				}
+				
 				if (mDb != null) {
 					mDb.close();
 				}

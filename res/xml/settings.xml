@@ -19,7 +19,7 @@
         android:summary="@string/defaultLocationSummary"
         android:title="@string/defaultLocation" />
 
-    <com.beerme.android.prefs.BreweryStatusFilterPreference
+    <com.beerme.android_free.prefs.BreweryStatusFilterPreference
         android:defaultValue="3"
         android:key="status_filter"
         android:persistent="true"

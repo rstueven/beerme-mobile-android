@@ -11,8 +11,7 @@ public class SaveTripData implements Serializable {
 	private ArrayList<Long> mBreweries = new ArrayList<Long>();
 	private HashMap<Long, String> mStops = null;
 
-	public SaveTripData(String directions, Set<Long> breweries,
-			HashMap<Long, String> stops) {
+	public SaveTripData(String directions, Set<Long> breweries, HashMap<Long, String> stops) {
 		this.mDirections = directions;
 		this.mBreweries.addAll(breweries);
 		this.mStops = stops;

@@ -82,7 +82,7 @@ public class MessageHandler extends Handler {
 		case DISPLAY_EXCEPTION:
 			Exception e = (Exception) (msg.obj);
 			ErrLog.log(frag.getActivity(), "MessageHandler.handleMessage("
-					+ msg.what + ")", e, "Bad message");
+					+ msg.what + ")", e, "Bad message: " + e.getLocalizedMessage());
 			break;
 		default:
 			super.handleMessage(msg);

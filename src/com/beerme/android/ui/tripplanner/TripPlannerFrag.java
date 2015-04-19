@@ -64,14 +64,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-public class TripPlannerFrag extends Fragment implements
-		OnInfoWindowClickListener, LocationFragment.LocationCallbacks,
-		MessageHandler.MessageListener, DirectionsFragment.DirectionsListener,
-		BreweriesFragment.BreweriesListener,
-		BreweriesDisplayer.BreweriesDisplayerListener,
-		MarkerDialogFragment.MarkerDialogListener, SaveTrip.SaveTripListener,
-		FileListFragment.FileListListener,
-		FileExistsFragment.FileExistsListener, YesNoListener {
+public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListener, LocationFragment.LocationCallbacks,
+		MessageHandler.MessageListener, DirectionsFragment.DirectionsListener, BreweriesFragment.BreweriesListener,
+		BreweriesDisplayer.BreweriesDisplayerListener, MarkerDialogFragment.MarkerDialogListener,
+		SaveTrip.SaveTripListener, FileListFragment.FileListListener, FileExistsFragment.FileExistsListener,
+		YesNoListener {
 	protected static final int CONTEXT_MENU_ID = R.menu.tripplanner;
 	private static final String TAG_MAP = "map";
 	public static final String DIRECTIONS_TAG = "directions";
@@ -101,7 +98,7 @@ public class TripPlannerFrag extends Fragment implements
 	protected Directions mDirections;
 	private HashMap<Long, Brewery> mBreweries;
 	private MessageHandler mHandler = new MessageHandler(this);
-	private HashMap<Long, Marker> markers;
+	private HashMap<Long, Marker> mMarkers;
 	private Polyline currentSegment = null;
 	private PlacesAutoCompleteAdapter mStartAdapter;
 	private PlacesAutoCompleteAdapter mEndAdapter;
@@ -130,12 +127,9 @@ public class TripPlannerFrag extends Fragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.tripplanner_frag, container,
-				false);
-		ViewGroup layoutView = (ViewGroup) view
-				.findViewById(R.id.tripplanner_layout);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.tripplanner_frag, container, false);
+		ViewGroup layoutView = (ViewGroup) view.findViewById(R.id.tripplanner_layout);
 		setupContextMenu(layoutView);
 
 		FragmentManager fragMgr = getChildFragmentManager();
@@ -169,13 +163,11 @@ public class TripPlannerFrag extends Fragment implements
 		fragTrans.commit();
 
 		mStart = (AutoCompleteTextView) view.findViewById(R.id.start);
-		mStartAdapter = new PlacesAutoCompleteAdapter(getActivity(),
-				android.R.layout.simple_list_item_1);
+		mStartAdapter = new PlacesAutoCompleteAdapter(getActivity(), android.R.layout.simple_list_item_1);
 		mStart.setAdapter(mStartAdapter);
 
 		mEnd = (AutoCompleteTextView) view.findViewById(R.id.end);
-		mEndAdapter = new PlacesAutoCompleteAdapter(getActivity(),
-				android.R.layout.simple_list_item_1);
+		mEndAdapter = new PlacesAutoCompleteAdapter(getActivity(), android.R.layout.simple_list_item_1);
 		mEnd.setAdapter(mEndAdapter);
 
 		mDist = (EditText) view.findViewById(R.id.dist);
@@ -200,8 +192,7 @@ public class TripPlannerFrag extends Fragment implements
 		if (Utils.isOnline(getActivity())) {
 			mMap = mMapFrag.getExtendedMap();
 		} else {
-			ErrLog.log(getActivity(), "TripPlannerFrag.onCreateView()", null,
-					R.string.No_network_connection);
+			ErrLog.log(getActivity(), "TripPlannerFrag.onCreateView()", null, R.string.No_network_connection);
 		}
 	}
 
@@ -215,15 +206,13 @@ public class TripPlannerFrag extends Fragment implements
 			// Check if we were successful in obtaining the map.
 			if (mMap != null) {
 				mMap.setMyLocationEnabled(true);
-				mMap.setInfoWindowAdapter(new PopupAdapter(getActivity()
-						.getLayoutInflater()));
+				mMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
 				mMap.setOnInfoWindowClickListener(this);
 			} else {
 				Log.e(Utils.APPTAG, "null map");
 			}
 		} else {
-			ErrLog.log(getActivity(), "TripPlannerFrag.onResume()", null,
-					R.string.No_network_connection);
+			ErrLog.log(getActivity(), "TripPlannerFrag.onResume()", null, R.string.No_network_connection);
 		}
 	}
 
@@ -239,19 +228,15 @@ public class TripPlannerFrag extends Fragment implements
 		String distString = mDist.getText().toString();
 
 		if ("".equals(endString)) {
-			Toast.makeText(getActivity(), R.string.Enter_destination,
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), R.string.Enter_destination, Toast.LENGTH_LONG).show();
 		} else if ("".equals(distString)) {
-			Toast.makeText(getActivity(), R.string.Enter_distance,
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), R.string.Enter_distance, Toast.LENGTH_LONG).show();
 		} else {
 			// GO!!!
 			performClearMap();
-			int distance = (int) Utils.unitsToMeters(getActivity(),
-					Integer.parseInt(distString));
+			int distance = (int) Utils.unitsToMeters(getActivity(), Integer.parseInt(distString));
 
-			mDirectionsFrag.fetchDirections(startString, endString, distance,
-					mStops, mHere);
+			mDirectionsFrag.fetchDirections(startString, endString, distance, mStops, mHere);
 		}
 	}
 
@@ -293,8 +278,7 @@ public class TripPlannerFrag extends Fragment implements
 
 	@Override
 	public void postException(Exception e) {
-		Message msg = mHandler.obtainMessage(MessageHandler.DISPLAY_EXCEPTION,
-				e);
+		Message msg = mHandler.obtainMessage(MessageHandler.DISPLAY_EXCEPTION, e);
 		mHandler.sendMessage(msg);
 	}
 
@@ -319,9 +303,7 @@ public class TripPlannerFrag extends Fragment implements
 					mDirections = directions;
 					final Route route = routes.get(0);
 					Segment overview = route.getOverviewPolyline();
-					getActivity().runOnUiThread(
-							new RouteDisplayer(mMapFrag, route, overview,
-									distance));
+					getActivity().runOnUiThread(new RouteDisplayer(mMapFrag, route, overview, distance));
 					getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -342,9 +324,7 @@ public class TripPlannerFrag extends Fragment implements
 					ShowToast.show(getActivity(), R.string.No_routes);
 				}
 			} else {
-				ShowToast.show(getActivity(),
-						getActivity().getString(R.string.Status) + ": <"
-								+ status + ">");
+				ShowToast.show(getActivity(), getActivity().getString(R.string.Status) + ": <" + status + ">");
 			}
 		} else {
 			ShowToast.show(getActivity(), R.string.No_directions);
@@ -354,9 +334,7 @@ public class TripPlannerFrag extends Fragment implements
 	@Override
 	public void onBreweriesFetched(HashMap<Long, Brewery> breweries) {
 		this.mBreweries = breweries;
-		getActivity().runOnUiThread(
-				new BreweriesDisplayer(getActivity(), mMapFrag, breweries,
-						this, this));
+		getActivity().runOnUiThread(new BreweriesDisplayer(getActivity(), mMapFrag, breweries, this, this));
 	}
 
 	public void onBreweriesFetched(ArrayList<Long> breweryIds) {
@@ -402,14 +380,14 @@ public class TripPlannerFrag extends Fragment implements
 
 	@Override
 	public void onBreweriesDisplayed(HashMap<Long, Marker> markers) {
-		this.markers = markers;
+		this.mMarkers = markers;
 	}
 
 	private long getMarkerId(Marker marker) {
 		long id = -1;
 
-		for (Long key : markers.keySet()) {
-			if (markers.get(key).equals(marker)) {
+		for (Long key : mMarkers.keySet()) {
+			if (mMarkers.get(key).equals(marker)) {
 				id = key;
 				break;
 			}
@@ -466,8 +444,7 @@ public class TripPlannerFrag extends Fragment implements
 			ArrayList<Route> routes = mDirections.getRoutes();
 			Route route = routes.get(0);
 			LatLngBounds bounds = route.getBounds();
-			mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,
-					Utils.DEFAULT_ZOOM_PADDING));
+			mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, Utils.DEFAULT_ZOOM_PADDING));
 		}
 	}
 
@@ -484,8 +461,7 @@ public class TripPlannerFrag extends Fragment implements
 
 	protected void performSave() {
 		if (mDirections != null) {
-			SaveTrip saveDialog = SaveTrip.newInstance(mStart.getText()
-					.toString(), mEnd.getText().toString());
+			SaveTrip saveDialog = SaveTrip.newInstance(mStart.getText().toString(), mEnd.getText().toString());
 			saveDialog.registerListener(this);
 			saveDialog.show(getChildFragmentManager(), SAVE_TRIP_KEY);
 		} else {
@@ -494,8 +470,7 @@ public class TripPlannerFrag extends Fragment implements
 	}
 
 	protected void performLoad() {
-		FileListFragment loadDialog = FileListFragment.newInstance(
-				getActivity().getFilesDir(), FILE_SUFFIX);
+		FileListFragment loadDialog = FileListFragment.newInstance(getActivity().getFilesDir(), FILE_SUFFIX);
 		loadDialog.registerListener(this);
 		loadDialog.show(getChildFragmentManager(), LOAD_TRIP_KEY);
 	}
@@ -520,8 +495,7 @@ public class TripPlannerFrag extends Fragment implements
 		return filename;
 	}
 
-	public static Directions loadDirections(Context context,
-			String savedDirections) {
+	public static Directions loadDirections(Context context, String savedDirections) {
 		StringBuffer dirString = new StringBuffer();
 		Directions dir = null;
 		byte[] buffer = new byte[1024];
@@ -587,8 +561,7 @@ public class TripPlannerFrag extends Fragment implements
 	@Override
 	public void onRemoveFromRoute(long id) {
 		if (mStops.containsKey(id)) {
-			YesNoDialog dialog = YesNoDialog.getInstance(REMOVE_FROM_ROUTE,
-					getString(R.string.Remove_from_route), id);
+			YesNoDialog dialog = YesNoDialog.getInstance(REMOVE_FROM_ROUTE, getString(R.string.Remove_from_route), id);
 			dialog.registerListener(this);
 			dialog.show(getChildFragmentManager(), "YesNoFragment");
 		}
@@ -601,8 +574,7 @@ public class TripPlannerFrag extends Fragment implements
 
 	@Override
 	public void onDeleteMarker(long id) {
-		YesNoDialog dialog = YesNoDialog.getInstance(DELETE_MARKER,
-				getString(R.string.Delete_marker), id);
+		YesNoDialog dialog = YesNoDialog.getInstance(DELETE_MARKER, getString(R.string.Delete_marker), id);
 		dialog.registerListener(this);
 		dialog.show(getChildFragmentManager(), "YesNoFragment");
 	}
@@ -629,12 +601,12 @@ public class TripPlannerFrag extends Fragment implements
 
 	@Override
 	public void onZoomHere(long id) {
-		if (markers == null) {
+		if (mMarkers == null) {
 			ShowToast.show(getActivity(), R.string.No_markers);
 			return;
 		}
 
-		Marker marker = markers.get(id);
+		Marker marker = mMarkers.get(id);
 		if (marker == null) {
 			ShowToast.show(getActivity(), R.string.Marker_not_found);
 			return;
@@ -645,20 +617,16 @@ public class TripPlannerFrag extends Fragment implements
 			return;
 		}
 
-		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(marker.getPosition()).zoom(12).build();
-		mMap.animateCamera(CameraUpdateFactory
-				.newCameraPosition(cameraPosition));
+		CameraPosition cameraPosition = new CameraPosition.Builder().target(marker.getPosition()).zoom(12).build();
+		mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 
 	@Override
 	public void onSaveTrip(String name) {
-		File file = new File(getActivity().getFilesDir(), name + "."
-				+ FILE_SUFFIX);
+		File file = new File(getActivity().getFilesDir(), name + "." + FILE_SUFFIX);
 
 		if (file.exists()) {
-			FileExistsFragment existsDialog = FileExistsFragment
-					.newInstance(file.getName());
+			FileExistsFragment existsDialog = FileExistsFragment.newInstance(file.getName());
 			existsDialog.registerListener(this);
 			existsDialog.show(getChildFragmentManager(), FILE_EXISTS_KEY);
 		} else {
@@ -667,10 +635,9 @@ public class TripPlannerFrag extends Fragment implements
 	}
 
 	private void doSaveTrip(File file) {
+		SaveTripData data = new SaveTripData(mDirections.toString(), mBreweries.keySet(), mStops);
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
-		SaveTripData data = new SaveTripData(mDirections.toString(),
-				mBreweries.keySet(), mStops);
 
 		try {
 			fos = new FileOutputStream(file);
@@ -700,8 +667,7 @@ public class TripPlannerFrag extends Fragment implements
 
 	@Override
 	public void onFileSelected(String name) {
-		File file = new File(getActivity().getFilesDir(), name + "."
-				+ FILE_SUFFIX);
+		File file = new File(getActivity().getFilesDir(), name + "." + FILE_SUFFIX);
 		FileInputStream fis = null;
 		ObjectInputStream ois = null;
 		SaveTripData data = null;
@@ -725,10 +691,9 @@ public class TripPlannerFrag extends Fragment implements
 				mMap.clear();
 				Directions dir = new Directions(data.getDirections());
 				mStops = data.getStops();
-				displayRoute(dir, 10);
+				displayRoute(dir, 0);
 				onBreweriesFetched(data.getBreweries());
-				mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(dir
-						.getRoutes().get(0).getBounds(),
+				mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(dir.getRoutes().get(0).getBounds(),
 						Utils.DEFAULT_ZOOM_PADDING));
 			} catch (JSONException e) {
 				postException(e);
@@ -743,8 +708,11 @@ public class TripPlannerFrag extends Fragment implements
 			performRemoveFromRoute(data);
 			break;
 		case DELETE_MARKER:
-			Marker marker = markers.get(data);
+			Marker marker = mMarkers.get(data);
 			marker.remove();
+			mMarkers.remove(data);
+			
+			mBreweries.remove(data);
 
 			if (mStops.containsKey(data)) {
 				performRemoveFromRoute(data);

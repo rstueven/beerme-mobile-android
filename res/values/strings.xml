@@ -54,7 +54,7 @@
     <string name="Close">Close</string>
     <string name="Closed">Closed</string>
     <string name="contact">Contact</string>
-    <string name="copyright">©1992–2014 Richard Stueven</string>
+    <string name="copyright">©1992–2015 Richard Stueven</string>
     <string name="current_location">Current location</string>
     <string name="Database">Database</string>
     <string name="Database_downgrade_unsupported" formatted="false">Database downgrade from %d to %d is not supported.</string>

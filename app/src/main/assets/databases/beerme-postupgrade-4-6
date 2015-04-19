@@ -1,6 +1,0 @@
-BEGIN TRANSACTION;
-INSERT INTO brewerynotes (_id, breweryid, date, rating, notes) SELECT id, breweryid, date, rating, notes FROM brewerynotes_backup;
-INSERT INTO beernotes (_id, beerid, package, sampled, place, appscore, appearance, aroscore, aroma, mouscore, mouthfeel, ovrscore, notes) SELECT pagenumber, beerid, package, sampled, place, appscore, appearance, aroscore, aroma, mouscore, mouthfeel, ovrscore, notes FROM beernotes_backup;
-DROP TABLE brewerynotes_backup;
-DROP TABLE beernotes_backup;
-COMMIT;

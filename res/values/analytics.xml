@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Replace placeholder ID with your tracking ID -->
+    <string name="ga_trackingId">UA-11700291-2</string>
+
+    <!-- Enable automatic activity tracking -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Enable automatic exception tracking -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    
+	<!-- The screen names that will appear in your reporting -->
+	<string name="com.beerme.android.ui.BeerActivity">BeerActivity</string>
+	<string name="com.beerme.android.ui.BeerMeMapActivity">BeerMeMapActivity</string>
+	<string name="com.beerme.android.ui.BreweryActivity">BreweryActivity</string>
+	<string name="com.beerme.android.ui.BreweryListActivity">BreweryListActivity</string>
+	<string name="com.beerme.android.ui.MainActivity">MainActivity</string>
+	<string name="com.beerme.android.ui.Splash">Splash</string>
+					
+</resources>

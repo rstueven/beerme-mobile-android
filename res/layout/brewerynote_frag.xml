@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.BreweryNoteFrag" >
+
+    <TableLayout
+        android:id="@+id/brewerynote_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/brewerynote_visitedLabel"
+                android:layout_marginRight="10dp"
+                android:text="@string/Date"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/brewerynote_visited"
+                android:hint="@string/brewerynote_date_hint"
+                android:maxLines="2"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/brewerynote_ratingLabel"
+                android:layout_marginRight="10dp"
+                android:text="@string/Rating"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/brewerynote_rating"
+                android:hint="@string/zero"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/brewerynote_notesLabel"
+                android:layout_marginRight="10dp"
+                android:text="@string/Notes"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/brewerynote_notes"
+                android:hint="@string/beernote_overall_hint"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+    </TableLayout>
+
+</ScrollView>

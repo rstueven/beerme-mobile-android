@@ -10,11 +10,13 @@ public class SaveTripData implements Serializable {
 	private String mDirections = null;
 	private ArrayList<Long> mBreweries = new ArrayList<Long>();
 	private HashMap<Long, String> mStops = null;
+	private int mDist = 0;
 
-	public SaveTripData(String directions, Set<Long> breweries, HashMap<Long, String> stops) {
+	public SaveTripData(String directions, Set<Long> breweries, HashMap<Long, String> stops, int dist) {
 		this.mDirections = directions;
 		this.mBreweries.addAll(breweries);
 		this.mStops = stops;
+		this.mDist = dist;
 	}
 
 	public String getDirections() {
@@ -27,5 +29,9 @@ public class SaveTripData implements Serializable {
 
 	public HashMap<Long, String> getStops() {
 		return this.mStops;
+	}
+
+	public int getDist() {
+		return this.mDist;
 	}
 }

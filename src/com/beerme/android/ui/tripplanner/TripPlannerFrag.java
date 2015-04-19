@@ -336,7 +336,8 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	@Override
 	public void onBreweriesFetched(HashMap<Long, Brewery> breweries) {
 		this.mBreweries = breweries;
-		getActivity().runOnUiThread(new BreweriesDisplayer(getActivity(), mMapFrag, breweries, mDeletedBreweries, this, this));
+		getActivity().runOnUiThread(
+				new BreweriesDisplayer(getActivity(), mMapFrag, breweries, mDeletedBreweries, this, this));
 	}
 
 	public void onBreweriesFetched(ArrayList<Long> breweryIds) {
@@ -637,7 +638,8 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	}
 
 	private void doSaveTrip(File file) {
-		SaveTripData data = new SaveTripData(mDirections.toString(), mBreweries.keySet(), mStops);
+		SaveTripData data = new SaveTripData(mDirections.toString(), mBreweries.keySet(), mStops,
+				Integer.parseInt(mDist.getText().toString()));
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
 
@@ -693,7 +695,9 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 				mMap.clear();
 				Directions dir = new Directions(data.getDirections());
 				mStops = data.getStops();
+				int dist = data.getDist();
 				displayRoute(dir, 0);
+				mDist.setText(Integer.toString(dist));
 				onBreweriesFetched(data.getBreweries());
 				mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(dir.getRoutes().get(0).getBounds(),
 						Utils.DEFAULT_ZOOM_PADDING));

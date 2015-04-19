@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
@@ -31,9 +32,8 @@ import com.beerme.android.utils.Utils;
  * @author rstueven
  * 
  */
-public class Splash extends FragmentActivity implements
-		CheckLicenseTask.CheckLicenseListener, DbOpenHelper.OnDbOpenListener,
-		DatabaseUpdateAlerter {
+public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLicenseListener,
+		DbOpenHelper.OnDbOpenListener, DatabaseUpdateAlerter {
 	private static final int DATABASE_CHECK = 2;
 	private static final int DATABASE_DONE = 3;
 	private static final int LICENSE_CHECK = 4;
@@ -109,10 +109,8 @@ public class Splash extends FragmentActivity implements
 			case NETWORK_CHECK:
 				// Online?
 				if (!Utils.isOnline(instance)) {
-					ErrLog.log(instance, "Splash.onCreate()", null,
-							R.string.No_network_connection);
-					DialogFrag.newInstance(DialogFrag.Mode.OFFLINE).show(
-							instance.getSupportFragmentManager(),
+					ErrLog.log(instance, "Splash.onCreate()", null, R.string.No_network_connection);
+					DialogFrag.newInstance(DialogFrag.Mode.OFFLINE).show(instance.getSupportFragmentManager(),
 							"offline");
 				} else {
 					this.sendEmptyMessage(NETWORK_DONE);
@@ -131,12 +129,16 @@ public class Splash extends FragmentActivity implements
 				}
 				break;
 			case LICENSE_CHECK:
-				mLicenseDialog = ProgressDialog
-						.show(instance,
-								instance.getString(R.string.Checking_license),
-								"", true);
-				new Thread(new CheckLicenseTask(instance), "CheckLicenseTask")
-						.start();
+				if (Utils.getPlatformVersion().startsWith("5.0")) {
+					// Known bug: https://code.google.com/p/android/issues/detail?id=78505
+					Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
+					instance.mLicensed = true;
+					mHandler.sendEmptyMessage(LICENSE_OK);
+				} else {
+					mLicenseDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
+							true);
+					new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
+				}
 				break;
 			case LICENSE_OK:
 				mHandler.sendEmptyMessage(LICENSE_DONE);
@@ -145,8 +147,8 @@ public class Splash extends FragmentActivity implements
 				if (mLicenseDialog != null) {
 					mLicenseDialog.dismiss();
 				}
-				DialogFrag.newInstance(DialogFrag.Mode.UNLICENSED).show(
-						instance.getSupportFragmentManager(), "unlicensed");
+				DialogFrag.newInstance(DialogFrag.Mode.UNLICENSED).show(instance.getSupportFragmentManager(),
+						"unlicensed");
 				mHandler.sendEmptyMessage(LICENSE_DONE);
 				break;
 			case LICENSE_DONE:
@@ -159,14 +161,8 @@ public class Splash extends FragmentActivity implements
 				break;
 			case DATABASE_CHECK:
 				if (DbOpenHelper.isUpdating(instance)) {
-					if (Prefs
-							.getSettings(instance)
-							.getBoolean(
-									DatabaseUpdateAlert.SHOW_DB_UPDATE_ALERT_PREF,
-									true)) {
-						new DatabaseUpdateAlert().show(
-								instance.getSupportFragmentManager(),
-								"databaseUpdateAlert");
+					if (Prefs.getSettings(instance).getBoolean(DatabaseUpdateAlert.SHOW_DB_UPDATE_ALERT_PREF, true)) {
+						new DatabaseUpdateAlert().show(instance.getSupportFragmentManager(), "databaseUpdateAlert");
 					} else {
 						mHandler.sendEmptyMessage(DATABASE_DONE);
 					}
@@ -184,8 +180,7 @@ public class Splash extends FragmentActivity implements
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 				} finally {
-					instance.startActivity(new Intent(instance,
-							MainActivity.class));
+					instance.startActivity(new Intent(instance, MainActivity.class));
 					instance.finish();
 				}
 				break;

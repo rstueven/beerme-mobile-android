@@ -14,9 +14,8 @@ import com.google.android.vending.licensing.ServerManagedPolicy;
 
 public class CheckLicenseTask implements Runnable {
 	private static final String BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo0aACNgLXjwRhu5jPPVqwrE6woZcauIye54PtBDHcqoKf6x7TxMYqZwmFHln9n/ysM8gipjiYIJnc8CU+CGDvj92yQ70mVBFsRQIldhETBpDJi9fniazipRg6WD7iby1nRZ2F1JR3q6CYzqxeRFhf9cXsXLzkbapHCxllYgxCx4A5kqiOy2H7ybo+jkwCJ7eS7Txfg+i4LUXxh0/exk9k24GxTyEatW5TrX2cPyorM1aIFLYGx5Vn0l4FEI1thf6EX5fYizFGnOtQ4RmV4YajMwFNR/YnzIYSSg20xacY/2rQvEdhRfZ+5mm1ouQSOqXFZtffmZvMT8R90kZ1OPe3QIDAQAB";
-	private static final byte[] SALT = new byte[] { -40, 95, -14, 113, -120,
-			67, 15, -82, -118, -32, -54, -124, 82, -29, -15, 12, -2, 118, 99,
-			102 };
+	private static final byte[] SALT = new byte[] { -40, 95, -14, 113, -120, 67, 15, -82, -118, -32, -54, -124, 82,
+			-29, -15, 12, -2, 118, 99, 102 };
 	private Context mContext;
 
 	public interface CheckLicenseListener {
@@ -29,19 +28,14 @@ public class CheckLicenseTask implements Runnable {
 
 	@Override
 	public void run() {
-		String deviceId = Secure.getString(mContext.getContentResolver(),
-				Secure.ANDROID_ID);
-		BeerMeLicenseCheckerCallback callback = new BeerMeLicenseCheckerCallback(
-				mContext);
-		LicenseChecker checker = new LicenseChecker(mContext,
-				new ServerManagedPolicy(mContext, new AESObfuscator(SALT,
-						mContext.getPackageName(), deviceId)),
-				BASE64_PUBLIC_KEY);
+		String deviceId = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
+		BeerMeLicenseCheckerCallback callback = new BeerMeLicenseCheckerCallback(mContext);
+		LicenseChecker checker = new LicenseChecker(mContext, new ServerManagedPolicy(mContext, new AESObfuscator(SALT,
+				mContext.getPackageName(), deviceId)), BASE64_PUBLIC_KEY);
 		checker.checkAccess(callback);
 	}
 
-	private static class BeerMeLicenseCheckerCallback implements
-			LicenseCheckerCallback {
+	private static class BeerMeLicenseCheckerCallback implements LicenseCheckerCallback {
 		private Context mContext;
 		private CheckLicenseListener mListener;
 
@@ -89,31 +83,24 @@ public class CheckLicenseTask implements Runnable {
 				msg = "Unknown error.";
 				break;
 			}
-			String errMsg = String.format(
-					mContext.getString(R.string.Application_error), errorCode)
-					+ ": " + msg;
-			ErrLog.log(mContext,
-					"BeerMeLicenseCheckerCallback.applicationError("
-							+ errorCode + ")", null, errMsg);
+			String errMsg = String.format(mContext.getString(R.string.Application_error), errorCode) + ": " + msg;
+			ErrLog.log(mContext, "BeerMeLicenseCheckerCallback.applicationError(" + errorCode + ")", null, errMsg);
 			onLicenseChecked(false);
 		}
 
 		@Override
 		public void dontAllow(int reason) {
-			Log.i(Utils.APPTAG,
-					"Splash.BeerMeLicenseCheckerCallback.dontAllow(" + reason
-							+ ")");
+			Log.i(Utils.APPTAG, "Splash.BeerMeLicenseCheckerCallback.dontAllow(" + reason + ")");
 
-			ErrLog.log(mContext, "BeerMeLicenseCheckerCallback.dontAllow("
-					+ reason + ")", null, R.string.App_not_licensed);
+			ErrLog.log(mContext, "BeerMeLicenseCheckerCallback.dontAllow(" + reason + ")", null,
+					R.string.App_not_licensed);
 
 			onLicenseChecked(false);
 		}
 
 		private void onLicenseChecked(boolean result) {
 			if (Utils.DEBUG) {
-				Toast.makeText(mContext, "SKIPPING LICENSE CHECK",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext, "SKIPPING LICENSE CHECK", Toast.LENGTH_LONG).show();
 				mListener.onLicenseChecked(true);
 			} else {
 				mListener.onLicenseChecked(result);

@@ -129,7 +129,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				}
 				break;
 			case LICENSE_CHECK:
-				if (Utils.getPlatformVersion().startsWith("5.0")) {
+				if (Utils.getPlatformVersion().startsWith("5")) {
 					// Known bug: https://code.google.com/p/android/issues/detail?id=78505
 					Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
 					instance.mLicensed = true;

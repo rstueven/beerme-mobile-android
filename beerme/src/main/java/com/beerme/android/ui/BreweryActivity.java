@@ -60,6 +60,12 @@ public class BreweryActivity extends BeerMeActionBarActivity {
 			TextView addressView = (TextView) findViewById(R.id.brewery_address);
 			addressView.setText(mBrewery.getAddress());
 
+			TextView phoneView = (TextView) findViewById(R.id.brewery_phone);
+			phoneView.setText(mBrewery.getPhone());
+
+			TextView urlView = (TextView) findViewById(R.id.brewery_url);
+			urlView.setText(mBrewery.getWeb());
+
 			TextView statusView = (TextView) findViewById(R.id.brewery_status);
 			int statusCode = mBrewery.getStatus();
 			if (statusCode != BreweryStatusFilterPreference.OPEN) {

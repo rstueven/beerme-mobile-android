@@ -50,12 +50,8 @@ public class HoursFrag extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.hours_frag, container, false);
 
-		TextView phoneView = (TextView) view.findViewById(R.id.phone_view);
-		Utils.setTextOrGone(phoneView, mBrewery.getPhone());
-
 		TextView hoursView = (TextView) view.findViewById(R.id.hours_view);
 		String hours = mBrewery.getHours().replaceAll("([,\\.] )|\\.$", "<br/>");
-
 		Utils.setTextOrGone(hoursView, hours);
 
 		TableRow bar = (TableRow) (view.findViewById(R.id.hours_bar));
@@ -85,9 +81,6 @@ public class HoursFrag extends Fragment {
 
 		TableRow tours = (TableRow) (view.findViewById(R.id.hours_tours));
 		tours.setVisibility(mBrewery.hasTours() ? View.VISIBLE : View.GONE);
-
-		TextView urlView = (TextView) view.findViewById(R.id.url_view);
-		Utils.setTextOrGone(urlView, mBrewery.getWeb().replaceAll("/$", ""));
 
 		return view;
 	}

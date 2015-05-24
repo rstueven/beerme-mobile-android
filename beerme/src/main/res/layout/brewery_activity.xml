@@ -36,6 +36,9 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:text="@string/No_brewery_found"
+                    android:gravity="center"
+                    android:textIsSelectable="true"
+                    android:hapticFeedbackEnabled="true"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -51,6 +54,29 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:gravity="center"
+                    android:textIsSelectable="true"
+                    android:hapticFeedbackEnabled="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/brewery_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:autoLink="phone"
+                    android:textIsSelectable="true"
+                    android:hapticFeedbackEnabled="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/brewery_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:autoLink="web"
+                    android:textIsSelectable="true"
+                    android:hapticFeedbackEnabled="true"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 

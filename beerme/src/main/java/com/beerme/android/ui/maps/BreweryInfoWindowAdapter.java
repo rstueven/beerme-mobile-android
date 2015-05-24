@@ -16,7 +16,6 @@ import com.androidmapsextensions.Marker;
 import com.beerme.android.R;
 
 public class BreweryInfoWindowAdapter implements InfoWindowAdapter {
-	private Context context;
 	private LayoutInflater inflater;
 	private TextView tv;
 	private Collator collator = Collator.getInstance();
@@ -38,10 +37,9 @@ public class BreweryInfoWindowAdapter implements InfoWindowAdapter {
 	};
 
 	public BreweryInfoWindowAdapter(Context context, LayoutInflater inflater) {
-		this.context = context;
 		this.inflater = inflater;
 
-		tv = new TextView(this.context);
+		tv = new TextView(context);
 		tv.setTextColor(Color.BLACK);
 	}
 

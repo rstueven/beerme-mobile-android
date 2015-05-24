@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/aFileDialog/aFileDialog.iml" filepath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidmapsextensions/androidmapsextensions.iml" filepath="$PROJECT_DIR$/androidmapsextensions/androidmapsextensions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beerme/beerme.iml" filepath="$PROJECT_DIR$/beerme/beerme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android1.iml" filepath="$PROJECT_DIR$/beerme-mobile-android1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+    </modules>
+  </component>
+</project>

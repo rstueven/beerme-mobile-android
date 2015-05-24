@@ -1,0 +1,4 @@
+include ':aFileDialog'
+include ':androidmapsextensions'
+include ':library'
+include ':beerme'

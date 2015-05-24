@@ -5,15 +5,18 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/phone_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:autoLink="phone"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/hours_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <TableLayout
         android:layout_width="wrap_content"
@@ -124,4 +127,11 @@
         </TableRow>
     </TableLayout>
 
+    <TextView
+        android:id="@+id/url_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:autoLink="web"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

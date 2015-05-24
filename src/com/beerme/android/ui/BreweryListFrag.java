@@ -243,27 +243,30 @@ public class BreweryListFrag extends Fragment implements
 			Brewery brewery = getItem(position);
 
 			if (brewery != null) {
-				TextView nameView = (TextView) view
-						.findViewById(R.id.brewerylist_name);
+				TextView nameView = (TextView) view.findViewById(R.id.brewerylist_name);
 				nameView.setText(brewery.getName());
-				TextView addressView = (TextView) view
-						.findViewById(R.id.brewerylist_address);
+				
+				TextView addressView = (TextView) view.findViewById(R.id.brewerylist_address);
 				addressView.setText(brewery.getAddress());
 
-				TextView distanceView = (TextView) view
-						.findViewById(R.id.brewerylist_distance);
-				float distanceResults[] = new float[2];
-				Location.distanceBetween(mLocation.latitude,
-						mLocation.longitude, brewery.getLatitude(),
-						brewery.getLongitude(), distanceResults);
-				float distance = distanceResults[0];
-				String bearing = getString(Utils
-						.bearingToCompass(distanceResults[1]));
-				distanceView.setText(Utils.metersToUnits(getActivity(),
-						distance) + " " + bearing);
+				TextView phoneView = (TextView) view.findViewById(R.id.brewerylist_phone);
+				String phone = brewery.getPhone();
+				if (phone.equals("")) {
+					phoneView.setVisibility(View.GONE);
+				} else {
+					phoneView.setText(brewery.getPhone());
+					phoneView.setVisibility(View.VISIBLE);
+				}
 
-				LinearLayout servicesView = (LinearLayout) view
-						.findViewById(R.id.brewery_services);
+				TextView distanceView = (TextView) view.findViewById(R.id.brewerylist_distance);
+				float distanceResults[] = new float[2];
+				Location.distanceBetween(mLocation.latitude, mLocation.longitude,
+						brewery.getLatitude(), brewery.getLongitude(), distanceResults);
+				float distance = distanceResults[0];
+				String bearing = getString(Utils.bearingToCompass(distanceResults[1]));
+				distanceView.setText(Utils.metersToUnits(getActivity(), distance) + " " + bearing);
+
+				LinearLayout servicesView = (LinearLayout) view.findViewById(R.id.brewery_services);
 				brewery.displayServiceIcons(getActivity(), servicesView);
 			}
 

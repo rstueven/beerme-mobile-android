@@ -422,6 +422,10 @@ public class BeerMeMapFragment extends Fragment implements
 			snippet.append(brewery.getAddress());
 		}
 
+		if (!brewery.getPhone().equals("")) {
+			snippet.append("\n" + brewery.getPhone());
+		}
+
 		if (!brewery.getHours().equals("")) {
 			snippet.append("\n" + brewery.getHours());
 		}

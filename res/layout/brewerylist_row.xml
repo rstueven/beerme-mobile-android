@@ -24,11 +24,19 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/brewerylist_distance"
+        android:id="@+id/brewerylist_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/brewerylist_address"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/brewerylist_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/brewerylist_phone"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout

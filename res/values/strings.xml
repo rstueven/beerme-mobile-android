@@ -217,6 +217,7 @@
     <string name="Overall">Overall</string>
     <string name="Package">Package</string>
     <string name="pct_abv">% abv</string>
+    <string name="Phone">Phone: </string>
     <string name="Place">Place</string>
     <string name="Planned">Planned</string>
     <string name="Please_purchase">Please purchase it from Google Play.</string>

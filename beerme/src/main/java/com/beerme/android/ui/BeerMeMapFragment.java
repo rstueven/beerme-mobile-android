@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -366,7 +367,7 @@ public class BeerMeMapFragment extends Fragment implements
 						// Not already displayed
 						brewery = new Brewery(getActivity(), id);
 						visibleMarkers.put(id,
-								mMap.addMarker(initMarker(brewery)));
+                                mMap.addMarker(initMarker(brewery)));
 						visibleBreweries.put(id, brewery);
 					}
 				} else {
@@ -432,7 +433,6 @@ public class BeerMeMapFragment extends Fragment implements
 
 		opts.title(title.toString());
 		opts.snippet(snippet.toString());
-
 		return opts;
 	}
 
@@ -447,25 +447,26 @@ public class BeerMeMapFragment extends Fragment implements
 			mTrackLocation = true;
 			map.setOnCameraChangeListener(this);
 			map.setClustering(new ClusteringSettings()
-					.clusterSize(DEFAULT_CLUSTER_SIZE)
-					.clusterOptionsProvider(
-							new BeerMeClusterOptionsProvider(getResources()))
-					.addMarkersDynamically(true));
+                    .clusterSize(DEFAULT_CLUSTER_SIZE)
+                    .clusterOptionsProvider(
+                            new BeerMeClusterOptionsProvider(getResources()))
+                    .addMarkersDynamically(true));
 			map.setInfoWindowAdapter(new BreweryInfoWindowAdapter(
-					getActivity(), (LayoutInflater) getActivity()
-							.getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
+                    getActivity(), (LayoutInflater) getActivity()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
-					DEFAULT_ZOOM));
+                    DEFAULT_ZOOM));
 
 			map.setOnInfoWindowClickListener(this);
 			map.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
-				@Override
-				public boolean onMyLocationButtonClick() {
-					mTrackLocation = true;
-					return false;
-				}
-			});
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    mTrackLocation = true;
+                    return false;
+                }
+            });
+            map.setOnMarkerDragListener(onMarkerDragListener);
 		}
 
 		return map;

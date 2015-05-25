@@ -230,7 +230,11 @@
     <string name="Refresh_reload_data">Refresh or reload data</string>
     <string name="Remove_from_route">Remove from route</string>
     <string name="Replace">Replace</string>
-    <string name="Requires_network_access">This app requires network access to function. Check your network connection and restart the app.</string>
+    <string name="Requires_network_access">This app requires network access to function. Please check your network connection and restart the app.</string>
+    <string name="Requires_network_access_to_check_license">Network access is required to check
+        your licensing status. Please check your network connection and restart the app.</string>
+    <string name="Requires_network_access_to_update_database">Network access is required to
+        update the database.</string>
     <string name="Retail">Beer to Go / Off-License Sales</string>
     <string name="Save">Save</string>
     <string name="Score">Score</string>

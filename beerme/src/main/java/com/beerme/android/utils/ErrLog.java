@@ -29,8 +29,7 @@ public class ErrLog {
 	 */
 	public static void log(final Context context, final String methodName,
 			final Exception exception, final int userMessage) {
-		final String umsg = (userMessage == 0) ? "" : context.getText(
-				userMessage).toString();
+		final String umsg = (userMessage == 0) ? "" : context.getText(userMessage).toString();
 		log(context, methodName, exception, umsg);
 	}
 
@@ -50,8 +49,7 @@ public class ErrLog {
 			final Exception exception, final String userMessage) {
 		final Activity activity = (Activity) context;
 
-		Log.e(Utils.APPTAG, activity.getClass().getName() + "." + methodName
-				+ ": " + userMessage);
+		Log.e(Utils.APPTAG, activity.getClass().getName() + "." + methodName  + ": " + userMessage);
 
 		if (exception != null) {
 			String exMsg = exception.getLocalizedMessage();
@@ -62,8 +60,7 @@ public class ErrLog {
 			@Override
 			public void run() {
 				if (userMessage != null) {
-					Toast.makeText(activity, userMessage, Toast.LENGTH_LONG)
-							.show();
+					Toast.makeText(activity, userMessage, Toast.LENGTH_LONG).show();
 				}
 			}
 		});

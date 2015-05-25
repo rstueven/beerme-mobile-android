@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -39,13 +38,12 @@ public class NewsFrag extends Fragment {
 	private final static int LOAD_END = 2;
 	private ArrayList<NewsItem> mList = null;
 	private ListView mListView = null;
-	private NewsAdapter mAdapter;
+	// private NewsAdapter mAdapter;
 	private static NewsHandler mHandler = null;
 	private Thread mLoadThread = null;
 
 	public static NewsFrag getInstance() {
-		NewsFrag frag = new NewsFrag();
-		return frag;
+		return new NewsFrag();
 	}
 
 	@Override
@@ -108,50 +106,49 @@ public class NewsFrag extends Fragment {
 
 		@Override
 		public void run() {
-			String[] fields;
-			String line;
-			BufferedReader reader = null;
-			boolean interrupted = false;
+            if (Utils.isOnline(getActivity())) {
+                String[] fields;
+                String line;
+                BufferedReader reader = null;
+                boolean interrupted = false;
 
-			mList = new ArrayList<NewsItem>();
+                mList = new ArrayList<>();
 
-			try {
-				URLConnection conn = new URL(Utils.NEWS_URL).openConnection();
-				InputStream is = conn.getInputStream();
-				InputStreamReader isr = new InputStreamReader(is);
-				reader = new BufferedReader(isr, DEFAULT_BUFFER_SIZE);
+                try {
+                    URLConnection conn = new URL(Utils.NEWS_URL).openConnection();
+                    InputStream is = conn.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    reader = new BufferedReader(isr, DEFAULT_BUFFER_SIZE);
 
-				while ((line = reader.readLine()) != null) {
-					if (Thread.interrupted()) {
-						interrupted = true;
-						break;
-					}
-					fields = line.split("\\|", -1);
-					mList.add(new NewsItem(fields));
-				}
-			} catch (MalformedURLException e) {
-				ErrLog.log(getActivity(), "load.run()", e,
-						R.string.Network_problem);
-			} catch (IOException e) {
-				ErrLog.log(getActivity(), "load.run()", e,
-						R.string.Network_problem);
-			} catch (ParseException e) {
-				ErrLog.log(getActivity(), "load.run()", e,
-						R.string.Data_problem);
-			} finally {
-				try {
-					if (reader != null) {
-						reader.close();
-					}
-				} catch (IOException e) {
-					// Ignore
-				}
+                    while ((line = reader.readLine()) != null) {
+                        if (Thread.interrupted()) {
+                            interrupted = true;
+                            break;
+                        }
+                        fields = line.split("\\|", -1);
+                        mList.add(new NewsItem(fields));
+                    }
+                } catch (IOException e) {
+                    ErrLog.log(getActivity(), "load.run()", e,
+                            R.string.Network_problem);
+                } catch (ParseException e) {
+                    ErrLog.log(getActivity(), "load.run()", e,
+                            R.string.Data_problem);
+                } finally {
+                    try {
+                        if (reader != null) {
+                            reader.close();
+                        }
+                    } catch (IOException e) {
+                        // Ignore
+                    }
 
-				if (!interrupted) {
-					mHandler.sendEmptyMessage(LOAD_END);
-				}
-			}
-		}
+                    if (!interrupted) {
+                        mHandler.sendEmptyMessage(LOAD_END);
+                    }
+                }
+            }
+        }
 	};
 
 	public class NewsAdapter extends ArrayAdapter<NewsItem> {
@@ -203,7 +200,7 @@ public class NewsFrag extends Fragment {
 		WeakReference<NewsFrag> mRef;
 
 		NewsHandler(NewsFrag fragment) {
-			mRef = new WeakReference<NewsFrag>(fragment);
+			mRef = new WeakReference<>(fragment);
 		}
 
 		@Override
@@ -211,7 +208,6 @@ public class NewsFrag extends Fragment {
 			NewsFrag frag = mRef.get();
 			Activity activity = frag.getActivity();
 			ArrayList<NewsItem> list = frag.mList;
-			NewsAdapter adapter = frag.mAdapter;
 			ListView listView = frag.mListView;
 			switch (msg.what) {
 			case LOAD_START:
@@ -219,7 +215,7 @@ public class NewsFrag extends Fragment {
 				frag.mLoadThread.start();
 				break;
 			case LOAD_END:
-				adapter = frag.new NewsAdapter(activity, R.layout.news_item,
+				NewsAdapter adapter = frag.new NewsAdapter(activity, R.layout.news_item,
 						list);
 				listView.setAdapter(adapter);
 				adapter.notifyDataSetChanged();
@@ -228,5 +224,5 @@ public class NewsFrag extends Fragment {
 				super.handleMessage(msg);
 			}
 		}
-	};
+	}
 }

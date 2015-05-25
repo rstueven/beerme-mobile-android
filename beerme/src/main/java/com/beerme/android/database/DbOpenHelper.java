@@ -27,7 +27,7 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 	private static DbOpenHelper mInstance = null;
 
 	public interface OnDbOpenListener {
-		public void onDbOpen();
+		void onDbOpen();
 	}
 
 	private DbOpenHelper(final Context context) {
@@ -72,10 +72,8 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 
 				for (String key : indexStatements.keySet()) {
 					String[] idxStmts = indexStatements.get(key);
-					int n = idxStmts.length;
-
-					for (int i = 0; i < n; i++) {
-						db.execSQL(idxStmts[i]);
+					for (String idxStmt : idxStmts) {
+						db.execSQL(idxStmt);
 					}
 				}
 
@@ -108,9 +106,7 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		int i = oldVersion;
-		
-		for (i = ++oldVersion; i <= newVersion; i++) {
+		for (int i = ++oldVersion; i <= newVersion; i++) {
 			TableDefs.newInstance(i).upgrade(db);
 		}
 	}
@@ -136,7 +132,7 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 				false);
 	}
 
-	protected static final Context getContext() {
+	protected static Context getContext() {
 		return mContext;
 	}
 

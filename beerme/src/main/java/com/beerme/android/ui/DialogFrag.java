@@ -9,6 +9,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Toast;
@@ -20,11 +21,10 @@ public class DialogFrag extends DialogFragment {
 	private static final String TAG_MODE = "mode";
 
 	public enum Mode {
-		NONE, OFFLINE, UNLICENSED, SHOW_TELNO, NETWORK_ERROR, HELP
-	};
+		NONE, OFFLINE, UNLICENSED, SHOW_TELNO, NETWORK_ERROR, HELP, LICENSE_OFFLINE
+	}
 
-	private Mode mode = Mode.NONE;
-	private Activity mActivity = null;
+    private Activity mActivity = null;
 
 	public static DialogFrag newInstance(Mode mode) {
 		return newInstance(mode, null);
@@ -51,15 +51,14 @@ public class DialogFrag extends DialogFragment {
 		Utils.trackFragment(this);
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Bundle args = getArguments();
-		mode = Mode.values()[args.getInt(TAG_MODE)];
+        Mode mode = Mode.values()[args.getInt(TAG_MODE)];
 		mActivity = getActivity();
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 		builder.setCancelable(false);
-
-		boolean ok = true;
 
 		switch (mode) {
 		case OFFLINE:
@@ -127,16 +126,26 @@ public class DialogFrag extends DialogFragment {
 									int which) {
 							}
 						});
-				ok = true;
 			}
 			break;
+		case LICENSE_OFFLINE:
+			// MEDIUM: Positive button to send the user to Network settings
+			builder.setTitle(R.string.No_network_connection)
+					.setMessage(R.string.Requires_network_access_to_check_license)
+					.setNegativeButton(R.string.Exit,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+													int which) {
+									mActivity.finish();
+								}
+							});
+				break;
 		default:
 			Toast.makeText(getActivity(), "DialogFrag(" + mode.name() + ")",
 					Toast.LENGTH_LONG).show();
-			ok = false;
 			break;
 		}
 
-		return ok ? builder.create() : null;
+		return builder.create();
 	}
 }

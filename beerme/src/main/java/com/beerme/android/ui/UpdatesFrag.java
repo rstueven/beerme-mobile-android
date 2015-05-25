@@ -34,13 +34,11 @@ public class UpdatesFrag extends Fragment {
 	private final static int LOAD_END = 2;
 	private ArrayList<UpdatesItem> mList = null;
 	private ListView mListView = null;
-	private UpdatesAdapter mAdapter;
 	private static UpdatesHandler mHandler = null;
 	private Thread mLoadThread = null;
 
 	public static UpdatesFrag getInstance() {
-		UpdatesFrag frag = new UpdatesFrag();
-		return frag;
+		return new UpdatesFrag();
 	}
 
 	@Override
@@ -110,7 +108,7 @@ public class UpdatesFrag extends Fragment {
 		public void run() {
 			boolean interrupted = false;
 
-			mList = new ArrayList<UpdatesItem>();
+			mList = new ArrayList<>();
 
 			SQLiteDatabase db = null;
 			Cursor cursor = null;
@@ -197,7 +195,7 @@ public class UpdatesFrag extends Fragment {
 		WeakReference<UpdatesFrag> mRef;
 
 		UpdatesHandler(UpdatesFrag frag) {
-			mRef = new WeakReference<UpdatesFrag>(frag);
+			mRef = new WeakReference<>(frag);
 		}
 
 		@Override
@@ -205,7 +203,6 @@ public class UpdatesFrag extends Fragment {
 			UpdatesFrag frag = mRef.get();
 			Activity activity = frag.getActivity();
 			ArrayList<UpdatesItem> list = frag.mList;
-			UpdatesAdapter adapter = frag.mAdapter;
 			ListView listView = frag.mListView;
 			switch (msg.what) {
 			case LOAD_START:
@@ -213,7 +210,7 @@ public class UpdatesFrag extends Fragment {
 				frag.mLoadThread.start();
 				break;
 			case LOAD_END:
-				adapter = frag.new UpdatesAdapter(activity,
+				UpdatesAdapter adapter = frag.new UpdatesAdapter(activity,
 						R.layout.updates_item, list);
 				listView.setAdapter(adapter);
 				adapter.notifyDataSetChanged();
@@ -222,5 +219,5 @@ public class UpdatesFrag extends Fragment {
 				super.handleMessage(msg);
 			}
 		}
-	};
+	}
 }

@@ -2,7 +2,6 @@ package com.beerme.android.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,8 +33,7 @@ public class MainActivity extends BeerMeActionBarActivity {
         mServicesAvailable = Utils.checkPlayServices(this);
 
         mPrefs = Prefs.getSettings(this);
-        mNearbyPref = mPrefs.getString(Prefs.KEY_NEARBY_DISPLAY,
-                Prefs.KEY_NEARBY_DISPLAY_LIST);
+        mNearbyPref = mPrefs.getString(Prefs.KEY_NEARBY_DISPLAY, Prefs.KEY_NEARBY_DISPLAY_LIST);
 
         mAdapter = new MainPagerAdapter(this, getSupportFragmentManager());
         ViewPager mViewPager = (ViewPager) findViewById(R.id.main_pager);
@@ -97,9 +95,9 @@ public class MainActivity extends BeerMeActionBarActivity {
                 mMapFrag = BeerMeMapFragment.getInstance();
                 frag = mMapFrag;
             } else {
-                Editor editor = Prefs.getSettingsEditor(mContext);
-                editor.putString(Prefs.KEY_NEARBY_DISPLAY,  Prefs.KEY_NEARBY_DISPLAY_LIST);
-                Prefs.getSettingsSaver(mContext).savePreferences(editor, false);
+                // Editor editor = Prefs.getSettingsEditor(mContext);
+                // editor.putString(Prefs.KEY_NEARBY_DISPLAY,  Prefs.KEY_NEARBY_DISPLAY_LIST);
+                // Prefs.getSettingsSaver(mContext).savePreferences(editor, false);
                 mBreweryListFrag = BreweryListFrag.getInstance();
                 frag = mBreweryListFrag;
             }
@@ -121,9 +119,9 @@ public class MainActivity extends BeerMeActionBarActivity {
                     return UpdatesFrag.getInstance();
                 case 3:
                     return TripPlannerFrag.getInstance();
+                default:
+                    return null;
             }
-
-            return null;
         }
 
         @Override

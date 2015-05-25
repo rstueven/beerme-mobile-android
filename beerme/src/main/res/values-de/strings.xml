@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="dist_unit_index">dist_unit_index</string>
+    <string name="dist_unit_conversion">dist_unit_conversion</string>
+    <string name="nearby_display_index">nearby_display_index</string>
     <string name="About">Über diese App</string>
     <string name="about_translationGerman">Deutsche Übersetzung: Mario Kornmesser, Matthias Krümberg</string>
     <string name="action_clear_map">Karte leeren</string>
@@ -194,6 +197,7 @@
     <string name="No_markers">Keine Markierung verfügbar.</string>
     <string name="No_network_connection">Netzwerkverbindung fehlt.</string>
     <string name="No">Nein</string>
+    <string name="No_results">Keine Ergebnisse.</string>
     <string name="No_routes">Keine Route verfügbar.</string>
     <string name="northeast">NE</string>
     <string name="north">N</string>
@@ -230,6 +234,8 @@
     <string name="Remove_from_route">Von Route entfernen.</string>
     <string name="Replace">Erzetzen</string>
     <string name="Requires_network_access">Netzwerkverbindung fehlt.</string>
+    <string name="Requires_network_access_to_check_license">Netzwerkverbindung ist erforderlich, um Lizenz zu überprüfen.</string>
+    <string name="Requires_network_access_to_update_database">Netzwerkverbindung erforderlich, um die Datenbank zu aktualisieren.</string>
     <string name="Retail">Brauereiverkauf</string>
     <string name="Save">Speichern</string>
     <string name="search_hint">Was suchen Sie?</string>

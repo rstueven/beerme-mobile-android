@@ -1,4 +1,3 @@
 include ':aFileDialog'
-include ':androidmapsextensions'
-include ':library'
+include ':lvl'
 include ':beerme'

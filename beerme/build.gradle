@@ -8,6 +8,8 @@ android {
         applicationId "com.beerme.android"
         minSdkVersion 15
         targetSdkVersion 22
+        versionCode 40
+        versionName "2.4.0"
     }
 
     buildTypes {
@@ -19,9 +21,9 @@ android {
 }
 
 dependencies {
-    compile project(':library')
-    compile project(':androidmapsextensions')
-    compile project(':aFileDialog')
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.google.android.gms:play-services:7.3.0'
+    compile project(':lvl')
+    compile 'com.androidmapsextensions:android-maps-extensions:2.2.0'
+    compile project(':aFileDialog')
 }

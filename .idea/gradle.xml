@@ -10,9 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aFileDialog" />
-            <option value="$PROJECT_DIR$/androidmapsextensions" />
             <option value="$PROJECT_DIR$/beerme" />
-            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/lvl" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -3,10 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/aFileDialog/aFileDialog.iml" filepath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/androidmapsextensions/androidmapsextensions.iml" filepath="$PROJECT_DIR$/androidmapsextensions/androidmapsextensions.iml" />
       <module fileurl="file://$PROJECT_DIR$/beerme/beerme.iml" filepath="$PROJECT_DIR$/beerme/beerme.iml" />
       <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android.iml" filepath="$PROJECT_DIR$/beerme-mobile-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lvl/lvl.iml" filepath="$PROJECT_DIR$/lvl/lvl.iml" />
     </modules>
   </component>
 </project>

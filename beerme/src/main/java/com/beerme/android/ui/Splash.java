@@ -98,7 +98,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 		SQLiteDatabase mDb = null;
 
 		public SplashHandler(Splash instance) {
-			mRef = new WeakReference<Splash>(instance);
+			mRef = new WeakReference<>(instance);
 		}
 
 		@Override
@@ -117,28 +117,28 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				}
 				break;
 			case NETWORK_DONE:
-				// Check the license status, if it hasn't previously been
-				// approved
-				SharedPreferences settings = Prefs.getSettings(instance);
-				if (Utils.FREE_VERSION) {
-					instance.onLicenseChecked(true);
-				} else if (settings.getBoolean(Prefs.KEY_LICENSED, false)) {
-					instance.onLicenseChecked(true);
-				} else {
-					mHandler.sendEmptyMessage(LICENSE_CHECK);
-				}
+                mHandler.sendEmptyMessage(LICENSE_CHECK);
 				break;
 			case LICENSE_CHECK:
-				if (Utils.getPlatformVersion().startsWith("5")) {
-					// Known bug: https://code.google.com/p/android/issues/detail?id=78505
-					Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
-					instance.mLicensed = true;
-					mHandler.sendEmptyMessage(LICENSE_OK);
-				} else {
-					mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
-							true);
-					new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
-				}
+                // Check the license status, if it hasn't previously been
+                // approved
+                SharedPreferences settings = Prefs.getSettings(instance);
+                if (Utils.FREE_VERSION) {
+                    instance.onLicenseChecked(true);
+                } else if (settings.getBoolean(Prefs.KEY_LICENSED, false)) {
+                    instance.onLicenseChecked(true);
+                } else {
+                    if (Utils.getPlatformVersion().startsWith("5")) {
+                        // Known bug: https://code.google.com/p/android/issues/detail?id=78505
+                        Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
+                        instance.mLicensed = true;
+                        mHandler.sendEmptyMessage(LICENSE_OK);
+                    } else {
+                        mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
+                                true);
+                        new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
+                    }
+                }
 				break;
 			case LICENSE_OK:
 				mHandler.sendEmptyMessage(LICENSE_DONE);
@@ -188,8 +188,9 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				}
 
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(1500);
 				} catch (InterruptedException e) {
+					// Ignore
 				} finally {
 					instance.startActivity(new Intent(instance, MainActivity.class));
 					instance.finish();

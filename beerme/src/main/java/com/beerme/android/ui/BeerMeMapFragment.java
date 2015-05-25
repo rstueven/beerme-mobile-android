@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,11 +97,7 @@ public class BeerMeMapFragment extends Fragment implements
 	 */
 	private GoogleMap mMap = null;
 	/**
-	 * {@link android.support.v4.app.FragmentManager}
-	 */
-	private FragmentManager mFragMgr;
-	/**
-	 * {@link pl.mg6.android.maps.extensions.SupportMapFragment}
+	 * {@link com.androidmapsextensions.SupportMapFragment}
 	 */
 	private SupportMapFragment mMapFrag = null;
 	/**
@@ -110,13 +105,13 @@ public class BeerMeMapFragment extends Fragment implements
 	 */
 	private LatLng mLocation;
 	/**
-	 * List of visible markers, parallel with {@link visibleBreweries}
+	 * List of visible markers, parallel with {@link #visibleBreweries}
 	 */
-	private HashMap<Long, Marker> visibleMarkers = new HashMap<Long, Marker>();
+	private HashMap<Long, Marker> visibleMarkers = new HashMap<>();
 	/**
-	 * List of visible breweries, parallel with {@link visibleMarkers}
+	 * List of visible breweries, parallel with {@link #visibleMarkers}
 	 */
-	private HashMap<Long, Brewery> visibleBreweries = new HashMap<Long, Brewery>();
+	private HashMap<Long, Brewery> visibleBreweries = new HashMap<>();
 	/**
 	 * View of the map in the Layout
 	 */
@@ -130,8 +125,7 @@ public class BeerMeMapFragment extends Fragment implements
 	 * @return A new instance of the Fragment
 	 */
 	public static BeerMeMapFragment getInstance() {
-		final BeerMeMapFragment frag = new BeerMeMapFragment();
-		return frag;
+		return new BeerMeMapFragment();
 	}
 
 	/**
@@ -186,7 +180,10 @@ public class BeerMeMapFragment extends Fragment implements
 		super.onActivityCreated(savedInstanceState);
 		Utils.trackFragment(this);
 
-		mFragMgr = getActivity().getSupportFragmentManager();
+		/*
+	  {@link android.support.v4.app.FragmentManager}
+	 */
+		FragmentManager mFragMgr = getActivity().getSupportFragmentManager();
 
 		mMapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
 
@@ -320,12 +317,12 @@ public class BeerMeMapFragment extends Fragment implements
 	}
 
 	/**
-	 * Go through the {@link visibleBreweries list of breweries} and place or
+	 * Go through the {@link #visibleBreweries list of breweries} and place or
 	 * remove Markers as appropriate.
 	 */
 	private void loadMarkers() {
-		Brewery brewery = null;
-		long id = -1;
+		Brewery brewery;
+		long id;
 		Cursor cursor = null;
 		SQLiteDatabase db = null;
 
@@ -356,8 +353,6 @@ public class BeerMeMapFragment extends Fragment implements
 			cursor = db.query("brewery", columns, selection, null, null, null,
 					null);
 
-			id = -1;
-
 			while (cursor.moveToNext()) {
 				id = cursor.getInt(0);
 				if (mapBounds.contains(new LatLng(cursor.getDouble(1), cursor
@@ -374,7 +369,6 @@ public class BeerMeMapFragment extends Fragment implements
 					// Off-screen
 					if (visibleMarkers.get(id) != null) {
 						// No longer displayed
-						brewery = visibleBreweries.get(id);
 						visibleMarkers.get(id).remove();
 						visibleMarkers.remove(id);
 						visibleBreweries.remove(id);
@@ -408,27 +402,27 @@ public class BeerMeMapFragment extends Fragment implements
 
 		opts.position(new LatLng(brewery.getLatitude(), brewery.getLongitude()));
 
-		StringBuffer title = new StringBuffer(brewery.getName());
+		StringBuilder title = new StringBuilder(brewery.getName());
 
 		int status = brewery.getStatus();
 		if (!BreweryStatusFilterPreference.isOpen(status)) {
 			String statusString = getResources().getStringArray(
 					R.array.status_value)[BreweryStatusFilterPreference
 					.getIndex(status)];
-			title.append(" (" + statusString + ")");
+			title.append(" (").append(statusString).append(")");
 		}
 
-		StringBuffer snippet = new StringBuffer(64);
+		StringBuilder snippet = new StringBuilder(64);
 		if (!brewery.getAddress().equals("")) {
 			snippet.append(brewery.getAddress());
 		}
 
 		if (!brewery.getPhone().equals("")) {
-			snippet.append("\n" + brewery.getPhone());
+			snippet.append("\n").append(brewery.getPhone());
 		}
 
 		if (!brewery.getHours().equals("")) {
-			snippet.append("\n" + brewery.getHours());
+			snippet.append("\n").append(brewery.getHours());
 		}
 
 		opts.title(title.toString());
@@ -447,35 +441,33 @@ public class BeerMeMapFragment extends Fragment implements
 			mTrackLocation = true;
 			map.setOnCameraChangeListener(this);
 			map.setClustering(new ClusteringSettings()
-                    .clusterSize(DEFAULT_CLUSTER_SIZE)
-                    .clusterOptionsProvider(
-                            new BeerMeClusterOptionsProvider(getResources()))
-                    .addMarkersDynamically(true));
+					.clusterSize(DEFAULT_CLUSTER_SIZE)
+					.clusterOptionsProvider(
+							new BeerMeClusterOptionsProvider(getResources()))
+					.addMarkersDynamically(true));
 			map.setInfoWindowAdapter(new BreweryInfoWindowAdapter(
-                    getActivity(), (LayoutInflater) getActivity()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
+					getActivity(), (LayoutInflater) getActivity()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
-                    DEFAULT_ZOOM));
+					DEFAULT_ZOOM));
 
 			map.setOnInfoWindowClickListener(this);
 			map.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    mTrackLocation = true;
-                    return false;
-                }
-            });
-            map.setOnMarkerDragListener(onMarkerDragListener);
+				@Override
+				public boolean onMyLocationButtonClick() {
+					mTrackLocation = true;
+					return false;
+				}
+			});
 		}
 
 		return map;
 	}
 
 	/**
-	 * @param marker
-	 * @return long corresponding to the {@link Brewery} associated with this
-	 *         {@link Marker}
+	 * @param marker {@link Marker}
+	 * @return {@link Brewery} id associated with this {@link Marker}
 	 */
 	private long getMarkerId(Marker marker) {
 		long id = -1;

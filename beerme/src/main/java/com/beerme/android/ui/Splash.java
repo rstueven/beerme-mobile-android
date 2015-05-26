@@ -25,6 +25,7 @@ import com.beerme.android.utils.DatabaseUpdateAlert;
 import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.utils.Version;
 
 import java.lang.ref.WeakReference;
 
@@ -124,7 +125,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
                     // Check the license status, if it hasn't previously been
                     // approved
                     SharedPreferences settings = Prefs.getSettings(instance);
-                    if (Utils.FREE_VERSION) {
+                    if (Version.FREE) {
                         instance.onLicenseChecked(true);
                     } else if (settings.getBoolean(Prefs.KEY_LICENSED, false)) {
                         instance.onLicenseChecked(true);

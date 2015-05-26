@@ -21,13 +21,13 @@ import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.database.TableDefs;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.utils.Version;
 
 // http://mobile.tutsplus.com/tutorials/android/android-sdk_content-providers/
 
 public class SuggestionProvider extends ContentProvider {
-	private static final String AUTHORITY = "com.beerme.android.search.SuggestionProvider";
-	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
-			+ "/suggestion");
+	private static final String AUTHORITY = Version.SEARCH_PROVIDER_AUTHORITY;
+	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/suggestion");
 	private static final int DEFAULT_LIMIT = 10;
 	public static final int SUGGESTIONS = 1;
 	public static final int GET = 3;
@@ -72,7 +72,7 @@ public class SuggestionProvider extends ContentProvider {
 			SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA };
 
 	public Cursor getSuggestions(String[] selectionArgs, int limit) {
-		ArrayList<Row> map = new ArrayList<Row>();
+		ArrayList<Row> map = new ArrayList<>();
 		String queryString = "";
 
 		if (selectionArgs != null) {
@@ -158,7 +158,7 @@ public class SuggestionProvider extends ContentProvider {
 				} else if (lhsId != 0 && rhsId == 0) {
 					// Brewery/Beer vs Location
 					return -1;
-				} else if (lhsId == 0 && rhsId == 0) {
+				} else if (lhsId == 0) {
 					// Location vs Location
 					return lhsCol1.compareToIgnoreCase(rhsCol1);
 				} else {
@@ -172,15 +172,15 @@ public class SuggestionProvider extends ContentProvider {
 		MatrixCursor matrix = new MatrixCursor(COLUMNS);
 
 		for (Row row : map) {
-			matrix.addRow(new Object[] { Long.valueOf(row.id), row.col1,
-					row.col2, Long.valueOf(row.dataId), row.location });
+			matrix.addRow(new Object[] {row.id, row.col1,
+					row.col2, row.dataId, row.location });
 		}
 
 		return matrix;
 	}
 
 	public Cursor get(String id) {
-		SQLiteDatabase db = null;
+		SQLiteDatabase db;
 		Cursor cursor = null;
 
 		try {

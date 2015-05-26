@@ -47,7 +47,6 @@ import java.util.Locale;
  * @author rstueven
  */
 public class Utils {
-    public static final boolean FREE_VERSION = false;
     public static final boolean DEBUG = false;
     public static final boolean DEBUG_LOCAL_NET = false;
     public static final String APPTAG = "beerme";

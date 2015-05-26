@@ -28,6 +28,7 @@ import com.beerme.android.utils.FileUtils;
 import com.beerme.android.utils.Help;
 import com.beerme.android.utils.SendUpdateDialog;
 import com.beerme.android.utils.Utils;
+import com.beerme.android.utils.Version;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -40,7 +41,7 @@ public abstract class BeerMeActionBarActivity extends ActionBarActivity {
 	protected void onStart() {
 		super.onStart();
 
-		if (Utils.FREE_VERSION) {
+		if (Version.FREE) {
 			adView = (AdView) findViewById(R.id.adView);
 			if (adView != null) {
 				adView.setVisibility(View.VISIBLE);

@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 41
+        versionCode 42
     }
 
     buildTypes {
@@ -20,18 +20,18 @@ android {
     productFlavors {
         paid {
             applicationId "com.beerme.android"
-            versionName "2.4.0"
+            versionName "2.5.1"
         }
         free {
             applicationId "com.beerme.android_free"
-            versionName "2.4.0 (free)"
+            versionName "2.5.1 (free)"
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.1.1'
-    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.google.android.gms:play-services:7.5.0'
     compile project(':lvl')
     compile 'com.androidmapsextensions:android-maps-extensions:2.2.0'
     compile project(':aFileDialog')

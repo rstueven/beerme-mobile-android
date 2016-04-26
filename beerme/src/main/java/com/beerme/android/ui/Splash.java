@@ -6,7 +6,6 @@ package com.beerme.android.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.beerme.android.utils.DatabaseUpdateAlert;
 import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
 import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
-import com.beerme.android.utils.Version;
 
 import java.lang.ref.WeakReference;
 
@@ -122,30 +120,34 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 				break;
 */
                 case LICENSE_CHECK:
-                    // Check the license status, if it hasn't previously been
-                    // approved
-                    SharedPreferences settings = Prefs.getSettings(instance);
-                    if (Version.FREE) {
-                        instance.onLicenseChecked(true);
-                    } else if (settings.getBoolean(Prefs.KEY_LICENSED, false)) {
-                        instance.onLicenseChecked(true);
-                    } else {
-                        if (Utils.getPlatformVersion().startsWith("5")) {
-                            // Known bug: https://code.google.com/p/android/issues/detail?id=78505
-                            Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
-                            instance.mLicensed = true;
-                            mHandler.sendEmptyMessage(LICENSE_OK);
-                        } else if (Utils.isOnline(instance)) {
-                            mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
-                                    true);
-                            new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
-                        } else {
-                            ErrLog.log(instance, "Splash.onCreate()", null, R.string.Requires_network_access_to_check_license);
-                            DialogFrag.newInstance(DialogFrag.Mode.LICENSE_OFFLINE).show(instance
-                                            .getSupportFragmentManager(),
-                                    "offline");
-                        }
-                    }
+                    // Check the license status, if it hasn't previously been approved
+//                    SharedPreferences settings = Prefs.getSettings(instance);
+//                    if (Version.FREE) {
+//                        instance.onLicenseChecked(true);
+//                    } else if (settings.getBoolean(Prefs.KEY_LICENSED, false)) {
+//                        instance.onLicenseChecked(true);
+//                    } else {
+//                        if (Utils.getPlatformVersion().startsWith("5")) {
+//                            // Known bug: https://code.google.com/p/android/issues/detail?id=78505
+//                            Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
+//                            instance.mLicensed = true;
+//                            mHandler.sendEmptyMessage(LICENSE_OK);
+//                        } else if (Utils.isOnline(instance)) {
+//                            mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Checking_license), "",
+//                                    true);
+//                            new Thread(new CheckLicenseTask(instance), "CheckLicenseTask").start();
+//                        } else {
+//                            ErrLog.log(instance, "Splash.onCreate()", null, R.string.Requires_network_access_to_check_license);
+//                            DialogFrag.newInstance(DialogFrag.Mode.LICENSE_OFFLINE).show(instance
+//                                            .getSupportFragmentManager(),
+//                                    "offline");
+//                        }
+//                    }
+
+                    // Known bug: https://code.google.com/p/android/issues/detail?id=78505
+                    Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
+                    instance.mLicensed = true;
+                    mHandler.sendEmptyMessage(LICENSE_OK);
                     break;
                 case LICENSE_OK:
                     mHandler.sendEmptyMessage(LICENSE_DONE);

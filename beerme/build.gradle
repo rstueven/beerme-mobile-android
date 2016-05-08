@@ -20,11 +20,11 @@ android {
     productFlavors {
         paid {
             applicationId "com.beerme.android"
-            versionName "2.4.0"
+            versionName "2.4.2"
         }
         free {
             applicationId "com.beerme.android_free"
-            versionName "2.4.0 (free)"
+            versionName "2.4.2 (free)"
         }
     }
 }

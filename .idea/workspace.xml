@@ -10,30 +10,9 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a639167-8100-4868-8801-d8d25a6c852c" name="Default" comment="Code cleanup.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_maps_extensions_2_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_maps_extensions_2_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_appindexing_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_appindexing_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_base_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_base_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_cast_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_cast_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_drive_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_drive_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_games_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_games_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_gcm_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_gcm_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_identity_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_identity_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_location_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_location_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_safetynet_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_safetynet_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_wallet_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_wallet_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_wearable_7_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_wearable_7_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_22_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_22_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="5a639167-8100-4868-8801-d8d25a6c852c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" afterPath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/beerme-mobile-android.iml" afterPath="$PROJECT_DIR$/beerme-mobile-android.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/beerme/beerme.iml" afterPath="$PROJECT_DIR$/beerme/beerme.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lvl/lvl.iml" afterPath="$PROJECT_DIR$/lvl/lvl.iml" />
     </list>
     <ignored path="beerme-mobile-android.iws" />
@@ -4314,7 +4293,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="7310586579736" />
+        <entry key="$PROJECT_DIR$" value="7310586716288" />
         <entry key="$PROJECT_DIR$/../beermemobile" value="4284494827943" />
       </map>
     </option>
@@ -5279,7 +5258,13 @@
       <option name="project" value="LOCAL" />
       <updated>1432587440962</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Master. (For now.)">
+      <created>1462725881548</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1462725881548</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -5343,7 +5328,8 @@
     <MESSAGE value="Move license-checking logic to LICENSE_CHECK." />
     <MESSAGE value="Disable maps and database updates when no network connection." />
     <MESSAGE value="Code cleanup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Code cleanup." />
+    <MESSAGE value="Master. (For now.)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Master. (For now.)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -5392,8 +5378,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
           <folding>
-            <element signature="e#1590#1591#0" expanded="true" />
-            <element signature="e#1608#1609#0" expanded="true" />
+            <element signature="e#1590#1591#0" expanded="false" />
+            <element signature="e#1608#1609#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -5697,8 +5683,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
           <folding>
-            <element signature="e#1590#1591#0" expanded="true" />
-            <element signature="e#1608#1609#0" expanded="true" />
+            <element signature="e#1590#1591#0" expanded="false" />
+            <element signature="e#1608#1609#0" expanded="false" />
           </folding>
         </state>
       </provider>

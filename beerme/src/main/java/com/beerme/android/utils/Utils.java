@@ -452,7 +452,15 @@ public class Utils {
 
     @SuppressLint("InlinedApi")
     public static boolean isLocationServiceEnabled(Context context) {
+        if (context == null) {
+            return false;
+        }
+
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (lm == null) {
+            return false;
+        }
+
         String provider = lm.getBestProvider(new Criteria(), true);
         if (SUPPORTS_FROYO) {
             return (!(provider == null || LocationManager.PASSIVE_PROVIDER.equals(provider)));

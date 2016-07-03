@@ -11,13 +11,8 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a639167-8100-4868-8801-d8d25a6c852c" name="Default" comment="Bump version number.">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_1_1.xml" />
+    <list default="true" id="5a639167-8100-4868-8801-d8d25a6c852c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" afterPath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/beerme/beerme.iml" afterPath="$PROJECT_DIR$/beerme/beerme.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/beerme/build.gradle" afterPath="$PROJECT_DIR$/beerme/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lvl/lvl.iml" afterPath="$PROJECT_DIR$/lvl/lvl.iml" />
     </list>
     <ignored path="beerme-mobile-android.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -5318,7 +5313,13 @@
       <option name="project" value="LOCAL" />
       <updated>1467557679563</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Bump version number.">
+      <created>1467557845524</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1467557845524</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">

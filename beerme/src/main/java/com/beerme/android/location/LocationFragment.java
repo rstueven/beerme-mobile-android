@@ -1,7 +1,5 @@
 package com.beerme.android.location;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -14,6 +12,8 @@ import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import java.util.ArrayList;
 
 public abstract class LocationFragment extends Fragment {
 	protected static final int MIN_TIME = 10000;
@@ -78,7 +78,7 @@ public abstract class LocationFragment extends Fragment {
 
 	protected Location getDefaultLocation() {
 		Location location = new Location("default");
-		SharedPreferences settings = Prefs.getSettings(getActivity());
+		SharedPreferences settings = Prefs.getSettings(mActivity);
 
 		if (settings.getString(Prefs.KEY_DEFAULT_LOCATION, null) != null) {
 			location = new Location("default");
@@ -87,7 +87,7 @@ public abstract class LocationFragment extends Fragment {
 			location.setLongitude(settings.getFloat(
 					Prefs.KEY_DEFAULT_LONGITUDE, 0));
 		} else {
-			ErrLog.log(getActivity(), "LocationFragment.getDefaultLocation",
+			ErrLog.log(mActivity, "LocationFragment.getDefaultLocation",
 					null, R.string.Unknown_location);
 		}
 

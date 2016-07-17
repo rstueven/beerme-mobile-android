@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="_home_rstueven_dev_adt_bundle_linux_x86_64_20140702_sdk_platforms_android_22_android_jar-android-22">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../adt-bundle-linux-x86_64-20140702/sdk/platforms/android-22/android.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

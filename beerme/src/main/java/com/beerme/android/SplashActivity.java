@@ -15,10 +15,13 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // This creates the database if it hasn't already been created.
         final DBHelper dbHelper = DBHelper.getInstance(this);
         dbHelper.getReadableDatabase();
 
         // TODO: Download database updates in a background Thread.
+        final Intent mDbUpdate = new Intent(this, DBUpdateService.class);
+        startService(mDbUpdate);
 
         // TODO: Ask for permission(s) here?
 

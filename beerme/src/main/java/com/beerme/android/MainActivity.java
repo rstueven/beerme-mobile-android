@@ -31,7 +31,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction {
+        OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction,
+        GoogleMap.OnMyLocationButtonClickListener {
     private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
     private static final String KEY_LOCATION = "KEY_LOCATION";
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
@@ -134,6 +135,7 @@ public class MainActivity extends FragmentActivity
             //noinspection MissingPermission
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.setOnMyLocationButtonClickListener(this);
         }
 
         if (mCameraPosition != null) {
@@ -220,7 +222,7 @@ public class MainActivity extends FragmentActivity
     public void onLocationChanged(final Location location) {
         mCurrentLocation = location;
 
-        if ((mCurrentLocation != null) && (mMap != null)) {
+        if ((mCurrentLocation != null) && (mMap != null) && mRequestingLocationUpdates) {
             final LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
@@ -233,6 +235,14 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onUpdateMapAfterUserInteraction() {
         // http://dimitar.me/how-to-detect-a-user-pantouchdrag-on-android-map-v2/
-        Log.d("beerme", "onUpdateMapAfterUserInteraction()");
+        mRequestingLocationUpdates = false;
+        stopLocationUpdates();
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        mRequestingLocationUpdates = true;
+        startLocationUpdates();
+        return false;
     }
 }

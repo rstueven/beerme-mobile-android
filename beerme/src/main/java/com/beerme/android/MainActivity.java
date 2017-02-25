@@ -21,17 +21,23 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, LocationListener {
+public class MainActivity extends FragmentActivity
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        OnMapReadyCallback, LocationListener {
+    private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
+    private static final String KEY_LOCATION = "KEY_LOCATION";
+    private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
+    private CameraPosition mCameraPosition;
     private Location mCurrentLocation;
     private boolean mRequestingLocationUpdates = true;
     private LocationRequest mLocationRequest;
@@ -40,6 +46,12 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState != null) {
+            mRequestingLocationUpdates = savedInstanceState.getBoolean(KEY_REQUESTING_LOCATION_UPDATES, true);
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -104,6 +116,14 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     @Override
+    public void onSaveInstanceState(final Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(KEY_REQUESTING_LOCATION_UPDATES, mRequestingLocationUpdates);
+        savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
+        savedInstanceState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -114,11 +134,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             //noinspection MissingPermission
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
 
-            if (mCurrentLocation != null) {
-                final LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            }
+        if (mCameraPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        } else if (mCurrentLocation != null) {
+            final LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
 

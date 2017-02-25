@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        OnMapReadyCallback, LocationListener {
+        OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction {
     private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
     private static final String KEY_LOCATION = "KEY_LOCATION";
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
@@ -228,5 +228,11 @@ public class MainActivity extends FragmentActivity
 
     private boolean hasLocationPermission() {
         return ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onUpdateMapAfterUserInteraction() {
+        // http://dimitar.me/how-to-detect-a-user-pantouchdrag-on-android-map-v2/
+        Log.d("beerme", "onUpdateMapAfterUserInteraction()");
     }
 }

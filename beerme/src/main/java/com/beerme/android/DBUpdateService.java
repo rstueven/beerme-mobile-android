@@ -4,12 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -51,17 +51,70 @@ public class DBUpdateService extends IntentService {
 
         final String urlString = BREWERYLIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
+        String line = "LINE ZERO";
         try {
             final URL url = new URL(urlString);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
+
+            // id, name, address, latitude, longitude, status, svc, updated, phone, hours, url, image
+            String[] values;
+            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO brewery (_id, name, address, latitude, longitude, status, services, updated, phone, hours, web, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             while ((line = reader.readLine()) != null) {
-                Log.d("beerme", line);
+                stmt.clearBindings();
+                values = line.split("\\|", -1);
+
+                // _id
+                try {
+                    stmt.bindLong(1, Integer.parseInt(values[0]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // name
+                stmt.bindString(2, values[1]);
+                // address
+                stmt.bindString(3, values[2]);
+                // latitude
+                try {
+                    stmt.bindDouble(4, Float.parseFloat(values[3]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // longitude
+                try {
+                    stmt.bindDouble(5, Float.parseFloat(values[4]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // status
+                try {
+                    stmt.bindLong(6, Integer.parseInt(values[5]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // svc
+                try {
+                    stmt.bindLong(7, Integer.parseInt(values[6]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // updated
+                stmt.bindString(8, values[7]);
+                // phone
+                stmt.bindString(9, values[8]);
+                // hours
+                stmt.bindString(10, values[9]);
+                // web
+                stmt.bindString(11, values[10]);
+                // image
+                stmt.bindString(12, values[11]);
+
+                stmt.execute();
             }
 
             reader.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            Log.e("fanapp", "loadBreweryUpdates(): " + line);
             Log.e("fanapp", "loadBreweryUpdates(): " + e.getLocalizedMessage());
         }
     }
@@ -77,17 +130,69 @@ public class DBUpdateService extends IntentService {
 
         final String urlString = BEERLIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
+        String line = "LINE ZERO";
+
         try {
             final URL url = new URL(urlString);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
+
+            // id, breweryid, name, updated, style, abv, image, score
+            String[] values;
+            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO beer (_id, breweryid, name, updated, style, abv, image, beermerating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
             while ((line = reader.readLine()) != null) {
-                Log.d("beerme", line);
+                stmt.clearBindings();
+                values = line.split("\\|", -1);
+
+                // _id
+                try {
+                    stmt.bindLong(1, Integer.parseInt(values[0]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // breweryid
+                try {
+                stmt.bindLong(2, Integer.parseInt(values[1]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // name
+                stmt.bindString(3, values[2]);
+                // updated
+                stmt.bindString(4, values[3]);
+                // style
+                if (!values[4].isEmpty()) {
+                    try {
+                        stmt.bindLong(5, Integer.parseInt(values[4]));
+                    } catch (final NumberFormatException e) {
+                        numberFormatWarn(e, line);
+                    }
+                }
+                // abv
+                if (!values[5].isEmpty()) {
+                    try {
+                        stmt.bindDouble(6, Double.parseDouble(values[5]));
+                    } catch (final NumberFormatException e) {
+                        numberFormatWarn(e, line);
+                    }
+                }
+                // image
+                stmt.bindString(7, values[6]);
+                // score
+                if (!values[7].isEmpty()) {
+                    try {
+                        stmt.bindDouble(8, Double.parseDouble(values[7]));
+                    } catch (final NumberFormatException e) {
+                        numberFormatWarn(e, line);
+                    }
+                }
+
+                stmt.execute();
             }
 
             reader.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            Log.e("fanapp", "loadBeerUpdates(): " + line);
             Log.e("fanapp", "loadBeerUpdates(): " + e.getLocalizedMessage());
         }
     }
@@ -103,18 +208,43 @@ public class DBUpdateService extends IntentService {
 
         final String urlString = STYLELIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
+        String line = "LINE ZERO";
+
         try {
             final URL url = new URL(urlString);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
+
+            // id, name, updated
+            String[] values;
+            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO style VALUES (?, ?, ?)");
 
             while ((line = reader.readLine()) != null) {
-                Log.d("beerme", line);
+                stmt.clearBindings();
+                values = line.split("\\|", -1);
+
+                // _id
+                try {
+                    stmt.bindLong(1, Integer.parseInt(values[0]));
+                } catch (final NumberFormatException e) {
+                    numberFormatWarn(e, line);
+                }
+                // name
+                stmt.bindString(2, values[1]);
+                // updated
+                stmt.bindString(3, values[2]);
+
+                stmt.execute();
             }
 
             reader.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            Log.e("fanapp", "loadStyleUpdates(): " + line);
             Log.e("fanapp", "loadStyleUpdates(): " + e.getLocalizedMessage());
         }
+    }
+
+    private void numberFormatWarn(final Exception e, final String line) {
+        Log.w("fanapp", "NUMBER FORMAT:" + line);
+        Log.w("fanapp", "NUMBER FORMAT: " + e.getLocalizedMessage());
     }
 }

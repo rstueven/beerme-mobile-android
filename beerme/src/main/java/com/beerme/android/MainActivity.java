@@ -11,9 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.Toast;
 
+import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
+import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
 import com.google.android.gms.common.ConnectionResult;
@@ -46,6 +49,7 @@ public class MainActivity extends FragmentActivity
     private Location mCurrentLocation;
     private boolean mRequestingLocationUpdates = true;
     private LocationRequest mLocationRequest;
+    private SparseArray<LatLng> mPointsOnMap = new SparseArray<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -135,6 +139,8 @@ public class MainActivity extends FragmentActivity
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnCameraIdleListener(this);
+        googleMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
+
 
         if (hasLocationPermission()) {
             //noinspection MissingPermission
@@ -255,6 +261,8 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void onCameraIdle() {
+        final MarkerOptions options = new MarkerOptions();
+
         // TODO: Should run in background. Service?
         final LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 
@@ -263,7 +271,20 @@ public class MainActivity extends FragmentActivity
 
         final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
         final Cursor c = db.rawQuery(sql, null);
-        Log.d("beerme", "COUNT: " + c.getCount());
+
+        int id;
+        LatLng latlng;
+        while (c.moveToNext()) {
+            id = c.getInt(0);
+            Log.d("beerme", "ID: " + id);
+            if (mPointsOnMap.get(id) == null) {
+                Log.d("beerme", "ADDING MARKER: " + c.getString(1));
+                latlng = new LatLng(c.getFloat(2), c.getFloat(3));
+                mMap.addMarker(options.title(c.getString(1)).position(latlng));
+                mPointsOnMap.append(id, latlng);
+            }
+        }
+
         c.close();
     }
 }

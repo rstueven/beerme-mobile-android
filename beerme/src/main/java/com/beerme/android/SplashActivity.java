@@ -19,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         final DBHelper dbHelper = DBHelper.getInstance(this);
         dbHelper.getReadableDatabase();
 
-        // TODO: Download database updates in a background Thread.
+        // Download database updates in a background Thread.
         final Intent mDbUpdate = new Intent(this, DBUpdateService.class);
         startService(mDbUpdate);
 

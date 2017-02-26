@@ -2,6 +2,8 @@ package com.beerme.android;
 
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,11 +30,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
+// TODO: LocationActivity extends FragmentActivity, MainActivity extends LocationActivity
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction,
-        GoogleMap.OnMyLocationButtonClickListener {
+        GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener {
     private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
     private static final String KEY_LOCATION = "KEY_LOCATION";
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
@@ -130,12 +134,15 @@ public class MainActivity extends FragmentActivity
 
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnCameraIdleListener(this);
 
         if (hasLocationPermission()) {
             //noinspection MissingPermission
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.setOnMyLocationButtonClickListener(this);
+            mMap.setMinZoomPreference(3.0f);
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(17.0f));
         }
 
         if (mCameraPosition != null) {
@@ -244,5 +251,19 @@ public class MainActivity extends FragmentActivity
         mRequestingLocationUpdates = true;
         startLocationUpdates();
         return false;
+    }
+
+    @Override
+    public void onCameraIdle() {
+        // TODO: Should run in background. Service?
+        final LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
+        final DBHelper dbHelper = DBHelper.getInstance(this);
+        final SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
+        final Cursor c = db.rawQuery(sql, null);
+        Log.d("beerme", "COUNT: " + c.getCount());
+        c.close();
     }
 }

@@ -18,11 +18,12 @@ import java.net.URL;
  * Downloads updated data from beerme.com
  */
 
+// TODO: Setting to allow downloads over WiFi only.
 public class DBUpdateService extends IntentService {
     private static final String API_URL = "http://beerme.com/mobile/v2/";
-    private static final String BREWERYLIST_URL = API_URL + "breweryList.php";
-    private static final String BEERLIST_URL = API_URL + "beerList.php";
-    private static final String STYLELIST_URL = API_URL + "styleList.php";
+    private static final String BREWERY_URL = API_URL + "breweryList.php";
+    private static final String BEER_URL = API_URL + "beerList.php";
+    private static final String STYLE_URL = API_URL + "styleList.php";
 
     public DBUpdateService() {
         super("DBUpdateService");
@@ -34,11 +35,12 @@ public class DBUpdateService extends IntentService {
         final DBHelper dbHelper = DBHelper.getInstance(this);
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // TODO: Separate threads? (Probably won't matter.)
         loadBreweryUpdates(db);
         loadBeerUpdates(db);
         loadStyleUpdates(db);
     }
+
+    // TODO: Refactor. Will require a callback mechanism.
 
     private void loadBreweryUpdates(final SQLiteDatabase db) {
         String latestDate = null;
@@ -49,7 +51,7 @@ public class DBUpdateService extends IntentService {
         }
         c.close();
 
-        final String urlString = BREWERYLIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
+        final String urlString = BREWERY_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
         String line = "LINE ZERO";
         try {
@@ -128,7 +130,7 @@ public class DBUpdateService extends IntentService {
         }
         c.close();
 
-        final String urlString = BEERLIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
+        final String urlString = BEER_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
         String line = "LINE ZERO";
 
@@ -206,7 +208,7 @@ public class DBUpdateService extends IntentService {
         }
         c.close();
 
-        final String urlString = STYLELIST_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
+        final String urlString = STYLE_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
         Log.d("beerme", urlString);
         String line = "LINE ZERO";
 
@@ -216,7 +218,7 @@ public class DBUpdateService extends IntentService {
 
             // id, name, updated
             String[] values;
-            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO style VALUES (?, ?, ?)");
+            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO style (_id, name, updated) VALUES (?, ?, ?)");
 
             while ((line = reader.readLine()) != null) {
                 stmt.clearBindings();

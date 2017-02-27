@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
+import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
@@ -35,6 +37,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.ArrayList;
+
 // TODO: LocationActivity extends FragmentActivity, MainActivity extends LocationActivity
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -49,7 +53,7 @@ public class MainActivity extends FragmentActivity
     private Location mCurrentLocation;
     private boolean mRequestingLocationUpdates = true;
     private LocationRequest mLocationRequest;
-    private SparseArray<LatLng> mPointsOnMap = new SparseArray<>();
+    final private SparseArray<Marker> mPointsOnMap = new SparseArray<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -261,30 +265,62 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void onCameraIdle() {
-        final MarkerOptions options = new MarkerOptions();
+        new MarkerTask(mMap.getProjection().getVisibleRegion().latLngBounds).execute();
+    }
 
-        // TODO: Should run in background. Service?
-        final LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+    private class MarkerTask extends AsyncTask<Void, Void, ArrayList<Placemark>> {
+        final private LatLngBounds bounds;
 
-        final DBHelper dbHelper = DBHelper.getInstance(this);
-        final SQLiteDatabase db = dbHelper.getReadableDatabase();
+        MarkerTask(final LatLngBounds bounds) {
+            super();
+            this.bounds = bounds;
+        }
+        @Override
+        protected ArrayList<Placemark> doInBackground(final Void... params) {
+            final ArrayList<Placemark> placemarks = new ArrayList<>();
 
-        final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
-        final Cursor c = db.rawQuery(sql, null);
+            final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
+            final SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        int id;
-        LatLng latlng;
-        while (c.moveToNext()) {
-            id = c.getInt(0);
-            Log.d("beerme", "ID: " + id);
-            if (mPointsOnMap.get(id) == null) {
-                Log.d("beerme", "ADDING MARKER: " + c.getString(1));
-                latlng = new LatLng(c.getFloat(2), c.getFloat(3));
-                mMap.addMarker(options.title(c.getString(1)).position(latlng));
-                mPointsOnMap.append(id, latlng);
+            final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
+            final Cursor c = db.rawQuery(sql, null);
+
+            int id;
+            Marker marker;
+
+            // Place markers that aren't already on the map.
+            while (c.moveToNext()) {
+                id = c.getInt(0);
+                if (mPointsOnMap.get(id) == null) {
+                    placemarks.add(new Placemark(c));
+                }
             }
+            c.close();
+
+            return placemarks;
         }
 
-        c.close();
+        @Override
+        protected void onPostExecute(final ArrayList<Placemark> placemarks) {
+            final MarkerOptions options = new MarkerOptions();
+            Marker marker;
+
+            for (Placemark p : placemarks) {
+                if (mPointsOnMap.get(p.id) == null) {
+                    marker = mMap.addMarker(options.title(p.name).position(p.position));
+                    mPointsOnMap.append(p.id, marker);
+                }
+            }
+
+            // Remove markers that aren't on the map anymore.
+            final int n = mPointsOnMap.size();
+            for (int i = 0; i < n; i++) {
+                marker = mPointsOnMap.valueAt(i);
+                if ((marker != null) && !bounds.contains(marker.getPosition())) {
+                    mPointsOnMap.removeAt(i);
+                    marker.remove();
+                }
+            }
+        }
     }
 }

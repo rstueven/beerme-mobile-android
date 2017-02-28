@@ -43,7 +43,8 @@ import java.util.ArrayList;
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction,
-        GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener,
+        GoogleMap.OnMarkerClickListener {
     private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
     private static final String KEY_LOCATION = "KEY_LOCATION";
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
@@ -143,6 +144,7 @@ public class MainActivity extends FragmentActivity
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnCameraIdleListener(this);
+        mMap.setOnMarkerClickListener(this);
         googleMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
 
 
@@ -266,6 +268,13 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onCameraIdle() {
         new MarkerTask(mMap.getProjection().getVisibleRegion().latLngBounds).execute();
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        mRequestingLocationUpdates = false;
+        stopLocationUpdates();
+        return false;
     }
 
     private class MarkerTask extends AsyncTask<Void, Void, ArrayList<Placemark>> {

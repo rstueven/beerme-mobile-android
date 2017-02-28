@@ -1,5 +1,6 @@
 package com.beerme.android;
 
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,6 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
@@ -44,10 +48,12 @@ public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback, LocationListener, TouchableWrapper.UpdateMapAfterUserInteraction,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
     private static final String KEY_REQUESTING_LOCATION_UPDATES = "KEY_REQUESTING_LOCATION_UPDATES";
     private static final String KEY_LOCATION = "KEY_LOCATION";
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
+    final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
+    final SQLiteDatabase db = dbHelper.getReadableDatabase();
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
@@ -145,6 +151,7 @@ public class MainActivity extends FragmentActivity
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
+        mMap.setInfoWindowAdapter(this);
         googleMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
 
 
@@ -277,6 +284,40 @@ public class MainActivity extends FragmentActivity
         return false;
     }
 
+    @Override
+    public View getInfoContents(final Marker marker) {
+        final String id = Integer.toString((int)marker.getData());
+        Log.d("beerme", "ID: " + id);
+        final LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.infowindow, null);
+
+        final String sql = "SELECT name, address, status, hours FROM brewery WHERE _id = ?";
+        final Cursor c = db.rawQuery(sql, new String[] {id});
+
+        if (c.getCount() == 1) {
+            c.moveToFirst();
+            final TextView name = (TextView) view.findViewById((R.id.name));
+            name.setText(c.getString(0));
+            final TextView address = (TextView) view.findViewById((R.id.address));
+            address.setText(c.getString(1));
+            final TextView status = (TextView) view.findViewById((R.id.status));
+            status.setText(c.getString(2));
+            final TextView hours = (TextView) view.findViewById((R.id.hours));
+            hours.setText(c.getString(3));
+        } else {
+            view = null;
+        }
+
+        c.close();
+
+        return view;
+    }
+
+    @Override
+    public View getInfoWindow(final Marker marker) {
+        return null;
+    }
+
     private class MarkerTask extends AsyncTask<Void, Void, ArrayList<Placemark>> {
         final private LatLngBounds bounds;
 
@@ -284,18 +325,15 @@ public class MainActivity extends FragmentActivity
             super();
             this.bounds = bounds;
         }
+
         @Override
         protected ArrayList<Placemark> doInBackground(final Void... params) {
             final ArrayList<Placemark> placemarks = new ArrayList<>();
-
-            final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
-            final SQLiteDatabase db = dbHelper.getReadableDatabase();
 
             final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
             final Cursor c = db.rawQuery(sql, null);
 
             int id;
-            Marker marker;
 
             // Place markers that aren't already on the map.
             while (c.moveToNext()) {
@@ -313,10 +351,11 @@ public class MainActivity extends FragmentActivity
         protected void onPostExecute(final ArrayList<Placemark> placemarks) {
             final MarkerOptions options = new MarkerOptions();
             Marker marker;
+            String snippet;
 
             for (Placemark p : placemarks) {
                 if (mPointsOnMap.get(p.id) == null) {
-                    marker = mMap.addMarker(options.title(p.name).position(p.position));
+                    marker = mMap.addMarker(options.title(p.name).position(p.position).data(p.id));
                     mPointsOnMap.append(p.id, marker);
                 }
             }

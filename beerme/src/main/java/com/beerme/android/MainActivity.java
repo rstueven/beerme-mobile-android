@@ -291,7 +291,7 @@ public class MainActivity extends FragmentActivity
         final LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.infowindow, null);
 
-        final String sql = "SELECT name, address, status, hours FROM brewery WHERE _id = ?";
+        final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id = ?";
         final Cursor c = db.rawQuery(sql, new String[] {id});
 
         if (c.getCount() == 1) {
@@ -301,9 +301,17 @@ public class MainActivity extends FragmentActivity
             final TextView address = (TextView) view.findViewById((R.id.address));
             address.setText(c.getString(1));
             final TextView status = (TextView) view.findViewById((R.id.status));
-            status.setText(c.getString(2));
+            final String statusString = Statuses.statusString(c.getInt(2));
+            if (statusString == null) {
+                status.setVisibility(View.GONE);
+            } else {
+                status.setVisibility(View.VISIBLE);
+                status.setText(statusString);
+            }
             final TextView hours = (TextView) view.findViewById((R.id.hours));
             hours.setText(c.getString(3));
+            final TextView services = (TextView) view.findViewById((R.id.services));
+            services.setText(Services.serviceString(c.getInt(4)));
         } else {
             view = null;
         }
@@ -339,6 +347,7 @@ public class MainActivity extends FragmentActivity
             while (c.moveToNext()) {
                 id = c.getInt(0);
                 if (mPointsOnMap.get(id) == null) {
+                    //noinspection ObjectAllocationInLoop
                     placemarks.add(new Placemark(c));
                 }
             }
@@ -351,9 +360,8 @@ public class MainActivity extends FragmentActivity
         protected void onPostExecute(final ArrayList<Placemark> placemarks) {
             final MarkerOptions options = new MarkerOptions();
             Marker marker;
-            String snippet;
 
-            for (Placemark p : placemarks) {
+            for (final Placemark p : placemarks) {
                 if (mPointsOnMap.get(p.id) == null) {
                     marker = mMap.addMarker(options.title(p.name).position(p.position).data(p.id));
                     mPointsOnMap.append(p.id, marker);

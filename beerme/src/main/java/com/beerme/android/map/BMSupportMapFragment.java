@@ -1,4 +1,4 @@
-package com.beerme.android;
+package com.beerme.android.map;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.beerme.android.db.DBHelper;
+import com.beerme.android.db.DBUpdateService;
+
 /**
  * Created by rstueven on 2/24/17.
  * <p/>

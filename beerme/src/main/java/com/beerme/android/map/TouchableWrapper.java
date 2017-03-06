@@ -1,4 +1,4 @@
-package com.beerme.android;
+package com.beerme.android.map;
 
 import android.content.Context;
 import android.os.SystemClock;

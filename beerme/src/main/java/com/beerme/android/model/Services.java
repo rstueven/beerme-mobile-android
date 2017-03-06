@@ -1,4 +1,4 @@
-package com.beerme.android;
+package com.beerme.android.model;
 
 import android.util.SparseArray;
 

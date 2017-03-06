@@ -1,4 +1,4 @@
-package com.beerme.android;
+package com.beerme.android.db;
 
 import android.app.IntentService;
 import android.content.Intent;

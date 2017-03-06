@@ -7,7 +7,7 @@
     <!-- http://dimitar.me/how-to-detect-a-user-pantouchdrag-on-android-map-v2/ -->
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/map"
-        android:name="com.beerme.android.BMSupportMapFragment"
+        android:name="com.beerme.android.map.BMSupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.beerme.android.MainActivity" />

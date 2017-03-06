@@ -1,4 +1,4 @@
-package com.beerme.android;
+package com.beerme.android.map;
 
 import android.database.Cursor;
 import android.util.SparseArray;
@@ -17,13 +17,13 @@ public class Placemark {
     public LatLng position;
     public String status;
 
-    Placemark(final int id, final String name, final LatLng position) {
+    public Placemark(final int id, final String name, final LatLng position) {
         this.id = id;
         this.name = name;
         this.position = position;
     }
 
-    Placemark(final Cursor c) {
+    public Placemark(final Cursor c) {
         this(c.getInt(0), c.getString(1), new LatLng(c.getFloat(2), c.getFloat(3)));
     }
 }

@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -83,8 +82,7 @@ public class MainActivity extends LocationActivity
 
         switch (id) {
             case R.id.action_settings:
-                Toast.makeText(this, "SETTINGS", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Settings.ACTION_SETTINGS));
+                startActivity(new Intent(this, AppSettings.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

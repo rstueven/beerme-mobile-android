@@ -31,6 +31,10 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
 
+        <activity
+            android:name=".AppSettings"
+            android:label="@string/action_settings" />
+
         <service
             android:name=".db.DBUpdateService"
             android:exported="false"/>

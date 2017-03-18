@@ -9,15 +9,12 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
@@ -48,6 +45,7 @@ public class MainActivity extends LocationActivity
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     final private SparseArray<Marker> mPointsOnMap = new SparseArray<>();
+    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -61,7 +59,25 @@ public class MainActivity extends LocationActivity
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getExtendedMapAsync(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        prefsListener = new PrefsChangeListener(mMap, mPointsOnMap);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(prefsListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (prefsListener != null) {
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .unregisterOnSharedPreferenceChangeListener(prefsListener);
+        }
     }
 
     @Override
@@ -190,6 +206,27 @@ public class MainActivity extends LocationActivity
     @Override
     public View getInfoWindow(final Marker marker) {
         return null;
+    }
+
+    private class PrefsChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+        final private SparseArray<Marker> points;
+        final private GoogleMap map;
+
+        PrefsChangeListener(final GoogleMap map, final SparseArray<Marker> points) {
+            this.points = points;
+            this.map = map;
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+            if (key.startsWith("status_filter_")) {
+                points.clear();
+                if (map != null) {
+                    map.clear();
+                    new MarkerTask(map.getProjection().getVisibleRegion().latLngBounds).execute();
+                }
+            }
+        }
     }
 
     private class MarkerTask extends AsyncTask<Void, Void, ArrayList<Placemark>> {

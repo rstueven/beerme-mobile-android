@@ -154,7 +154,7 @@ public class DBUpdateService extends IntentService {
                 }
                 // breweryid
                 try {
-                stmt.bindLong(2, Integer.parseInt(values[1]));
+                    stmt.bindLong(2, Integer.parseInt(values[1]));
                 } catch (final NumberFormatException e) {
                     numberFormatWarn(e, line);
                 }

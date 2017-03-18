@@ -16,6 +16,7 @@ public class Statuses {
     public static final int DELETED = 0x10;
 
     public static final SparseArray<String> STATUS = new SparseArray<>();
+
     static {
         STATUS.put(OPEN, "");
         STATUS.put(PLANNED, "Planned");

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <PreferenceScreen android:key="status_filter"
+        android:title="Status Filter"
+        android:persistent="false">
+        <CheckBoxPreference android:key="open"
+            android:title="Open"
+            android:defaultValue="true"/>
+        <CheckBoxPreference android:key="planned"
+            android:title="Planned"
+            android:defaultValue="true"/>
+        <CheckBoxPreference android:key="no_longer_brewing"
+            android:title="No Longer Brewing"
+            android:defaultValue="false"/>
+        <CheckBoxPreference android:key="closed"
+            android:title="Closed"
+            android:defaultValue="false"/>
+    </PreferenceScreen>
 </PreferenceScreen>

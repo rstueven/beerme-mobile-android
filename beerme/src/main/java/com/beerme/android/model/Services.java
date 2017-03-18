@@ -2,8 +2,6 @@ package com.beerme.android.model;
 
 import android.util.SparseArray;
 
-import java.util.HashMap;
-
 /**
  * Created by rstueven on 3/5/17.
  * <p/>
@@ -22,6 +20,7 @@ public class Services {
     public static final int TOURS = 0x0100;
 
     public static final SparseArray<String> ICONS = new SparseArray<>();
+
     static {
         ICONS.put(OPEN, "\uD83D\uDEAB");
         ICONS.put(BAR, "\uD83C\uDF7B");

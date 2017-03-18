@@ -2,7 +2,6 @@ package com.beerme.android.map;
 
 import android.content.Context;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -37,7 +36,7 @@ public class TouchableWrapper extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 final long now = SystemClock.uptimeMillis();
                 if ((now - lastTouched) > SCROLL_TIME) {
-                    ((UpdateMapAfterUserInteraction)context).onUpdateMapAfterUserInteraction();
+                    ((UpdateMapAfterUserInteraction) context).onUpdateMapAfterUserInteraction();
                 }
                 break;
             default:

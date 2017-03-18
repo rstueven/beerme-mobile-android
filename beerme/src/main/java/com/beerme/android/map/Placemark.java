@@ -1,7 +1,6 @@
 package com.beerme.android.map;
 
 import android.database.Cursor;
-import android.util.SparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 

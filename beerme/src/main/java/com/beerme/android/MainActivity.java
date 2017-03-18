@@ -205,8 +205,9 @@ public class MainActivity extends LocationActivity
             final ArrayList<Placemark> placemarks = new ArrayList<>();
 
             final String sql = "SELECT _id, name, latitude, longitude FROM brewery"
-                + " WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude
-                + " AND (status & " + Statuses.statusMask(MainActivity.this) + ") > 0";
+                + " WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude
+                + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude
+                + " AND " + Statuses.statusClause(MainActivity.this);
             final Cursor c = db.rawQuery(sql, null);
 
             int id;

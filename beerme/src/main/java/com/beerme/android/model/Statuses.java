@@ -42,6 +42,10 @@ public class Statuses {
         return s;
     }
 
+    public static String statusClause(final Context context) {
+        return "(status & " + Statuses.statusMask(context) + ") != 0";
+    }
+
     public static int statusMask(final Context context) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final int open = prefs.getBoolean("status_filter_open", false) ? OPEN : 0;

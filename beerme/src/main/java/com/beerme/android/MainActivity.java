@@ -2,11 +2,13 @@ package com.beerme.android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
@@ -52,9 +54,6 @@ public class MainActivity extends LocationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
         if (savedInstanceState != null) {
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
@@ -62,6 +61,7 @@ public class MainActivity extends LocationActivity
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getExtendedMapAsync(this);
+
     }
 
     @Override
@@ -78,9 +78,7 @@ public class MainActivity extends LocationActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, AppSettings.class));
                 return true;
@@ -99,7 +97,6 @@ public class MainActivity extends LocationActivity
         mMap.setOnMarkerClickListener(this);
         mMap.setInfoWindowAdapter(this);
         googleMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
-
 
         if (hasLocationPermission()) {
             //noinspection MissingPermission
@@ -157,7 +154,6 @@ public class MainActivity extends LocationActivity
     @Override
     public View getInfoContents(final Marker marker) {
         final String id = Integer.toString((int) marker.getData());
-        Log.d("beerme", "ID: " + id);
         final LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.infowindow, null);
 
@@ -208,7 +204,9 @@ public class MainActivity extends LocationActivity
         protected ArrayList<Placemark> doInBackground(final Void... params) {
             final ArrayList<Placemark> placemarks = new ArrayList<>();
 
-            final String sql = "SELECT _id, name, latitude, longitude FROM brewery WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude;
+            final String sql = "SELECT _id, name, latitude, longitude FROM brewery"
+                + " WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude
+                + " AND (status & " + Statuses.statusMask(MainActivity.this) + ") > 0";
             final Cursor c = db.rawQuery(sql, null);
 
             int id;

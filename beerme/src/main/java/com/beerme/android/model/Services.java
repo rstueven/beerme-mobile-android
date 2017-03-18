@@ -8,6 +8,7 @@ import android.util.SparseArray;
  * Brewery services.
  */
 
+// TODO: Should this be an enum?
 public class Services {
     public static final int OPEN = 0x0001;
     public static final int BAR = 0x0002;

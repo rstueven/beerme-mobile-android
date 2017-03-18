@@ -9,12 +9,15 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
@@ -33,6 +36,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends LocationActivity
         implements
@@ -169,36 +174,66 @@ public class MainActivity extends LocationActivity
 
     @Override
     public View getInfoContents(final Marker marker) {
-        final String id = Integer.toString((int) marker.getData());
+        View view;
         final LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.infowindow, null);
 
-        final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id = ?";
-        final Cursor c = db.rawQuery(sql, new String[]{id});
+        if (marker.isCluster()) {
+            final List<Marker> markers = marker.getMarkers();
+            view = inflater.inflate(R.layout.clusterwindow, null);
+            final TextView txt = (TextView) view.findViewById(R.id.clusterList);
 
-        if (c.getCount() == 1) {
-            c.moveToFirst();
-            final TextView name = (TextView) view.findViewById((R.id.name));
-            name.setText(c.getString(0));
-            final TextView address = (TextView) view.findViewById((R.id.address));
-            address.setText(c.getString(1));
-            final TextView status = (TextView) view.findViewById((R.id.status));
-            final String statusString = Statuses.statusString(c.getInt(2));
-            if (statusString == null) {
-                status.setVisibility(View.GONE);
-            } else {
-                status.setVisibility(View.VISIBLE);
-                status.setText(statusString);
+            final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id IN ("
+            + TextUtils.join(",", Collections.nCopies(markers.size(), "?"))
+            + ") ORDER BY name";
+            final ArrayList<String> ids = new ArrayList<>();
+            for (final Marker m : marker.getMarkers()) {
+                ids.add(Integer.toString((int) m.getData()));
             }
-            final TextView hours = (TextView) view.findViewById((R.id.hours));
-            hours.setText(c.getString(3));
-            final TextView services = (TextView) view.findViewById((R.id.services));
-            services.setText(Services.serviceString(c.getInt(4)));
-        } else {
-            view = null;
-        }
 
-        c.close();
+            final Cursor c = db.rawQuery(sql, ids.toArray(new String[0]));
+            final StringBuilder txtList = new StringBuilder();
+            int n = 0;
+            while (c.moveToNext() && (n < 5)) {
+                txtList.append(c.getString(0)).append('\n');
+                ++n;
+            }
+            if (n < c.getCount()) {
+                txtList.append("(").append(c.getCount() - n).append(" more)");
+            }
+            txt.setText(txtList.toString());
+
+            c.close();
+        } else {
+            view = inflater.inflate(R.layout.infowindow, null);
+            final String id = Integer.toString((int) marker.getData());
+
+            final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id = ?";
+            final Cursor c = db.rawQuery(sql, new String[]{id});
+
+            if (c.getCount() == 1) {
+                c.moveToFirst();
+                final TextView name = (TextView) view.findViewById((R.id.name));
+                name.setText(c.getString(0));
+                final TextView address = (TextView) view.findViewById((R.id.address));
+                address.setText(c.getString(1));
+                final TextView status = (TextView) view.findViewById((R.id.status));
+                final String statusString = Statuses.statusString(c.getInt(2));
+                if (statusString == null) {
+                    status.setVisibility(View.GONE);
+                } else {
+                    status.setVisibility(View.VISIBLE);
+                    status.setText(statusString);
+                }
+                final TextView hours = (TextView) view.findViewById((R.id.hours));
+                hours.setText(c.getString(3));
+                final TextView services = (TextView) view.findViewById((R.id.services));
+                services.setText(Services.serviceString(c.getInt(4)));
+            } else {
+                view = null;
+            }
+
+            c.close();
+        }
 
         return view;
     }

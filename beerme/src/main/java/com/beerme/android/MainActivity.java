@@ -169,6 +169,22 @@ public class MainActivity extends LocationActivity
     public boolean onMarkerClick(final Marker marker) {
         mRequestingLocationUpdates = false;
         stopLocationUpdates();
+
+        if (marker.isCluster()) {
+            final List<Marker> markers = marker.getMarkers();
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for (final Marker m : markers) {
+                builder.include(m.getPosition());
+            }
+
+            final LatLngBounds bounds = builder.build();
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
+
+            return true;
+        }
+
         return false;
     }
 

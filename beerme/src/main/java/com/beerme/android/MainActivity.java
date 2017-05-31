@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
@@ -171,6 +170,7 @@ public class MainActivity extends LocationActivity
         stopLocationUpdates();
 
         if (marker.isCluster()) {
+            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
             final List<Marker> markers = marker.getMarkers();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -180,6 +180,8 @@ public class MainActivity extends LocationActivity
 
             final LatLngBounds bounds = builder.build();
 
+            Log.d("beerme", "OLD: " + oldBounds);
+            Log.d("beerme", "NEW: " + bounds);
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
 
             return true;

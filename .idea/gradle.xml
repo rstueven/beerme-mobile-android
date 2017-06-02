@@ -15,14 +15,7 @@
             <option value="$PROJECT_DIR$/lvl" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/aFileDialog" />
-            <option value="$PROJECT_DIR$/beerme" />
-            <option value="$PROJECT_DIR$/lvl" />
-          </set>
-        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

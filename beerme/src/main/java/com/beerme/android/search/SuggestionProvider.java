@@ -1,9 +1,5 @@
 package com.beerme.android.search;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -23,10 +19,15 @@ import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.Utils;
 import com.beerme.android.utils.Version;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 // http://mobile.tutsplus.com/tutorials/android/android-sdk_content-providers/
 
 public class SuggestionProvider extends ContentProvider {
-	private static final String AUTHORITY = Version.SEARCH_PROVIDER_AUTHORITY;
+//	private static final String AUTHORITY = Version.SEARCH_PROVIDER_AUTHORITY;
+	private static final String AUTHORITY = "com.beerme.android.search.SuggestionProvider";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/suggestion");
 	private static final int DEFAULT_LIMIT = 10;
 	public static final int SUGGESTIONS = 1;

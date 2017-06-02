@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 45
+        versionCode 46
     }
 
     buildTypes {
@@ -20,11 +20,11 @@ android {
     productFlavors {
         paid {
             applicationId "com.beerme.android"
-            versionName "2.4.4"
+            versionName "2.4.5"
         }
         free {
             applicationId "com.beerme.android_free"
-            versionName "2.4.4 (free)"
+            versionName "2.4.5 (free)"
         }
     }
 }

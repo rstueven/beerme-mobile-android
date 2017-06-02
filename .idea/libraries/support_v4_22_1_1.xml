@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="support-v4-22.1.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/beerme/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/libs/internal_impl-22.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/beerme/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/beerme/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/174f46ec403453173841a63f688ad9f778c931cb/output/jars/libs/internal_impl-22.1.1.jar!/" />
+      <root url="jar://$USER_HOME$/.android/build-cache/174f46ec403453173841a63f688ad9f778c931cb/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/174f46ec403453173841a63f688ad9f778c931cb/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="play-services-ads-7.3.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/beerme/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/beerme/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/ee3a1652fbfe0ca20dca004406b0ce2e64103602/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/ee3a1652fbfe0ca20dca004406b0ce2e64103602/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

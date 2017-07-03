@@ -18,6 +18,8 @@ public class Brewery {
     private int status;
     private String hours;
     private int services;
+    private String phone;
+    private String web;
 
     public Brewery(final Context context, final int id) {
         if (id <= 0) {
@@ -27,7 +29,7 @@ public class Brewery {
         final DBHelper dbHelper = DBHelper.getInstance(context);
         final SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id = ?";
+        final String sql = "SELECT name, address, status, hours, services, phone, web FROM brewery WHERE _id = ?";
         final Cursor c = db.rawQuery(sql, new String[]{Integer.toString(id)});
 
         if (c.getCount() == 1) {
@@ -38,6 +40,8 @@ public class Brewery {
             this.status = c.getInt(2);
             this.hours = c.getString(3);
             this.services = c.getInt(4);
+            this.phone = c.getString(5);
+            this.web = c.getString(6);
         }
 
         c.close();
@@ -52,6 +56,8 @@ public class Brewery {
         s += "status: " + this.status + "\n";
         s += "hours: " + this.hours + "\n";
         s += "services: " + this.services + "\n";
+        s += "phone: " + this.phone + "\n";
+        s += "web: " + this.web + "\n";
 
         return s;
     }
@@ -78,5 +84,13 @@ public class Brewery {
 
     public int getServices() {
         return services;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getWeb() {
+        return web;
     }
 }

@@ -31,5 +31,11 @@ public class BreweryDetailActivity extends AppCompatActivity {
 
         final TextView addressView = (TextView) findViewById(R.id.address);
         addressView.setText(brewery.getAddress());
+
+        final TextView phoneView = (TextView) findViewById(R.id.phone);
+        phoneView.setText(brewery.getPhone());
+
+        final TextView webView = (TextView) findViewById(R.id.web);
+        webView.setText(brewery.getWeb());
     }
 }

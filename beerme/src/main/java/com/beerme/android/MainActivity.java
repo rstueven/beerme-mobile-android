@@ -1,5 +1,6 @@
 package com.beerme.android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
@@ -24,11 +26,12 @@ import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
+import com.beerme.android.model.Brewery;
 import com.beerme.android.db.DBHelper;
 import com.beerme.android.map.Placemark;
 import com.beerme.android.map.TouchableWrapper;
 import com.beerme.android.model.Services;
-import com.beerme.android.model.Statuses;
+import com.beerme.android.model.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,7 +45,8 @@ public class MainActivity extends LocationActivity
         implements
         OnMapReadyCallback, TouchableWrapper.UpdateMapAfterUserInteraction,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener,
-        GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
+        GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter,
+        GoogleMap.OnInfoWindowClickListener {
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
     final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
     final SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -116,6 +120,7 @@ public class MainActivity extends LocationActivity
         mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setInfoWindowAdapter(this);
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setMinZoomPreference(3.0f);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.299699, -95.899515), 10.0f));
@@ -170,7 +175,7 @@ public class MainActivity extends LocationActivity
         stopLocationUpdates();
 
         if (marker.isCluster()) {
-            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+//            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
             final List<Marker> markers = marker.getMarkers();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -180,8 +185,8 @@ public class MainActivity extends LocationActivity
 
             final LatLngBounds bounds = builder.build();
 
-            Log.d("beerme", "OLD: " + oldBounds);
-            Log.d("beerme", "NEW: " + bounds);
+//            Log.d("beerme", "OLD: " + oldBounds);
+//            Log.d("beerme", "NEW: " + bounds);
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
 
             return true;
@@ -190,6 +195,7 @@ public class MainActivity extends LocationActivity
         return false;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getInfoContents(final Marker marker) {
         View view;
@@ -208,6 +214,7 @@ public class MainActivity extends LocationActivity
                 ids.add(Integer.toString((int) m.getData()));
             }
 
+            @SuppressWarnings("ZeroLengthArrayAllocation")
             final Cursor c = db.rawQuery(sql, ids.toArray(new String[0]));
             final StringBuilder txtList = new StringBuilder();
             int n = 0;
@@ -223,19 +230,16 @@ public class MainActivity extends LocationActivity
             c.close();
         } else {
             view = inflater.inflate(R.layout.infowindow, null);
-            final String id = Integer.toString((int) marker.getData());
 
-            final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id = ?";
-            final Cursor c = db.rawQuery(sql, new String[]{id});
+            try {
+                final Brewery brewery = new Brewery(this, (int) marker.getData());
 
-            if (c.getCount() == 1) {
-                c.moveToFirst();
                 final TextView name = (TextView) view.findViewById((R.id.name));
-                name.setText(c.getString(0));
+                name.setText(brewery.getName());
                 final TextView address = (TextView) view.findViewById((R.id.address));
-                address.setText(c.getString(1));
+                address.setText(brewery.getAddress());
                 final TextView status = (TextView) view.findViewById((R.id.status));
-                final String statusString = Statuses.statusString(c.getInt(2));
+                final String statusString = Status.statusString(brewery.getStatus());
                 if (statusString == null) {
                     status.setVisibility(View.GONE);
                 } else {
@@ -243,14 +247,13 @@ public class MainActivity extends LocationActivity
                     status.setText(statusString);
                 }
                 final TextView hours = (TextView) view.findViewById((R.id.hours));
-                hours.setText(c.getString(3));
+                hours.setText(brewery.getHours());
                 final TextView services = (TextView) view.findViewById((R.id.services));
-                services.setText(Services.serviceString(c.getInt(4)));
-            } else {
+                services.setText(Services.serviceString(brewery.getServices()));
+            } catch (final IllegalArgumentException e) {
+                Toast.makeText(this, "Database error: Illegal brewery ID", Toast.LENGTH_LONG).show();
                 view = null;
             }
-
-            c.close();
         }
 
         return view;
@@ -259,6 +262,17 @@ public class MainActivity extends LocationActivity
     @Override
     public View getInfoWindow(final Marker marker) {
         return null;
+    }
+
+    @Override
+    public void onInfoWindowClick(final Marker marker) {
+//        Log.d("beerme", "onInfoWindowClick(" + marker.getData() + " : " + marker.getTitle() + ")");
+        final Integer id = marker.getData();
+        if (id != null) {
+            final Intent intent = new Intent(this, BreweryDetailActivity.class);
+            intent.putExtra("id", id);
+            startActivity(intent);
+        }
     }
 
     private class PrefsChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -297,7 +311,7 @@ public class MainActivity extends LocationActivity
             final String sql = "SELECT _id, name, latitude, longitude FROM brewery"
                 + " WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude
                 + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude
-                + " AND " + Statuses.statusClause(MainActivity.this);
+                + " AND " + com.beerme.android.model.Status.statusClause(MainActivity.this);
             final Cursor c = db.rawQuery(sql, null);
 
             int id;

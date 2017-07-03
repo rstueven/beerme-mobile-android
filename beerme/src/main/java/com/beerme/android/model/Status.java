@@ -9,11 +9,11 @@ import android.util.SparseArray;
 /**
  * Created by rstueven on 3/5/17.
  * <p/>
- * Brewery statuses. Probably better located in the Brewery class.
+ * Brewery Status. Probably better located in the Brewery class.
  */
 
 // TODO: Should this be an enum?
-public class Statuses {
+public class Status {
     public static final int OPEN = 0x1;
     public static final int PLANNED = 0x2;
     public static final int NO_LONGER_BREWING = 0x4;
@@ -43,7 +43,7 @@ public class Statuses {
     }
 
     public static String statusClause(final Context context) {
-        return "(status & " + Statuses.statusMask(context) + ") != 0";
+        return "(status & " + Status.statusMask(context) + ") != 0";
     }
 
     public static int statusMask(final Context context) {

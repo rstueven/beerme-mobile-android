@@ -116,15 +116,15 @@ public class MainActivity extends LocationActivity
         mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setInfoWindowAdapter(this);
-        googleMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setMinZoomPreference(3.0f);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.299699, -95.899515), 10.0f));
+        mMap.setClustering(new ClusteringSettings().addMarkersDynamically(true).clusterSize(20));
 
         if (hasLocationPermission()) {
             //noinspection MissingPermission
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.setOnMyLocationButtonClickListener(this);
-            mMap.setMinZoomPreference(3.0f);
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(17.0f));
         }
 
         if (mCameraPosition != null) {

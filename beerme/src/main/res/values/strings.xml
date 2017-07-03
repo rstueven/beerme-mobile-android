@@ -2,4 +2,6 @@
     <string name="app_name">Beer Me!</string>
     <string name="title_activity_main">Beer Me!</string>
     <string name="action_settings">Settings</string>
+    <!--<string name="location_permission_rationale">If you want to be able to find breweries in your vicinity, or to get directions to a brewery, you\'ll need to allow the app to access your location.</string>-->
+    <string name="location_permission_rationale">Your location is necessary to show nearby breweries.</string>
 </resources>

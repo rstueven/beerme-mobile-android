@@ -1,14 +1,18 @@
 package com.beerme.android;
 
+import android.app.Activity;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -122,14 +126,26 @@ public class LocationActivity extends AppCompatActivity
             if (mRequestingLocationUpdates) {
                 startLocationUpdates();
             }
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                final Activity activity = this;
+                final View layout = activity.findViewById(android.R.id.content);
+                Snackbar.make(layout,
+                    R.string.location_permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            // Request the permission again.
+                            ActivityCompat.requestPermissions(activity,
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                    PERM_ACCESS_FINE_LOCATION);
+                        }
+                    }).show();
+
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(this, "Show Permission Rationale", Toast.LENGTH_SHORT).show();
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERM_ACCESS_FINE_LOCATION);
-            }
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERM_ACCESS_FINE_LOCATION);
         }
     }
 
@@ -139,15 +155,13 @@ public class LocationActivity extends AppCompatActivity
         switch (requestCode) {
             case PERM_ACCESS_FINE_LOCATION:
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
                     mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
                     if (mRequestingLocationUpdates) {
                         startLocationUpdates();
                     }
-                } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:

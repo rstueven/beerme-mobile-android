@@ -2,14 +2,17 @@ package com.beerme.android;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beerme.android.model.Brewery;
+import com.beerme.android.model.Services;
 
 public class BreweryDetailActivity extends AppCompatActivity {
     int id = -1;
@@ -69,8 +72,12 @@ public class BreweryDetailActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            final TableLayout svcView = Services.serviceView(this, brewery.getServices());
+            ((LinearLayout) findViewById(R.id.brewery_detail_layout)).addView(svcView);
         } catch (final IllegalArgumentException e) {
             Toast.makeText(this, "Database error: Illegal brewery ID " + id, Toast.LENGTH_LONG).show();
+            Log.e("beerme", e.getLocalizedMessage());
             this.finish();
         }
     }

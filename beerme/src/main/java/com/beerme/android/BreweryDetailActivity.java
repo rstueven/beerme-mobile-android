@@ -1,6 +1,7 @@
 package com.beerme.android;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,9 +40,18 @@ public class BreweryDetailActivity extends AppCompatActivity {
 
             final TextView phoneView = (TextView) findViewById(R.id.phone);
             final String phone = brewery.getPhone();
-            phoneView.setText(phone);
             if ((phone == null) || phone.isEmpty()) {
                 phoneView.setVisibility(View.GONE);
+            } else {
+                phoneView.setText(phone);
+                phoneView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        final Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + phone));
+                        startActivity(intent);
+                    }
+                });
             }
 
             final TextView webView = (TextView) findViewById(R.id.web);

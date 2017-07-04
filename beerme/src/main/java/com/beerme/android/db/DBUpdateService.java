@@ -21,7 +21,7 @@ import java.net.URL;
 // TODO: Setting to allow downloads over WiFi only.
 public class DBUpdateService extends IntentService {
     private static final String API_URL = "http://beerme.com/mobile/v3/";
-    private static final String UPDATE_URL = API_URL + "database_update.php";
+    private static final String UPDATE_URL = API_URL + "dbUpdate.php";
 
     public DBUpdateService() {
         super("DBUpdateService");
@@ -136,8 +136,7 @@ public class DBUpdateService extends IntentService {
 
         try {
             String[] values;
-            // TODO: Rating?
-            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO beer (_id, breweryid, name, style, abv, image, updated) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            final SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO beer (_id, breweryid, name, style, abv, image, updated, beermerating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
             while ((line = reader.readLine()) != null) {
 //                Log.d("beerme", line);
@@ -181,14 +180,14 @@ public class DBUpdateService extends IntentService {
                 stmt.bindString(6, values[5]);
                 // updated
                 stmt.bindString(7, values[6]);
-//                // score
-//                if (!values[7].isEmpty()) {
-//                    try {
-//                        stmt.bindDouble(8, Double.parseDouble(values[7]));
-//                    } catch (final NumberFormatException e) {
-//                        numberFormatWarn(e, line);
-//                    }
-//                }
+                // beermerating
+                if (!values[7].isEmpty()) {
+                    try {
+                        stmt.bindDouble(8, Double.parseDouble(values[7]));
+                    } catch (final NumberFormatException e) {
+                        numberFormatWarn(e, line);
+                    }
+                }
 
                 stmt.execute();
             }

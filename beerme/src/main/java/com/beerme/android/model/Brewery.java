@@ -102,6 +102,7 @@ public class Brewery {
         if ((web == null) || web.isEmpty()) {
             return "";
         } else {
+            // Not sure why a regex didn't work here.
             final URL url;
             String webForDisplay;
             try {

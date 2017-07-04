@@ -2,11 +2,14 @@ package com.beerme.android.model;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.beerme.android.R;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,9 +38,9 @@ public class Services {
         public int code;
         public String emoji;
         public String text;
-        public Drawable icon;
+        public int icon;
 
-        public Service(final int code, final String emoji, final String text, final Drawable icon) {
+        public Service(final int code, final String emoji, final String text, final int icon) {
             this.code = code;
             this.emoji = emoji;
             this.text = text;
@@ -46,15 +49,15 @@ public class Services {
     }
 
     static {
-        ICONS.put(OPEN, new Service(OPEN, "\uD83D\uDEAB", "Not open to the public", null));
-        ICONS.put(BAR, new Service(BAR, "\uD83C\uDF7B", "Bar/Tasting Room", null));
-        ICONS.put(BEERGARDEN, new Service(BEERGARDEN, "\uD83C\uDF33", "Beer Garden", null));
-        ICONS.put(FOOD, new Service(FOOD, "\uD83C\uDF74", "Food", null));
-        ICONS.put(GIFTSHOP, new Service(GIFTSHOP, "\uD83D\uDC55", "Items for Sale", null));
-        ICONS.put(HOTEL, new Service(HOTEL, "\uD83D\uDECC", "Hotel Rooms", null));
-        ICONS.put(INTERNET, new Service(INTERNET, "\uD83D\uDCF6", "Internet Access", null));
-        ICONS.put(RETAIL, new Service(RETAIL, "\uD83C\uDF7E", "Beer to Go (Off License)", null));
-        ICONS.put(TOURS, new Service(TOURS, "\uD83D\uDC63", "Tours", null));
+        ICONS.put(OPEN, new Service(OPEN, "\uD83D\uDEAB", "Not open to the public", R.drawable.ic_block_black_24dp));
+        ICONS.put(BAR, new Service(BAR, "\uD83C\uDF7B", "Bar/Tasting Room", R.drawable.ic_local_drink_black_24dp));
+        ICONS.put(BEERGARDEN, new Service(BEERGARDEN, "\uD83C\uDF33", "Beer Garden", R.drawable.ic_nature_people_black_24dp));
+        ICONS.put(FOOD, new Service(FOOD, "\uD83C\uDF74", "Food", R.drawable.ic_restaurant_black_24dp));
+        ICONS.put(GIFTSHOP, new Service(GIFTSHOP, "\uD83D\uDC55", "Items for Sale", R.drawable.ic_local_mall_black_24dp));
+        ICONS.put(HOTEL, new Service(HOTEL, "\uD83D\uDECC", "Hotel Rooms", R.drawable.ic_hotel_black_24dp));
+        ICONS.put(INTERNET, new Service(INTERNET, "\uD83D\uDCF6", "Internet Access", R.drawable.ic_wifi_black_24dp));
+        ICONS.put(RETAIL, new Service(RETAIL, "\uD83C\uDF7E", "Beer to Go", R.drawable.ic_shopping_cart_black_24dp));
+        ICONS.put(TOURS, new Service(TOURS, "\uD83D\uDC63", "Tours", R.drawable.ic_directions_walk_black_24dp));
     }
 
     public static String serviceString(final int svc) {
@@ -133,10 +136,10 @@ public class Services {
             tableLayout.addView(row);
 
             while (iterator.hasNext()) {
-                Service service = iterator.next();
-                TextView view = new TextView(context);
+                final Service service = iterator.next();
+                final TextView view = new TextView(context);
                 view.setText(service.text);
-                view.setCompoundDrawables(service.icon, null, null, null);
+                view.setCompoundDrawablesWithIntrinsicBounds(service.icon, 0, 0, 0);
                 row.addView(view);
                 ++column;
                 if ((column & 1) == 0) {

@@ -24,8 +24,6 @@ public class BreweryDetailActivity extends AppCompatActivity {
             throw new IllegalArgumentException("invalid brewery ID: " + id);
         }
 
-        Log.d("beerme", "onCreate(" + id + ")");
-
         try {
             final Brewery brewery = new Brewery(this, id);
 

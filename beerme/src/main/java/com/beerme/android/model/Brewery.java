@@ -3,8 +3,12 @@ package com.beerme.android.model;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.beerme.android.db.DBHelper;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by rstueven on 7/3/17.
@@ -98,7 +102,19 @@ public class Brewery {
         if ((web == null) || web.isEmpty()) {
             return "";
         } else {
-            return web.split("\\A(http[s]*://)(.+[^/])(/?)\\Z")[1];
+            final URL url;
+            String webForDisplay;
+            try {
+                url = new URL(web);
+                webForDisplay = url.getHost();
+                if (!"/".equals(url.getPath())) {
+                    webForDisplay += "/" + url.getPath();
+                }
+            } catch (final MalformedURLException e) {
+                webForDisplay = "";
+                Log.w("beerme", "getWebForDisplay(" + web + "): " + e.getLocalizedMessage());
+            }
+            return webForDisplay;
         }
     }
 }

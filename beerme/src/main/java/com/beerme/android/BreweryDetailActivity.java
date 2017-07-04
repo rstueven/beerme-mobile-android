@@ -56,9 +56,18 @@ public class BreweryDetailActivity extends AppCompatActivity {
 
             final TextView webView = (TextView) findViewById(R.id.web);
             final String web = brewery.getWebForDisplay();
-            webView.setText(web);
             if ((web == null) || web.isEmpty()) {
                 webView.setVisibility(View.GONE);
+            } else {
+                webView.setText(web);
+                webView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        final Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(brewery.getWeb()));
+                        startActivity(intent);
+                    }
+                });
             }
         } catch (final IllegalArgumentException e) {
             Toast.makeText(this, "Database error: Illegal brewery ID " + id, Toast.LENGTH_LONG).show();

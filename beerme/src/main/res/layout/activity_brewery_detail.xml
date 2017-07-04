@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:drawableStart="@android:drawable/ic_menu_mapmode"
+        android:drawableStart="@drawable/ic_map_black_24dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:drawableStart="@android:drawable/ic_menu_call"
+        android:drawableStart="@drawable/ic_call_black_24dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 

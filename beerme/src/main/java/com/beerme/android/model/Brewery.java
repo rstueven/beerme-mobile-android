@@ -93,4 +93,12 @@ public class Brewery {
     public String getWeb() {
         return web;
     }
+
+    public String getWebForDisplay() {
+        if ((web == null) || web.isEmpty()) {
+            return "";
+        } else {
+            return web.split("\\A(http[s]*://)(.+[^/])(/?)\\Z")[1];
+        }
+    }
 }

@@ -13,10 +13,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -248,8 +250,10 @@ public class MainActivity extends LocationActivity
                 }
                 final TextView hours = (TextView) view.findViewById((R.id.hours));
                 hours.setText(brewery.getHours());
-                final TextView services = (TextView) view.findViewById((R.id.services));
-                services.setText(Services.serviceString(brewery.getServices()));
+
+                final LinearLayout svcLayout = Services.serviceIcons(this, brewery.getServices());
+                // TODO: Center this.
+                ((LinearLayout) view).addView(svcLayout);
             } catch (final IllegalArgumentException e) {
                 Toast.makeText(this, "Database error: Illegal brewery ID", Toast.LENGTH_LONG).show();
                 view = null;

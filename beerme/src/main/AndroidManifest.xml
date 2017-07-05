@@ -44,7 +44,9 @@
             android:name=".db.DBContentProvider"
             android:authorities="com.beerme.android.provider"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Content provider for Beer Me! mobile"/>
     </application>
 
 </manifest>

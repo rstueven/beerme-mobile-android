@@ -7,29 +7,37 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 // http://www.vogella.com/tutorials/AndroidSQLite/article.html#content-provider-and-sharing-data
 public class DBContentProvider extends ContentProvider {
     private DBHelper dbHelper;
-    private static final String AUTHORITY = "com.beerme.android.provider";
+    private static final String AUTHORITY = DBContract.CONTENT_AUTHORITY;
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    private static final int BREWERY_TABLE = 1;
-    private static final int BREWERY_ROW = 2;
-    private static final int BEER_TABLE = 3;
-    private static final int BEER_ROW = 4;
-    private static final int STYLE_TABLE = 5;
-    private static final int STYLE_ROW = 6;
+    private static final String BREWERY_TABLE = DBContract.BreweryEntry.TABLE_NAME;
+    private static final String BEER_TABLE = DBContract.BeerEntry.TABLE_NAME;
+    private static final String STYLE_TABLE = DBContract.StyleEntry.TABLE_NAME;
+
+    private static final int CODE_BREWERY_TABLE = 1;
+    private static final int CODE_BREWERY_ROW = 2;
+    private static final int CODE_BEER_TABLE = 3;
+    private static final int CODE_BEER_ROW = 4;
+    private static final int CODE_STYLE_TABLE = 5;
+    private static final int CODE_STYLE_ROW = 6;
 
     static {
-        matcher.addURI(AUTHORITY, "brewery", BREWERY_TABLE);
-        matcher.addURI(AUTHORITY, "brewery/#", BREWERY_ROW);
-        matcher.addURI(AUTHORITY, "beer", BEER_TABLE);
-        matcher.addURI(AUTHORITY, "beer/#", BEER_ROW);
-        matcher.addURI(AUTHORITY, "style", STYLE_TABLE);
-        matcher.addURI(AUTHORITY, "style/#", STYLE_ROW);
+        matcher.addURI(AUTHORITY, BREWERY_TABLE, CODE_BREWERY_TABLE);
+        matcher.addURI(AUTHORITY, BREWERY_TABLE + "/#", CODE_BREWERY_ROW);
+        matcher.addURI(AUTHORITY, BEER_TABLE, CODE_BEER_TABLE);
+        matcher.addURI(AUTHORITY, BEER_TABLE + "/#", CODE_BEER_ROW);
+        matcher.addURI(AUTHORITY, STYLE_TABLE, CODE_STYLE_TABLE);
+        matcher.addURI(AUTHORITY, STYLE_TABLE + "/#", CODE_STYLE_ROW);
     }
 
     @Override
@@ -40,37 +48,55 @@ public class DBContentProvider extends ContentProvider {
         final String id = uri.getLastPathSegment();
 
         switch (uriType) {
-            case BREWERY_TABLE:
-                rowsDeleted = db.delete("brewery", selection, selectionArgs);
+            case CODE_BREWERY_TABLE:
+                rowsDeleted = db.delete(BREWERY_TABLE, selection, selectionArgs);
                 break;
-            case BREWERY_ROW:
-                rowsDeleted = db.delete("brewery", "_id=" + id, null);
+            case CODE_BREWERY_ROW:
+                rowsDeleted = db.delete(BREWERY_TABLE, "_id=" + id, null);
                 break;
-            case BEER_TABLE:
-                rowsDeleted = db.delete("beer", selection, selectionArgs);
+            case CODE_BEER_TABLE:
+                rowsDeleted = db.delete(BEER_TABLE, selection, selectionArgs);
                 break;
-            case BEER_ROW:
-                rowsDeleted = db.delete("beer", "_id=" + id, null);
+            case CODE_BEER_ROW:
+                rowsDeleted = db.delete(BEER_TABLE, "_id=" + id, null);
                 break;
-            case STYLE_TABLE:
-                rowsDeleted = db.delete("style", selection, selectionArgs);
+            case CODE_STYLE_TABLE:
+                rowsDeleted = db.delete(STYLE_TABLE, selection, selectionArgs);
                 break;
-            case STYLE_ROW:
-                rowsDeleted = db.delete("style", "_id=" + id, null);
+            case CODE_STYLE_ROW:
+                rowsDeleted = db.delete(STYLE_TABLE, "_id=" + id, null);
                 break;
             default:
                 final String msg = "DBContentProvider.delete(" + uri + "): No match (" + uriType + ")";
                 throw new IllegalArgumentException(msg);
         }
 
+        //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsDeleted;
     }
 
     @Override
     public String getType(@NonNull final Uri uri) {
-        // Implement this to handle requests for the MIME type of the data at the given URI.
-        return null;
+        final int uriType = matcher.match(uri);
+
+        switch (uriType) {
+            case CODE_BREWERY_TABLE:
+                return DBContract.BreweryEntry.CONTENT_TYPE;
+            case CODE_BREWERY_ROW:
+                return DBContract.BreweryEntry.CONTENT_ITEM_TYPE;
+            case CODE_BEER_TABLE:
+                return DBContract.BeerEntry.CONTENT_TYPE;
+            case CODE_BEER_ROW:
+                return DBContract.BeerEntry.CONTENT_ITEM_TYPE;
+            case CODE_STYLE_TABLE:
+                return DBContract.StyleEntry.CONTENT_TYPE;
+            case CODE_STYLE_ROW:
+                return DBContract.StyleEntry.CONTENT_ITEM_TYPE;
+            default:
+                final String msg = "DBContentProvider.getType(" + uri + "): No match (" + uriType + ")";
+                throw new IllegalArgumentException(msg);
+        }
     }
 
     @Override
@@ -80,14 +106,14 @@ public class DBContentProvider extends ContentProvider {
         final String table;
 
         switch (uriType) {
-            case BREWERY_TABLE:
-                table = "brewery";
+            case CODE_BREWERY_TABLE:
+                table = BREWERY_TABLE;
                 break;
-            case BEER_TABLE:
-                table = "beer";
+            case CODE_BEER_TABLE:
+                table = BEER_TABLE;
                 break;
-            case STYLE_TABLE:
-                table = "style";
+            case CODE_STYLE_TABLE:
+                table = STYLE_TABLE;
                 break;
             default:
                 final String msg = "DBContentProvider.insert(" + uri + "): No match (" + uriType + ")";
@@ -95,6 +121,8 @@ public class DBContentProvider extends ContentProvider {
         }
 
         final long id = db.insert(table, null, values);
+
+        //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(uri, null);
 
         return Uri.parse(table + "/" + id);
@@ -111,39 +139,43 @@ public class DBContentProvider extends ContentProvider {
                         final String[] selectionArgs, String sortOrder) {
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
-        checkColumns(projection);
-
         final int uriType = matcher.match(uri);
 
         switch (uriType) {
-            case BREWERY_TABLE:
-                builder.setTables("brewery");
+            case CODE_BREWERY_TABLE:
+                checkColumns(DBContract.BreweryEntry.COLUMNS, projection);
+                builder.setTables(BREWERY_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
-            case BREWERY_ROW:
-                builder.setTables("brewery");
+            case CODE_BREWERY_ROW:
+                checkColumns(DBContract.BreweryEntry.COLUMNS, projection);
+                builder.setTables(BREWERY_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
-            case BEER_TABLE:
-                builder.setTables("beer");
+            case CODE_BEER_TABLE:
+                checkColumns(DBContract.BeerEntry.COLUMNS, projection);
+                builder.setTables(BEER_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
-            case BEER_ROW:
-                builder.setTables("beer");
+            case CODE_BEER_ROW:
+                checkColumns(DBContract.BeerEntry.COLUMNS, projection);
+                builder.setTables(BEER_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
-            case STYLE_TABLE:
-                builder.setTables("style");
+            case CODE_STYLE_TABLE:
+                checkColumns(DBContract.StyleEntry.COLUMNS, projection);
+                builder.setTables(STYLE_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
-            case STYLE_ROW:
-                builder.setTables("style");
+            case CODE_STYLE_ROW:
+                checkColumns(DBContract.StyleEntry.COLUMNS, projection);
+                builder.setTables(STYLE_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
             default:
@@ -153,6 +185,8 @@ public class DBContentProvider extends ContentProvider {
 
         final SQLiteDatabase db = dbHelper.getReadableDatabase();
         final Cursor cursor = builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+
+        //noinspection ConstantConditions
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
         return cursor;
@@ -167,34 +201,34 @@ public class DBContentProvider extends ContentProvider {
         final String id = uri.getLastPathSegment();
 
         switch (uriType) {
-            case BREWERY_TABLE:
-                rowsUpdated = db.update("brewery", values, selection, selectionArgs);
+            case CODE_BREWERY_TABLE:
+                rowsUpdated = db.update(BREWERY_TABLE, values, selection, selectionArgs);
                 break;
-            case BREWERY_ROW:
+            case CODE_BREWERY_ROW:
                 if (TextUtils.isEmpty(selection)) {
-                    rowsUpdated = db.update("brewery", values, "_id=" + id, null);
+                    rowsUpdated = db.update(BREWERY_TABLE, values, "_id=" + id, null);
                 } else {
-                    rowsUpdated = db.update("brewery", values, "_id=" + id + " AND " + selection, null);
+                    rowsUpdated = db.update(BREWERY_TABLE, values, "_id=" + id + " AND " + selection, null);
                 }
                 break;
-            case BEER_TABLE:
-                rowsUpdated = db.update("beer", values, selection, selectionArgs);
+            case CODE_BEER_TABLE:
+                rowsUpdated = db.update(BEER_TABLE, values, selection, selectionArgs);
                 break;
-            case BEER_ROW:
+            case CODE_BEER_ROW:
                 if (TextUtils.isEmpty(selection)) {
-                    rowsUpdated = db.update("beer", values, "_id=" + id, null);
+                    rowsUpdated = db.update(BEER_TABLE, values, "_id=" + id, null);
                 } else {
-                    rowsUpdated = db.update("beer", values, "_id=" + id + " AND " + selection, null);
+                    rowsUpdated = db.update(BEER_TABLE, values, "_id=" + id + " AND " + selection, null);
                 }
                 break;
-            case STYLE_TABLE:
-                rowsUpdated = db.update("style", values, selection, selectionArgs);
+            case CODE_STYLE_TABLE:
+                rowsUpdated = db.update(STYLE_TABLE, values, selection, selectionArgs);
                 break;
-            case STYLE_ROW:
+            case CODE_STYLE_ROW:
                 if (TextUtils.isEmpty(selection)) {
-                    rowsUpdated = db.update("style", values, "_id=" + id, null);
+                    rowsUpdated = db.update(STYLE_TABLE, values, "_id=" + id, null);
                 } else {
-                    rowsUpdated = db.update("style", values, "_id=" + id + " AND " + selection, null);
+                    rowsUpdated = db.update(STYLE_TABLE, values, "_id=" + id + " AND " + selection, null);
                 }
                 break;
             default:
@@ -202,11 +236,22 @@ public class DBContentProvider extends ContentProvider {
                 throw new IllegalArgumentException(msg);
         }
 
+        //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsUpdated;
     }
 
-    private void checkColumns(final String[] projection) {
-        // TODO: Not implemented.
+    private void checkColumns(final String[] available, final String[] projection) {
+//        String[] available = { TodoTable.COLUMN_CATEGORY,
+//                TodoTable.COLUMN_SUMMARY, TodoTable.COLUMN_DESCRIPTION,
+//                TodoTable.COLUMN_ID };
+        if (projection != null) {
+            final HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
+            final HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
+            // check if all columns which are requested are available
+            if (!availableColumns.containsAll(requestedColumns)) {
+                throw new IllegalArgumentException("Unknown columns in projection");
+            }
+        }
     }
 }

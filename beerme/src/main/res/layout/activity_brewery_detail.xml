@@ -43,4 +43,9 @@
         android:drawableStart="@drawable/ic_open_in_browser_black_24dp"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/beerlist"/>
 </LinearLayout>

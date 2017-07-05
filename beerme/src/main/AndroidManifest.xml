@@ -38,7 +38,13 @@
             android:name=".db.DBUpdateService"
             android:exported="false" />
 
-        <activity android:name=".BreweryDetailActivity"></activity>
+        <activity android:name=".BreweryDetailActivity" />
+
+        <provider
+            android:name=".db.DBContentProvider"
+            android:authorities="com.beerme.android.provider"
+            android:enabled="true"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

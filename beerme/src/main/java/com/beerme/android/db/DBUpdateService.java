@@ -19,6 +19,7 @@ import java.net.URL;
  */
 
 // TODO: Setting to allow downloads over WiFi only.
+// TODO: Use DBContentProvider.
 public class DBUpdateService extends IntentService {
     private static final String API_URL = "http://beerme.com/mobile/v3/";
     private static final String UPDATE_URL = API_URL + "dbUpdate.php";

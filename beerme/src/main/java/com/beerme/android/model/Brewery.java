@@ -1,10 +1,12 @@
 package com.beerme.android.model;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.util.Log;
 
+import com.beerme.android.db.DBContentProvider;
 import com.beerme.android.db.DBHelper;
 
 import java.net.MalformedURLException;
@@ -31,24 +33,27 @@ public class Brewery {
         }
 
         final DBHelper dbHelper = DBHelper.getInstance(context);
-        final SQLiteDatabase db = dbHelper.getReadableDatabase();
+        final ContentResolver contentResolver = dbHelper.getContentResolver();
+        final String[] projection = {"name", "address", "status", "hours", "services", "phone", "web"};
+        final String selection = "_id=" + id;
+        final Uri uri = Uri.parse("content://" + DBContentProvider.getAuthority() + "/" + DBContentProvider.getBreweryTable() + "/" + id);
 
-        final String sql = "SELECT name, address, status, hours, services, phone, web FROM brewery WHERE _id = ?";
-        final Cursor c = db.rawQuery(sql, new String[]{Integer.toString(id)});
+        final Cursor c = contentResolver.query(uri, projection, selection, null, null);
 
-        if (c.getCount() == 1) {
+        if ((c != null) && c.moveToFirst()) {
             c.moveToFirst();
             this.id = id;
             this.name = c.getString(0);
+            Log.d("beerme", this.name);
             this.address = c.getString(1);
             this.status = c.getInt(2);
             this.hours = c.getString(3);
             this.services = c.getInt(4);
             this.phone = c.getString(5);
             this.web = c.getString(6);
-        }
 
-        c.close();
+            c.close();
+        }
     }
 
     @Override

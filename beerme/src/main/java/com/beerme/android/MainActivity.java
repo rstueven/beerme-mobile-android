@@ -255,7 +255,7 @@ public class MainActivity extends LocationActivity
                 // TODO: Center this.
                 ((LinearLayout) view).addView(svcLayout);
             } catch (final IllegalArgumentException e) {
-                Toast.makeText(this, "Database error: Illegal brewery ID", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Database error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 view = null;
             }
         }

@@ -254,4 +254,20 @@ public class DBContentProvider extends ContentProvider {
             }
         }
     }
+
+    public static String getAuthority() {
+        return AUTHORITY;
+    }
+
+    public static String getBreweryTable() {
+        return BREWERY_TABLE;
+    }
+
+    public static String getBeerTable() {
+        return BEER_TABLE;
+    }
+
+    public static String getStyleTable() {
+        return STYLE_TABLE;
+    }
 }

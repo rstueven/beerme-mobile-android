@@ -23,6 +23,6 @@ public class Placemark {
     }
 
     public Placemark(final Cursor c) {
-        this(c.getInt(0), c.getString(1), new LatLng(c.getFloat(2), c.getFloat(3)));
+        this(c.getInt(c.getColumnIndex("_id")), c.getString(c.getColumnIndex("name")), new LatLng(c.getFloat(c.getColumnIndex("latitude")), c.getFloat(c.getColumnIndex("longitude"))));
     }
 }

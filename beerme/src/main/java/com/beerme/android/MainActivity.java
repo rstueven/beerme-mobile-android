@@ -1,11 +1,11 @@
 package com.beerme.android;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,10 +27,11 @@ import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
-import com.beerme.android.model.Brewery;
+import com.beerme.android.db.DBContract;
 import com.beerme.android.db.DBHelper;
 import com.beerme.android.map.Placemark;
 import com.beerme.android.map.TouchableWrapper;
+import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
 import com.beerme.android.model.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends LocationActivity
@@ -51,7 +50,7 @@ public class MainActivity extends LocationActivity
         GoogleMap.OnInfoWindowClickListener {
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
     final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
-    final SQLiteDatabase db = dbHelper.getReadableDatabase();
+    final ContentResolver contentResolver = dbHelper.getContentResolver();
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     final private SparseArray<Marker> mPointsOnMap = new SparseArray<>();
@@ -204,32 +203,38 @@ public class MainActivity extends LocationActivity
         final LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (marker.isCluster()) {
-            final List<Marker> markers = marker.getMarkers();
+//            final List<Marker> markers = marker.getMarkers();
             view = inflater.inflate(R.layout.clusterwindow, null);
             final TextView txt = (TextView) view.findViewById(R.id.clusterList);
 
-            final String sql = "SELECT name, address, status, hours, services FROM brewery WHERE _id IN ("
-            + TextUtils.join(",", Collections.nCopies(markers.size(), "?"))
-            + ") ORDER BY name";
             final ArrayList<String> ids = new ArrayList<>();
             for (final Marker m : marker.getMarkers()) {
                 ids.add(Integer.toString((int) m.getData()));
             }
 
             @SuppressWarnings("ZeroLengthArrayAllocation")
-            final Cursor c = db.rawQuery(sql, ids.toArray(new String[0]));
+
+            final Cursor c = contentResolver.query(DBContract.Brewery.CONTENT_URI,
+                    DBContract.Brewery.COLUMNS,
+                    "id IN (" + TextUtils.join(",", ids) + ")",
+                    null,
+                    "name");
+
+
             final StringBuilder txtList = new StringBuilder();
             int n = 0;
-            while (c.moveToNext() && (n < 5)) {
-                txtList.append(c.getString(0)).append('\n');
-                ++n;
-            }
-            if (n < c.getCount()) {
-                txtList.append("(").append(c.getCount() - n).append(" more)");
-            }
-            txt.setText(txtList.toString());
+            if (c != null) {
+                while (c.moveToNext() && (n < 5)) {
+                    txtList.append(c.getString(0)).append('\n');
+                    ++n;
+                }
+                if (n < c.getCount()) {
+                    txtList.append("(").append(c.getCount() - n).append(" more)");
+                }
+                txt.setText(txtList.toString());
 
-            c.close();
+                c.close();
+            }
         } else {
             view = inflater.inflate(R.layout.infowindow, null);
 
@@ -312,23 +317,41 @@ public class MainActivity extends LocationActivity
         protected ArrayList<Placemark> doInBackground(final Void... params) {
             final ArrayList<Placemark> placemarks = new ArrayList<>();
 
-            final String sql = "SELECT _id, name, latitude, longitude FROM brewery"
-                + " WHERE latitude BETWEEN " + bounds.southwest.latitude + " AND " + bounds.northeast.latitude
-                + " AND longitude BETWEEN " + bounds.southwest.longitude + " AND " + bounds.northeast.longitude
-                + " AND " + com.beerme.android.model.Status.statusClause(MainActivity.this);
-            final Cursor c = db.rawQuery(sql, null);
+            final String[] projection = {
+                    DBContract.Brewery.COLUMN_ID,
+                    DBContract.Brewery.COLUMN_NAME,
+                    DBContract.Brewery.COLUMN_LATITUDE,
+                    DBContract.Brewery.COLUMN_LONGITUDE
+            };
+            final String selection = "(latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND (" + com.beerme.android.model.Status.statusClause(MainActivity.this) + ")";
+            final String[] selectionArgs = {
+                    Double.toString(bounds.southwest.latitude),
+                    Double.toString(bounds.northeast.latitude),
+                    Double.toString(bounds.southwest.longitude),
+                    Double.toString(bounds.northeast.longitude)
+            };
+
+            final Cursor c = contentResolver.query(
+                    DBContract.Brewery.CONTENT_URI,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null
+            );
 
             int id;
 
             // Place markers that aren't already on the map.
-            while (c.moveToNext()) {
-                id = c.getInt(0);
-                if (mPointsOnMap.get(id) == null) {
-                    //noinspection ObjectAllocationInLoop
-                    placemarks.add(new Placemark(c));
+            if (c != null) {
+                while (c.moveToNext()) {
+                    id = c.getInt(c.getColumnIndex("_id"));
+                    if (mPointsOnMap.get(id) == null) {
+                        //noinspection ObjectAllocationInLoop
+                        placemarks.add(new Placemark(c));
+                    }
                 }
+                c.close();
             }
-            c.close();
 
             return placemarks;
         }

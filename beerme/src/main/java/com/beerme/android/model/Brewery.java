@@ -34,10 +34,9 @@ public class Brewery {
 
         final DBHelper dbHelper = DBHelper.getInstance(context);
         final ContentResolver contentResolver = dbHelper.getContentResolver();
-        final String[] projection = DBContract.Brewery.COLUMNS;
-        final Uri uri = Uri.parse(DBContract.Brewery.CONTENT_URI + "/" + id);
+        final Uri uri = DBContract.Brewery.buildBreweryUri(id);
 
-        final Cursor c = contentResolver.query(uri, projection, null, null, null);
+        final Cursor c = contentResolver.query(uri, DBContract.Brewery.COLUMNS, null, null, null);
 
         if ((c != null) && c.moveToFirst()) {
             c.moveToFirst();

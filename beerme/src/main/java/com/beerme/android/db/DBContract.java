@@ -19,6 +19,7 @@ public final class DBContract {
 
     public static final class Brewery implements BaseColumns {
         public static final String TABLE_NAME = "brewery";
+        public static final String COLUMN_ID = "_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_ADDRESS = "address";
         public static final String COLUMN_LATITUDE = "latitude";
@@ -32,6 +33,7 @@ public final class DBContract {
         public static final String COLUMN_UPDATED = "updated";
 
         public static final String[] COLUMNS = {
+                COLUMN_ID,
                 COLUMN_NAME,
                 COLUMN_ADDRESS,
                 COLUMN_LATITUDE,
@@ -58,6 +60,7 @@ public final class DBContract {
 
     public static final class Beer implements BaseColumns {
         public static final String TABLE_NAME = "beer";
+        public static final String COLUMN_ID = "_id";
         public static final String COLUMN_BREWERYID = "breweryid";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_STYLE = "style";
@@ -67,6 +70,7 @@ public final class DBContract {
         public static final String COLUMN_BEERMERATING = "beermerating";
 
         public static final String[] COLUMNS = {
+                COLUMN_ID,
                 COLUMN_BREWERYID,
                 COLUMN_NAME,
                 COLUMN_STYLE,
@@ -89,10 +93,12 @@ public final class DBContract {
 
     public static final class Style implements BaseColumns {
         public static final String TABLE_NAME = "style";
+        public static final String COLUMN_ID = "_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_UPDATED = "updated";
 
         public static final String[] COLUMNS = {
+                COLUMN_ID,
                 COLUMN_NAME,
                 COLUMN_UPDATED
         };

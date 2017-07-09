@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -17,12 +16,12 @@ import java.util.HashSet;
 // http://www.vogella.com/tutorials/AndroidSQLite/article.html#content-provider-and-sharing-data
 public class DBContentProvider extends ContentProvider {
     private DBHelper dbHelper;
-    private static final String AUTHORITY = DBContract.CONTENT_AUTHORITY;
+    private static final String AUTHORITY = DBContract.AUTHORITY;
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    private static final String BREWERY_TABLE = DBContract.BreweryEntry.TABLE_NAME;
-    private static final String BEER_TABLE = DBContract.BeerEntry.TABLE_NAME;
-    private static final String STYLE_TABLE = DBContract.StyleEntry.TABLE_NAME;
+    private static final String BREWERY_TABLE = DBContract.Brewery.TABLE_NAME;
+    private static final String BEER_TABLE = DBContract.Beer.TABLE_NAME;
+    private static final String STYLE_TABLE = DBContract.Style.TABLE_NAME;
 
     private static final int CODE_BREWERY_TABLE = 1;
     private static final int CODE_BREWERY_ROW = 2;
@@ -82,17 +81,17 @@ public class DBContentProvider extends ContentProvider {
 
         switch (uriType) {
             case CODE_BREWERY_TABLE:
-                return DBContract.BreweryEntry.CONTENT_TYPE;
+                return DBContract.Brewery.CONTENT_TYPE;
             case CODE_BREWERY_ROW:
-                return DBContract.BreweryEntry.CONTENT_ITEM_TYPE;
+                return DBContract.Brewery.CONTENT_ITEM_TYPE;
             case CODE_BEER_TABLE:
-                return DBContract.BeerEntry.CONTENT_TYPE;
+                return DBContract.Beer.CONTENT_TYPE;
             case CODE_BEER_ROW:
-                return DBContract.BeerEntry.CONTENT_ITEM_TYPE;
+                return DBContract.Beer.CONTENT_ITEM_TYPE;
             case CODE_STYLE_TABLE:
-                return DBContract.StyleEntry.CONTENT_TYPE;
+                return DBContract.Style.CONTENT_TYPE;
             case CODE_STYLE_ROW:
-                return DBContract.StyleEntry.CONTENT_ITEM_TYPE;
+                return DBContract.Style.CONTENT_ITEM_TYPE;
             default:
                 final String msg = "DBContentProvider.getType(" + uri + "): No match (" + uriType + ")";
                 throw new IllegalArgumentException(msg);
@@ -143,38 +142,38 @@ public class DBContentProvider extends ContentProvider {
 
         switch (uriType) {
             case CODE_BREWERY_TABLE:
-                checkColumns(DBContract.BreweryEntry.COLUMNS, projection);
+                checkColumns(DBContract.Brewery.COLUMNS, projection);
                 builder.setTables(BREWERY_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
             case CODE_BREWERY_ROW:
-                checkColumns(DBContract.BreweryEntry.COLUMNS, projection);
+                checkColumns(DBContract.Brewery.COLUMNS, projection);
                 builder.setTables(BREWERY_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
             case CODE_BEER_TABLE:
-                checkColumns(DBContract.BeerEntry.COLUMNS, projection);
+                checkColumns(DBContract.Beer.COLUMNS, projection);
                 builder.setTables(BEER_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
             case CODE_BEER_ROW:
-                checkColumns(DBContract.BeerEntry.COLUMNS, projection);
+                checkColumns(DBContract.Beer.COLUMNS, projection);
                 builder.setTables(BEER_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
             case CODE_STYLE_TABLE:
-                checkColumns(DBContract.StyleEntry.COLUMNS, projection);
+                checkColumns(DBContract.Style.COLUMNS, projection);
                 builder.setTables(STYLE_TABLE);
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = "_id ASC";
                 }
                 break;
             case CODE_STYLE_ROW:
-                checkColumns(DBContract.StyleEntry.COLUMNS, projection);
+                checkColumns(DBContract.Style.COLUMNS, projection);
                 builder.setTables(STYLE_TABLE);
                 builder.appendWhere("_id=" + uri.getLastPathSegment());
                 break;
@@ -242,15 +241,13 @@ public class DBContentProvider extends ContentProvider {
     }
 
     private void checkColumns(final String[] available, final String[] projection) {
-//        String[] available = { TodoTable.COLUMN_CATEGORY,
-//                TodoTable.COLUMN_SUMMARY, TodoTable.COLUMN_DESCRIPTION,
-//                TodoTable.COLUMN_ID };
         if (projection != null) {
             final HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
             final HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
             // check if all columns which are requested are available
             if (!availableColumns.containsAll(requestedColumns)) {
-                throw new IllegalArgumentException("Unknown columns in projection");
+                requestedColumns.removeAll(availableColumns);
+                throw new IllegalArgumentException("Unknown columns in projection: " + requestedColumns);
             }
         }
     }

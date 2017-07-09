@@ -11,13 +11,13 @@ import android.provider.BaseColumns;
  */
 
 public final class DBContract {
-    public static final String CONTENT_AUTHORITY = "com.beerme.android.provider";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final String AUTHORITY = "com.beerme.android.provider";
+    public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_BREWERY = "brewery";
     public static final String PATH_BEER = "beer";
     public static final String PATH_STYLE = "style";
 
-    public static final class BreweryEntry implements BaseColumns {
+    public static final class Brewery implements BaseColumns {
         public static final String TABLE_NAME = "brewery";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_ADDRESS = "address";
@@ -45,18 +45,18 @@ public final class DBContract {
                 COLUMN_UPDATED
         };
 
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_BREWERY).build();
+        public static final Uri CONTENT_URI = BASE_URI.buildUpon().appendPath(PATH_BREWERY).build();
 
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BREWERY;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BREWERY;
 
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BREWERY;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BREWERY;
 
         public static Uri buildBreweryUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 
-    public static final class BeerEntry implements BaseColumns {
+    public static final class Beer implements BaseColumns {
         public static final String TABLE_NAME = "beer";
         public static final String COLUMN_BREWERYID = "breweryid";
         public static final String COLUMN_NAME = "name";
@@ -76,18 +76,18 @@ public final class DBContract {
                 COLUMN_BEERMERATING
         };
 
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_BEER).build();
+        public static final Uri CONTENT_URI = BASE_URI.buildUpon().appendPath(PATH_BEER).build();
 
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BEER;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BEER;
 
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BEER;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BEER;
 
         public static Uri buildBeerUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 
-    public static final class StyleEntry implements BaseColumns {
+    public static final class Style implements BaseColumns {
         public static final String TABLE_NAME = "style";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_UPDATED = "updated";
@@ -97,11 +97,11 @@ public final class DBContract {
                 COLUMN_UPDATED
         };
 
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STYLE).build();
+        public static final Uri CONTENT_URI = BASE_URI.buildUpon().appendPath(PATH_STYLE).build();
 
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STYLE;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_STYLE;
 
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STYLE;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_STYLE;
 
         public static Uri buildStyleUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

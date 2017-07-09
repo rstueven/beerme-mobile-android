@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.beerme.android.db.DBContentProvider;
+import com.beerme.android.db.DBContract;
 import com.beerme.android.db.DBHelper;
 
 import java.net.MalformedURLException;
@@ -34,23 +34,21 @@ public class Brewery {
 
         final DBHelper dbHelper = DBHelper.getInstance(context);
         final ContentResolver contentResolver = dbHelper.getContentResolver();
-        final String[] projection = {"name", "address", "status", "hours", "services", "phone", "web"};
-        final String selection = "_id=" + id;
-        final Uri uri = Uri.parse("content://" + DBContentProvider.getAuthority() + "/" + DBContentProvider.getBreweryTable() + "/" + id);
+        final String[] projection = DBContract.Brewery.COLUMNS;
+        final Uri uri = Uri.parse(DBContract.Brewery.CONTENT_URI + "/" + id);
 
-        final Cursor c = contentResolver.query(uri, projection, selection, null, null);
+        final Cursor c = contentResolver.query(uri, projection, null, null, null);
 
         if ((c != null) && c.moveToFirst()) {
             c.moveToFirst();
             this.id = id;
-            this.name = c.getString(0);
-            Log.d("beerme", this.name);
-            this.address = c.getString(1);
-            this.status = c.getInt(2);
-            this.hours = c.getString(3);
-            this.services = c.getInt(4);
-            this.phone = c.getString(5);
-            this.web = c.getString(6);
+            this.name = c.getString(c.getColumnIndex("name"));
+            this.address = c.getString(c.getColumnIndex("address"));
+            this.status = c.getInt(c.getColumnIndex("status"));
+            this.hours = c.getString(c.getColumnIndex("hours"));
+            this.services = c.getInt(c.getColumnIndex("services"));
+            this.phone = c.getString(c.getColumnIndex("phone"));
+            this.web = c.getString(c.getColumnIndex("web"));
 
             c.close();
         }

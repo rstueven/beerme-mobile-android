@@ -21,11 +21,14 @@ public class Brewery {
     private int id;
     private String name;
     private String address;
+    private double latitude;
+    private double longitude;
     private int status;
     private String hours;
-    private int services;
     private String phone;
     private String web;
+    private int services;
+    private String image;
 
     public Brewery(final Context context, final int id) {
         if (id <= 0) {
@@ -43,11 +46,14 @@ public class Brewery {
             this.id = id;
             this.name = c.getString(c.getColumnIndex("name"));
             this.address = c.getString(c.getColumnIndex("address"));
+            this.latitude = c.getDouble(c.getColumnIndex("latitude"));
+            this.longitude = c.getDouble(c.getColumnIndex("longitude"));
             this.status = c.getInt(c.getColumnIndex("status"));
             this.hours = c.getString(c.getColumnIndex("hours"));
-            this.services = c.getInt(c.getColumnIndex("services"));
             this.phone = c.getString(c.getColumnIndex("phone"));
             this.web = c.getString(c.getColumnIndex("web"));
+            this.services = c.getInt(c.getColumnIndex("services"));
+            this.image = c.getString(c.getColumnIndex("image"));
 
             c.close();
         }
@@ -80,6 +86,14 @@ public class Brewery {
         return address;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -98,6 +112,10 @@ public class Brewery {
 
     public String getWeb() {
         return web;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public String getWebForDisplay() {

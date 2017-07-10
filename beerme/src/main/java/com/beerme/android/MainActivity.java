@@ -197,7 +197,7 @@ public class MainActivity extends LocationActivity
 
     @SuppressLint("InflateParams")
     @Override
-    public View getInfoContents(final Marker marker) {
+    public View getInfoWindow(final Marker marker) {
         View view;
         final LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -268,7 +268,7 @@ public class MainActivity extends LocationActivity
     }
 
     @Override
-    public View getInfoWindow(final Marker marker) {
+    public View getInfoContents(final Marker marker) {
         return null;
     }
 

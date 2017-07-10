@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/beerme/beerme.iml" filepath="$PROJECT_DIR$/beerme/beerme.iml" />
-      <module fileurl="file://$PROJECT_DIR$/beerme-android.iml" filepath="$PROJECT_DIR$/beerme-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android.iml" filepath="$PROJECT_DIR$/beerme-mobile-android.iml" />
     </modules>
   </component>

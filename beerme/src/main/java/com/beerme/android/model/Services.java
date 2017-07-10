@@ -126,6 +126,7 @@ public class Services {
                 final TextView view = new TextView(context);
                 view.setText(service.text);
                 view.setCompoundDrawablesWithIntrinsicBounds(service.icon, 0, 0, 0);
+                view.setCompoundDrawablePadding(8);
                 row.addView(view);
                 ++column;
                 if ((column & 1) == 0) {

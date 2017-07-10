@@ -53,7 +53,7 @@ public final class DBContract {
 
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BREWERY;
 
-        public static Uri buildBreweryUri(final long id) {
+        public static Uri buildUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -86,7 +86,7 @@ public final class DBContract {
 
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_BEER;
 
-        public static Uri buildBeerUri(final long id) {
+        public static Uri buildUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -109,7 +109,7 @@ public final class DBContract {
 
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_STYLE;
 
-        public static Uri buildStyleUri(final long id) {
+        public static Uri buildUri(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

@@ -6,5 +6,5 @@
     <color name="colorPrimary">#F3EFB9</color>
     <color name="colorPrimaryDark">#663333</color>
     <color name="colorAccent">#808080</color>
-    <color name="colorInfoWindowBackground">#80F3EFB9</color>
+    <color name="colorInfoWindowBackground">#D0F3EFB9</color>
 </resources>

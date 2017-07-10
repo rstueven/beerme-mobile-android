@@ -1,7 +1,6 @@
 package com.beerme.android;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,8 +12,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,7 +24,6 @@ import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
 import com.beerme.android.db.DBContract;
-import com.beerme.android.db.DBHelper;
 import com.beerme.android.map.Placemark;
 import com.beerme.android.map.TouchableWrapper;
 import com.beerme.android.model.Brewery;
@@ -48,8 +44,6 @@ public class MainActivity extends LocationActivity
         GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter,
         GoogleMap.OnInfoWindowClickListener {
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
-    final DBHelper dbHelper = DBHelper.getInstance(MainActivity.this);
-    final ContentResolver contentResolver = dbHelper.getContentResolver();
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     final private SparseArray<Marker> mPointsOnMap = new SparseArray<>();
@@ -92,23 +86,6 @@ public class MainActivity extends LocationActivity
     public void onSaveInstanceState(final Bundle savedInstanceState) {
         savedInstanceState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, AppSettings.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -210,8 +187,6 @@ public class MainActivity extends LocationActivity
             for (final Marker m : marker.getMarkers()) {
                 ids.add(Integer.toString((int) m.getData()));
             }
-
-            @SuppressWarnings("ZeroLengthArrayAllocation")
 
             final Cursor c = contentResolver.query(DBContract.Brewery.CONTENT_URI,
                     DBContract.Brewery.COLUMNS,

@@ -33,7 +33,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  * Superclass for location-aware activities.
  */
 
-public class LocationActivity extends AppCompatActivity
+public class LocationActivity extends BeerMeActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     protected Location mCurrentLocation;
     protected boolean mRequestingLocationUpdates = true;

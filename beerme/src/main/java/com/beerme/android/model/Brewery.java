@@ -37,7 +37,7 @@ public class Brewery {
 
         final DBHelper dbHelper = DBHelper.getInstance(context);
         final ContentResolver contentResolver = dbHelper.getContentResolver();
-        final Uri uri = DBContract.Brewery.buildBreweryUri(id);
+        final Uri uri = DBContract.Brewery.buildUri(id);
 
         final Cursor c = contentResolver.query(uri, DBContract.Brewery.COLUMNS, null, null, null);
 

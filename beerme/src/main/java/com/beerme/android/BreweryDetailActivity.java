@@ -1,11 +1,14 @@
 package com.beerme.android;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -13,8 +16,12 @@ import android.widget.Toast;
 
 import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
+import com.beerme.android.util.DownloadImageTask;
 
-public class BreweryDetailActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.net.URL;
+
+public class BreweryDetailActivity extends BeerMeActivity {
     int id = -1;
 
     @Override
@@ -40,6 +47,16 @@ public class BreweryDetailActivity extends AppCompatActivity {
             if ((address == null) || address.isEmpty()) {
                 addressView.setVisibility(View.GONE);
             }
+
+            final TextView hoursView = (TextView) findViewById(R.id.hours);
+            final String hours = brewery.getHours();
+            hoursView.setText(hours);
+            if ((hours == null) || hours.isEmpty()) {
+                hoursView.setVisibility(View.GONE);
+            }
+
+            final TableLayout svcView = Services.serviceView(this, brewery.getServices());
+            ((FrameLayout) findViewById(R.id.services)).addView(svcView);
 
             final TextView phoneView = (TextView) findViewById(R.id.phone);
             final String phone = brewery.getPhone();
@@ -73,8 +90,37 @@ public class BreweryDetailActivity extends AppCompatActivity {
                 });
             }
 
-            final TableLayout svcView = Services.serviceView(this, brewery.getServices());
-            ((LinearLayout) findViewById(R.id.brewery_detail_layout)).addView(svcView);
+            final ImageView imageView = (ImageView) findViewById(R.id.image);
+            final String breweryImage = brewery.getImage();
+            if ((breweryImage == null) || breweryImage.isEmpty()) {
+                imageView.setVisibility(View.GONE);
+            } else {
+                String imageUrl = "http://beerme.com/graphics/brewery/" + (int)(brewery.getId() / 1000) + "/" + brewery.getId() + "/";
+                switch (breweryImage.charAt(0)) {
+                    case 'P':
+                        // Premises
+                        imageUrl += "premises.png";
+                        break;
+                    case 'G':
+                        // Generic
+                        imageUrl += "generic.png";
+                        break;
+                    default:
+                        imageUrl = null;
+                        imageView.setVisibility(View.GONE);
+                }
+
+                if (imageUrl != null) {
+                    new DownloadImageTask(imageView).execute(imageUrl);
+//                    try {
+//                        final Bitmap image = BitmapFactory.decodeStream(new URL(imageUrl).openConnection().getInputStream());
+//                        imageView.setImageBitmap(image);
+//                    } catch (IOException e) {
+//                        Log.e("beerme", e.getLocalizedMessage());
+//                        imageView.setVisibility(View.GONE);
+//                    }
+                }
+            }
         } catch (final IllegalArgumentException e) {
             Toast.makeText(this, "Database error: Illegal brewery ID " + id, Toast.LENGTH_LONG).show();
             Log.e("beerme", e.getLocalizedMessage());

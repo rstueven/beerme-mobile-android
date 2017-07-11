@@ -5,4 +5,7 @@
     <!--<string name="location_permission_rationale">If you want to be able to find breweries in your vicinity, or to get directions to a brewery, you\'ll need to allow the app to access your location.</string>-->
     <string name="location_permission_rationale">Your location is necessary to show nearby breweries.</string>
     <string name="premises_image">premises image</string>
+    <string name="beer_list">Beer List</string>
+    <string name="title_activity_beer_list">BeerListActivity</string>
+    <string name="brewery">Brewery</string>
 </resources>

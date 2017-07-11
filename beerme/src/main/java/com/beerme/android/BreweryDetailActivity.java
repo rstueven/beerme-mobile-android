@@ -1,15 +1,12 @@
 package com.beerme.android;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,9 +14,6 @@ import android.widget.Toast;
 import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
 import com.beerme.android.util.DownloadImageTask;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class BreweryDetailActivity extends BeerMeActivity {
     int id = -1;
@@ -90,12 +84,23 @@ public class BreweryDetailActivity extends BeerMeActivity {
                 });
             }
 
+            final TextView beerListView = (TextView) findViewById(R.id.beerlist);
+            beerListView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    final Intent intent = new Intent(BreweryDetailActivity.this, BeerListActivity.class);
+                    intent.putExtra("id", brewery.getId());
+                    intent.putExtra("name", brewery.getName());
+                    startActivity(intent);
+                }
+            });
+
             final ImageView imageView = (ImageView) findViewById(R.id.image);
             final String breweryImage = brewery.getImage();
             if ((breweryImage == null) || breweryImage.isEmpty()) {
                 imageView.setVisibility(View.GONE);
             } else {
-                String imageUrl = "http://beerme.com/graphics/brewery/" + (int)(brewery.getId() / 1000) + "/" + brewery.getId() + "/";
+                String imageUrl = "http://beerme.com/graphics/brewery/" + (brewery.getId() / 1000) + "/" + brewery.getId() + "/";
                 switch (breweryImage.charAt(0)) {
                     case 'P':
                         // Premises
@@ -112,13 +117,6 @@ public class BreweryDetailActivity extends BeerMeActivity {
 
                 if (imageUrl != null) {
                     new DownloadImageTask(imageView).execute(imageUrl);
-//                    try {
-//                        final Bitmap image = BitmapFactory.decodeStream(new URL(imageUrl).openConnection().getInputStream());
-//                        imageView.setImageBitmap(image);
-//                    } catch (IOException e) {
-//                        Log.e("beerme", e.getLocalizedMessage());
-//                        imageView.setVisibility(View.GONE);
-//                    }
                 }
             }
         } catch (final IllegalArgumentException e) {

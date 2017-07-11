@@ -38,7 +38,8 @@
             android:name=".db.DBUpdateService"
             android:exported="false" />
 
-        <activity android:name=".BreweryDetailActivity" />
+        <activity android:name=".BreweryDetailActivity"
+            android:label="@string/brewery"/>
 
         <provider
             android:name=".db.DBContentProvider"
@@ -46,7 +47,11 @@
             android:enabled="true"
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
-            android:label="Content provider for Beer Me! mobile"/>
+            android:label="Content provider for Beer Me! mobile" />
+
+        <activity
+            android:name=".BeerListActivity"
+            android:label="@string/beer_list" />
     </application>
 
 </manifest>

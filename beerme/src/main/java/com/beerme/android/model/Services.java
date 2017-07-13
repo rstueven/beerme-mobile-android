@@ -3,6 +3,7 @@ package com.beerme.android.model;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -114,19 +115,19 @@ public class Services {
         final ArrayList<Service> cells = loadServices(svc);
 
         if (!cells.isEmpty()) {
-            // Set TableLayout width, height, stretchColumns=1
             int column = 0;
             final Iterator<Service> iterator = cells.iterator();
             TableRow row = new TableRow(context);
             tableLayout.addView(row);
+            final LayoutInflater inflater = LayoutInflater.from(context);
 
             while (iterator.hasNext()) {
                 final Service service = iterator.next();
                 //noinspection ObjectAllocationInLoop
-                final TextView view = new TextView(context);
+                final TextView view = (TextView) inflater.inflate(R.layout.service_cell, null);
                 view.setText(service.text);
                 view.setCompoundDrawablesWithIntrinsicBounds(service.icon, 0, 0, 0);
-                view.setCompoundDrawablePadding(8);
+                //noinspection ObjectAllocationInLoop
                 row.addView(view);
                 ++column;
                 if ((column & 1) == 0) {

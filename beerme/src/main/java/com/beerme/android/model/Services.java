@@ -1,5 +1,6 @@
 package com.beerme.android.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
@@ -124,6 +125,7 @@ public class Services {
             while (iterator.hasNext()) {
                 final Service service = iterator.next();
                 //noinspection ObjectAllocationInLoop
+                @SuppressLint("InflateParams")
                 final TextView view = (TextView) inflater.inflate(R.layout.service_cell, null);
                 view.setText(service.text);
                 view.setCompoundDrawablesWithIntrinsicBounds(service.icon, 0, 0, 0);

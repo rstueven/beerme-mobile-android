@@ -18,7 +18,7 @@ import com.beerme.android.db.DBContract;
 public class BeerListActivity extends BeerMeActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     int breweryId = -1;
-    SimpleCursorAdapter adapter;
+    BeerListAdapter adapter;
     final String[] PROJECTION = DBContract.Beer.COLUMNS;
     final String SELECTION = DBContract.Beer.COLUMN_BREWERYID + " = ?";
 
@@ -43,11 +43,7 @@ public class BeerListActivity extends BeerMeActivity
         breweryNameView.setText(breweryName);
 
         final ListView beerListView = (ListView) findViewById(R.id.beer_list);
-        final String[] fromColumns = {DBContract.Beer.COLUMN_NAME};
-        final int[] toViews = {android.R.id.text1};
-        adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1, null,
-                fromColumns, toViews, 0);
+        adapter = new BeerListAdapter(this, null);
         beerListView.setAdapter(adapter);
         getLoaderManager().initLoader(0, null, this);
     }

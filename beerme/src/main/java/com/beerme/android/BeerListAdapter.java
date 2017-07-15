@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.beerme.android.db.DBContract;
 import com.beerme.android.model.Style;
 
+import java.util.Locale;
+
 /**
  * Created by rstueven on 7/15/17.
  * <p/>
@@ -36,12 +38,18 @@ public class BeerListAdapter extends CursorAdapter {
         final String beerName = cursor.getString(cursor.getColumnIndex(DBContract.Beer.COLUMN_NAME));
         beerNameView.setText(beerName);
 
-        final TextView styleNameView = (TextView) view.findViewById(R.id.style_name);
         final int styleId = cursor.getInt(cursor.getColumnIndex(DBContract.Beer.COLUMN_STYLE));
         if (styleId > 0) {
             final Style style = new Style(context, styleId);
             final String styleName = style.getName();
+            final TextView styleNameView = (TextView) view.findViewById(R.id.style_name);
             styleNameView.setText(styleName);
+        }
+
+        final double abv = cursor.getDouble(cursor.getColumnIndex(DBContract.Beer.COLUMN_ABV));
+        if (abv > 0) {
+            final TextView abvView = (TextView) view.findViewById(R.id.abv);
+            abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));
         }
     }
 }

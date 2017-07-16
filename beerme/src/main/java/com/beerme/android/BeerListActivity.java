@@ -8,9 +8,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.beerme.android.db.DBContract;
@@ -45,6 +46,14 @@ public class BeerListActivity extends BeerMeActivity
         final ListView beerListView = (ListView) findViewById(R.id.beer_list);
         adapter = new BeerListAdapter(this, null);
         beerListView.setAdapter(adapter);
+        beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                final Intent intent = new Intent(BeerListActivity.this, BeerActivity.class);
+                intent.putExtra("id", (int) id);
+                startActivity(intent);
+            }
+        });
         getLoaderManager().initLoader(0, null, this);
     }
 

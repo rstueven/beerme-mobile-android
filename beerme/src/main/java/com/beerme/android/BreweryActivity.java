@@ -15,13 +15,13 @@ import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
 import com.beerme.android.util.DownloadImageTask;
 
-public class BreweryDetailActivity extends BeerMeActivity {
+public class BreweryActivity extends BeerMeActivity {
     int id = -1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brewery_detail);
+        setContentView(R.layout.activity_brewery);
 
         final Intent intent = getIntent();
         id = intent.getIntExtra("id", -1);
@@ -88,7 +88,7 @@ public class BreweryDetailActivity extends BeerMeActivity {
             beerListView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    final Intent intent = new Intent(BreweryDetailActivity.this, BeerListActivity.class);
+                    final Intent intent = new Intent(BreweryActivity.this, BeerListActivity.class);
                     intent.putExtra("id", brewery.getId());
                     intent.putExtra("name", brewery.getName());
                     startActivity(intent);

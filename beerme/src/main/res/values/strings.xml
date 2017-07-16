@@ -8,4 +8,6 @@
     <string name="beer_list">Beer List</string>
     <string name="title_activity_beer_list">BeerListActivity</string>
     <string name="brewery">Brewery</string>
+    <string name="title_activity_beer">BeerActivity</string>
+    <string name="beer">Beer</string>
 </resources>

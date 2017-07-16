@@ -39,8 +39,9 @@
             android:name=".db.DBUpdateService"
             android:exported="false" />
 
-        <activity android:name=".BreweryDetailActivity"
-            android:label="@string/brewery"/>
+        <activity
+            android:name=".BreweryActivity"
+            android:label="@string/brewery" />
 
         <provider
             android:name=".db.DBContentProvider"
@@ -53,6 +54,9 @@
         <activity
             android:name=".BeerListActivity"
             android:label="@string/beer_list" />
+        <activity
+            android:name=".BeerActivity"
+            android:label="@string/beer" />
     </application>
 
 </manifest>

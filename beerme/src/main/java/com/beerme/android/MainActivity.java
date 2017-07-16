@@ -252,7 +252,7 @@ public class MainActivity extends LocationActivity
 //        Log.d("beerme", "onInfoWindowClick(" + marker.getData() + " : " + marker.getTitle() + ")");
         final Integer id = marker.getData();
         if (id != null) {
-            final Intent intent = new Intent(this, BreweryDetailActivity.class);
+            final Intent intent = new Intent(this, BreweryActivity.class);
             intent.putExtra("id", id);
             startActivity(intent);
         }

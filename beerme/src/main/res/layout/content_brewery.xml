@@ -8,7 +8,7 @@
     android:layout_marginStart="8dp"
     android:padding="8dp"
     android:orientation="vertical"
-    tools:context="com.beerme.android.BreweryDetailActivity">
+    tools:context="com.beerme.android.BreweryActivity">
 
     <TextView
         android:id="@+id/name"

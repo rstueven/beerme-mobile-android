@@ -29,6 +29,9 @@ public class BeerMeActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startActivity(new Intent(this, AppSettings.class));
                 return true;
+            case R.id.action_search:
+                onSearchRequested();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

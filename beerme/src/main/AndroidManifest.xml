@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.beerme.android">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,34 +15,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".SplashActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" />
-        <activity
-            android:name=".AppSettings"
-            android:label="@string/action_settings" />
-
-        <service
-            android:name=".db.DBUpdateService"
-            android:exported="false" />
-
-        <activity
-            android:name=".BreweryActivity"
-            android:label="@string/brewery" />
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".SearchActivity" />
 
         <provider
             android:name=".db.DBContentProvider"
@@ -51,12 +32,51 @@
             android:icon="@mipmap/ic_launcher"
             android:label="Content provider for Beer Me! mobile" />
 
+        <service
+            android:name=".db.DBUpdateService"
+            android:exported="false" />
+
+        <activity
+            android:name=".SplashActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" />
+
+        <activity
+            android:name=".AppSettings"
+            android:label="@string/action_settings" />
+
+        <activity
+            android:name=".BreweryActivity"
+            android:label="@string/brewery" />
+
         <activity
             android:name=".BeerListActivity"
-            android:label="@string/beer_list" />
+            android:label="@string/title_activity_main" />
+
         <activity
             android:name=".BeerActivity"
-            android:label="@string/beer" />
+            android:label="@string/title_activity_main" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
     </application>
 
 </manifest>

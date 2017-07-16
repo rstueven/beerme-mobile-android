@@ -93,8 +93,16 @@ public class Beer {
         this.name = name;
     }
 
-    public int getStyle() {
+    public int getStyleId() {
         return style;
+    }
+
+    public String getStyle() {
+        if (style <= 0) {
+            return null;
+        } else {
+            return new Style(BeerMeApplication.getInstance(), style).getName();
+        }
     }
 
     public void setStyle(final int style) {

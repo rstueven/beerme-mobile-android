@@ -39,18 +39,13 @@ class BeerListAdapter extends CursorAdapter {
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final Beer beer = new Beer(context, cursor.getInt(cursor.getColumnIndex(DBContract.Beer.COLUMN_ID)));
         final TextView beerNameView = (TextView) view.findViewById(R.id.beer_name);
-        final String beerName = cursor.getString(cursor.getColumnIndex(DBContract.Beer.COLUMN_NAME));
+        final String beerName = beer.getName();
         beerNameView.setText(beerName);
 
-        final int styleId = cursor.getInt(cursor.getColumnIndex(DBContract.Beer.COLUMN_STYLE));
-        if (styleId > 0) {
-            final Style style = new Style(context, styleId);
-            final String styleName = style.getName();
-            final TextView styleNameView = (TextView) view.findViewById(R.id.style_name);
-            styleNameView.setText(styleName);
-        }
+        final TextView styleNameView = (TextView) view.findViewById(R.id.style_name);
+        styleNameView.setText(beer.getStyle());
 
-        final double abv = cursor.getDouble(cursor.getColumnIndex(DBContract.Beer.COLUMN_ABV));
+        final double abv = beer.getAbv();
         if (abv > 0) {
             final TextView abvView = (TextView) view.findViewById(R.id.abv);
             abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));

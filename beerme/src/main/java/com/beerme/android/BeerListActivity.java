@@ -51,6 +51,7 @@ public class BeerListActivity extends BeerMeActivity
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final Intent intent = new Intent(BeerListActivity.this, BeerActivity.class);
                 intent.putExtra("id", (int) id);
+                intent.putExtra("brewery_name", breweryName);
                 startActivity(intent);
             }
         });

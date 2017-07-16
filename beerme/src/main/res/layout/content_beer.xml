@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/beer_layout"
     android:layout_width="match_parent"
@@ -7,14 +7,37 @@
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:padding="8dp"
-    android:orientation="vertical"
     tools:context="com.beerme.android.BeerActivity">
 
     <TextView
-        android:id="@+id/beer_name"
-        android:layout_width="match_parent"
+        android:id="@+id/brewery_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:textSize="18sp"
         android:textStyle="bold" />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/beer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/brewery_name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/beer_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/beer_name" />
+
+    <TextView
+        android:id="@+id/beer_abv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/beer_style" />
+</RelativeLayout>

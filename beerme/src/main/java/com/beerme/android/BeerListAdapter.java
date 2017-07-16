@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beerme.android.db.DBContract;
+import com.beerme.android.model.Beer;
 import com.beerme.android.model.Style;
 
 import java.util.Locale;
@@ -19,10 +22,10 @@ import java.util.Locale;
  * Manages the beer list.
  */
 
-public class BeerListAdapter extends CursorAdapter {
+class BeerListAdapter extends CursorAdapter {
     final private LayoutInflater inflater;
 
-    public BeerListAdapter(final Context context, final Cursor c) {
+    BeerListAdapter(final Context context, final Cursor c) {
         super(context, c, 0);
         inflater = LayoutInflater.from(context);
     }
@@ -34,6 +37,7 @@ public class BeerListAdapter extends CursorAdapter {
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
+        final Beer beer = new Beer(context, cursor.getInt(cursor.getColumnIndex(DBContract.Beer.COLUMN_ID)));
         final TextView beerNameView = (TextView) view.findViewById(R.id.beer_name);
         final String beerName = cursor.getString(cursor.getColumnIndex(DBContract.Beer.COLUMN_NAME));
         beerNameView.setText(beerName);
@@ -52,10 +56,14 @@ public class BeerListAdapter extends CursorAdapter {
             abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));
         }
 
-        final double beermerating = cursor.getDouble(cursor.getColumnIndex(DBContract.Beer.COLUMN_BEERMERATING));
-        if (beermerating > 0) {
-            final TextView beermeratingView = (TextView) view.findViewById(R.id.beerme_rating);
-            beermeratingView.setText(String.format(Locale.getDefault(), "%.1f points", beermerating));
-        }
+//        final double stars = beer.getStarCount();
+//        if (stars > 0) {
+//            final TextView beermeratingView = (TextView) view.findViewById(R.id.beerme_rating);
+//            beermeratingView.setText(String.format(Locale.getDefault(), "%.1f stars", stars));
+//        }
+
+        final FrameLayout starFrame = (FrameLayout) view.findViewById(R.id.stars_layout);
+        final LinearLayout starLayout = beer.getStars();
+        starFrame.addView(starLayout);
     }
 }

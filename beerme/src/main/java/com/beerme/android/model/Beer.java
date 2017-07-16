@@ -3,8 +3,15 @@ package com.beerme.android.model;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.beerme.android.BeerMeApplication;
+import com.beerme.android.R;
 import com.beerme.android.db.DBContract;
 import com.beerme.android.db.DBHelper;
 
@@ -116,5 +123,35 @@ public class Beer {
 
     public void setBeermerating(final double beermerating) {
         this.beermerating = beermerating;
+    }
+
+    public double getStarCount() {
+        return (beermerating <= 0) ? 0 : (float) Math.max((Math.floor(beermerating - 10.5) / 2) + 0.5, 0.5);
+    }
+
+    public LinearLayout getStars() {
+        final Context context = BeerMeApplication.getInstance();
+        final double starCount = getStarCount();
+        final int wholeStars = (int)starCount;
+        final LinearLayout layout = new LinearLayout(context);
+
+        for (int i = 0; i < wholeStars; i++) {
+            @SuppressWarnings("ObjectAllocationInLoop")
+            final ImageView star = new ImageView(context);
+            final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_star_black_24dp);
+            drawable.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);
+            star.setImageDrawable(drawable);
+            layout.addView(star);
+        }
+
+        if ((starCount - wholeStars) > 0) {
+            final ImageView star = new ImageView(context);
+            final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_star_half_black_24dp);
+            drawable.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);
+            star.setImageDrawable(drawable);
+            layout.addView(star);
+        }
+
+        return layout;
     }
 }

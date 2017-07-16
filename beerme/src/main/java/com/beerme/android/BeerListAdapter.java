@@ -51,5 +51,11 @@ public class BeerListAdapter extends CursorAdapter {
             final TextView abvView = (TextView) view.findViewById(R.id.abv);
             abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));
         }
+
+        final double beermerating = cursor.getDouble(cursor.getColumnIndex(DBContract.Beer.COLUMN_BEERMERATING));
+        if (beermerating > 0) {
+            final TextView beermeratingView = (TextView) view.findViewById(R.id.beerme_rating);
+            beermeratingView.setText(String.format(Locale.getDefault(), "%.1f points", beermerating));
+        }
     }
 }

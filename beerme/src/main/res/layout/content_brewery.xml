@@ -73,7 +73,7 @@
         android:drawableStart="@drawable/ic_list_black_24dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:text="@string/beer_list"/>
+        android:text="@string/beer_list" />
 
     <ImageView
         android:id="@+id/image"

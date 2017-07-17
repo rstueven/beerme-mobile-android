@@ -12,13 +12,13 @@
         android:textStyle="bold" />
 
     <!--<TextView-->
-        <!--android:id="@+id/beerme_rating"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_toEndOf="@id/beer_name"-->
-        <!--android:gravity="end" />-->
+    <!--android:id="@+id/beerme_rating"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_toEndOf="@id/beer_name"-->
+    <!--android:gravity="end" />-->
 
     <FrameLayout
         android:id="@+id/stars_layout"

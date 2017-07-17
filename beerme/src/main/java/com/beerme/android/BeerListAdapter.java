@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.beerme.android.db.DBContract;
 import com.beerme.android.model.Beer;
-import com.beerme.android.model.Style;
 
 import java.util.Locale;
 
@@ -50,12 +49,6 @@ class BeerListAdapter extends CursorAdapter {
             final TextView abvView = (TextView) view.findViewById(R.id.abv);
             abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));
         }
-
-//        final double stars = beer.getStarCount();
-//        if (stars > 0) {
-//            final TextView beermeratingView = (TextView) view.findViewById(R.id.beerme_rating);
-//            beermeratingView.setText(String.format(Locale.getDefault(), "%.1f stars", stars));
-//        }
 
         final FrameLayout starFrame = (FrameLayout) view.findViewById(R.id.stars_layout);
         final LinearLayout starLayout = beer.getStars();

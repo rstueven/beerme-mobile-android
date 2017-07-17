@@ -17,11 +17,9 @@ public class AppSettings extends PreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new AppSettingsFragment()).commit();
     }
 
-    public static class AppSettingsFragment extends PreferenceFragment
-    {
+    public static class AppSettingsFragment extends PreferenceFragment {
         @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
         }

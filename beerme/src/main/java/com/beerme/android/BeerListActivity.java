@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -62,7 +61,7 @@ public class BeerListActivity extends BeerMeActivity
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         return new CursorLoader(this, DBContract.Beer.CONTENT_URI,
                 PROJECTION,
-                SELECTION, new String[] {Integer.toString(breweryId)},
+                SELECTION, new String[]{Integer.toString(breweryId)},
                 DBContract.Beer.COLUMN_NAME);
     }
 

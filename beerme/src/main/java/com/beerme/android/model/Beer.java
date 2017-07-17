@@ -140,7 +140,7 @@ public class Beer {
     public LinearLayout getStars() {
         final Context context = BeerMeApplication.getInstance();
         final double starCount = getStarCount();
-        final int wholeStars = (int)starCount;
+        final int wholeStars = (int) starCount;
         final LinearLayout layout = new LinearLayout(context);
 
         for (int i = 0; i < wholeStars; i++) {

@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -64,7 +63,8 @@ public class SearchActivity extends BeerMeActivity
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final Intent intent = new Intent(SearchActivity.this, BreweryActivity.class);
                 intent.putExtra("id", (int) id);
-                startActivity(intent);            }
+                startActivity(intent);
+            }
         });
         getLoaderManager().initLoader(BREWERY_LOADER, breweryArgs, this);
     }

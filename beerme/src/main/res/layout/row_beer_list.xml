@@ -9,16 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/stars_layout"
         android:textStyle="bold" />
-
-    <!--<TextView-->
-    <!--android:id="@+id/beerme_rating"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_toEndOf="@id/beer_name"-->
-    <!--android:gravity="end" />-->
 
     <FrameLayout
         android:id="@+id/stars_layout"
@@ -32,7 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/beer_name" />
+        android:layout_below="@id/beer_name"
+        android:layout_toStartOf="@+id/abv" />
 
     <TextView
         android:id="@+id/abv"
@@ -40,6 +33,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/stars_layout"
-        android:layout_toEndOf="@id/style_name"
         android:gravity="end" />
 </RelativeLayout>

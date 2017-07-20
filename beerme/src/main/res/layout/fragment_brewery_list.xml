@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:padding="8dp"
+    android:orientation="vertical"
+    android:baselineAligned="false">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/breweries"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <ListView
+        android:id="@+id/brewery_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/brewery_list_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_breweries_found"
+        android:visibility="gone"/>
+</LinearLayout>

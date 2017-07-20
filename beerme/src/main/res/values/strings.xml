@@ -11,4 +11,6 @@
     <string name="beer">Beer</string>
     <string name="search_hint">Search breweries, beers, locations</string>
     <string name="action_search">Search</string>
+    <string name="no_breweries_found">No breweries found</string>
+    <string name="breweries">Breweries</string>
 </resources>

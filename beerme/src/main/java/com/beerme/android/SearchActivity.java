@@ -56,6 +56,7 @@ public class SearchActivity extends BeerMeActivity
         breweryArgs.putStringArray("selection_args", new String[]{"%" + query + "%"});
         breweryArgs.putStringArray("projection", projection);
         final ListView listView = (ListView) findViewById(R.id.brewery_list);
+        listView.setEmptyView(findViewById(R.id.brewery_list_empty));
         breweryAdapter = new SearchAdapter(this, null);
         listView.setAdapter(breweryAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -40,6 +40,16 @@ public class BreweryActivity extends BeerMeActivity {
             addressView.setText(address);
             if ((address == null) || address.isEmpty()) {
                 addressView.setVisibility(View.GONE);
+            } else {
+                addressView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        final Intent intent = new Intent(BreweryActivity.this, MainActivity.class);
+                        intent.putExtra("latitude", brewery.getLatitude());
+                        intent.putExtra("longitude", brewery.getLongitude());
+                        startActivity(intent);
+                    }
+                });
             }
 
             final TextView hoursView = (TextView) findViewById(R.id.hours);

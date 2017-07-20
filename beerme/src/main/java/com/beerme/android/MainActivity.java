@@ -54,7 +54,13 @@ public class MainActivity extends LocationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState != null) {
+        final Intent intent = getIntent();
+        final Double lat = intent.getDoubleExtra("latitude", Double.NaN);
+        final Double lng = intent.getDoubleExtra("longitude", Double.NaN);
+
+        if (!lat.isNaN() && !lng.isNaN()) {
+            mCameraPosition = new CameraPosition(new LatLng(lat, lng), 17f, 0f, 0f);
+        } else if (savedInstanceState != null) {
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
@@ -111,6 +117,7 @@ public class MainActivity extends LocationActivity
 
         if (mCameraPosition != null) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            mRequestingLocationUpdates = false;
         } else if (mCurrentLocation != null) {
             final LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

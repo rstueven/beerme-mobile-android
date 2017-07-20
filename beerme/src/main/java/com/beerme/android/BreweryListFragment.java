@@ -22,16 +22,6 @@ public class BreweryListFragment extends Fragment
     private SearchAdapter breweryAdapter;
     private Context mContext;
 
-    public BreweryListFragment() {
-    }
-
-    public static BreweryListFragment newInstance() {
-        final BreweryListFragment fragment = new BreweryListFragment();
-        final Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

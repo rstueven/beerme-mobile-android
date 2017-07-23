@@ -29,6 +29,7 @@ public class Beer {
     private double abv;
     private String image;
     private double beermerating;
+    private String breweryName;
 
     public Beer(final Context context, final int id) {
         if (id <= 0) {
@@ -73,24 +74,12 @@ public class Beer {
         return id;
     }
 
-    public void setId(final int id) {
-        this.id = id;
-    }
-
     public int getBreweryid() {
         return breweryid;
     }
 
-    public void setBreweryid(final int breweryid) {
-        this.breweryid = breweryid;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
     }
 
     public int getStyleId() {
@@ -98,42 +87,22 @@ public class Beer {
     }
 
     public String getStyle() {
-        if (style <= 0) {
-            return null;
-        } else {
-            return new Style(BeerMeApplication.getInstance(), style).getName();
-        }
-    }
-
-    public void setStyle(final int style) {
-        this.style = style;
+        return (style > 0) ? new Style(BeerMeApplication.getInstance(), style).getName() : null;
     }
 
     public double getAbv() {
         return abv;
     }
 
-    public void setAbv(final double abv) {
-        this.abv = abv;
-    }
-
     public String getImage() {
         return image;
-    }
-
-    public void setImage(final String image) {
-        this.image = image;
     }
 
     public double getBeermerating() {
         return beermerating;
     }
 
-    public void setBeermerating(final double beermerating) {
-        this.beermerating = beermerating;
-    }
-
-    public double getStarCount() {
+    private double getStarCount() {
         return (beermerating <= 0) ? 0 : (float) Math.max((Math.floor(beermerating - 10.5) / 2) + 0.5, 0.5);
     }
 
@@ -161,5 +130,14 @@ public class Beer {
         }
 
         return layout;
+    }
+
+    public String getBreweryName() {
+        if (breweryName == null) {
+            final Brewery brewery = new Brewery(BeerMeApplication.getInstance(), breweryid);
+            breweryName = brewery.getName();
+        }
+
+        return breweryName;
     }
 }

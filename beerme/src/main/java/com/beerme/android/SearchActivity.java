@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 
 public class SearchActivity extends BeerMeActivity {
     private static final int BREWERY_TAB = 0;
+    private static final int BEER_TAB = 1;
     private String mQuery;
 
     @Override
@@ -43,6 +44,8 @@ public class SearchActivity extends BeerMeActivity {
             switch (position) {
                 case BREWERY_TAB:
                     return BreweryListFragment.newInstance(mQuery);
+                case BEER_TAB:
+                    return BeerListFragment.newInstance(mQuery);
                 default:
                     return null;
             }
@@ -50,7 +53,7 @@ public class SearchActivity extends BeerMeActivity {
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -58,6 +61,8 @@ public class SearchActivity extends BeerMeActivity {
             switch (position) {
                 case BREWERY_TAB:
                     return "Breweries";
+                case BEER_TAB:
+                    return "Beers";
                 default:
                     return null;
             }

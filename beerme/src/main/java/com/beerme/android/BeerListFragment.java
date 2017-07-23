@@ -17,15 +17,15 @@ import android.widget.ListView;
 
 import com.beerme.android.db.DBContract;
 
-public class BreweryListFragment extends Fragment
+public class BeerListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int BREWERY_LOADER = 0;
+    private static final int BEER_LOADER = 1;
     private SearchAdapter adapter;
     private Context mContext;
     private static final String KEY_QUERY = "mQuery";
 
-    public static BreweryListFragment newInstance(final String query) {
-        final BreweryListFragment frag = new BreweryListFragment();
+    public static BeerListFragment newInstance(final String query) {
+        final BeerListFragment frag = new BeerListFragment();
         final Bundle args = new Bundle();
         args.putString(KEY_QUERY, query.trim());
         frag.setArguments(args);
@@ -41,15 +41,15 @@ public class BreweryListFragment extends Fragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_brewery_list, container, false);
-        final ListView listView = (ListView) view.findViewById(R.id.brewery_list);
-        listView.setEmptyView(view.findViewById(R.id.brewery_list_empty));
+        final View view = inflater.inflate(R.layout.fragment_beer_list, container, false);
+        final ListView listView = (ListView) view.findViewById(R.id.beer_list);
+        listView.setEmptyView(view.findViewById(R.id.beer_list_empty));
         adapter = new SearchAdapter(mContext, null);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                final Intent intent = new Intent(mContext, BreweryActivity.class);
+                final Intent intent = new Intent(mContext, BeerActivity.class);
                 intent.putExtra("id", (int) id);
                 startActivity(intent);
             }
@@ -71,11 +71,11 @@ public class BreweryListFragment extends Fragment
 
     private void search(final String query) {
         Log.d("beerme", "search: <" + query + ">");
-        final String[] projection = new String[]{DBContract.Brewery.COLUMN_ID, DBContract.Brewery.COLUMN_NAME, DBContract.Brewery.COLUMN_ADDRESS};
-        final Bundle breweryArgs = new Bundle();
-        breweryArgs.putStringArray("selection_args", new String[]{"%" + query + "%"});
-        breweryArgs.putStringArray("projection", projection);
-        getLoaderManager().initLoader(BREWERY_LOADER, breweryArgs, this);
+        final String[] projection = new String[]{DBContract.Beer.COLUMN_ID, DBContract.Beer.COLUMN_NAME};
+        final Bundle args = new Bundle();
+        args.putStringArray("selection_args", new String[]{"%" + query + "%"});
+        args.putStringArray("projection", projection);
+        getLoaderManager().initLoader(BEER_LOADER, args, this);
     }
 
     @Override
@@ -84,9 +84,9 @@ public class BreweryListFragment extends Fragment
         final String ORDER = "name ASC";
 
         switch (id) {
-            case BREWERY_LOADER:
+            case BEER_LOADER:
                 return new CursorLoader(mContext,
-                        DBContract.Brewery.CONTENT_URI,
+                        DBContract.Beer.CONTENT_URI,
                         args.getStringArray("projection"),
                         SELECTION,
                         args.getStringArray("selection_args"),
@@ -101,7 +101,7 @@ public class BreweryListFragment extends Fragment
         final int id = loader.getId();
 
         switch (id) {
-            case BREWERY_LOADER:
+            case BEER_LOADER:
                 adapter.swapCursor(data);
                 break;
             default:
@@ -114,7 +114,7 @@ public class BreweryListFragment extends Fragment
         final int id = loader.getId();
 
         switch (id) {
-            case BREWERY_LOADER:
+            case BEER_LOADER:
                 adapter.swapCursor(null);
                 break;
             default:

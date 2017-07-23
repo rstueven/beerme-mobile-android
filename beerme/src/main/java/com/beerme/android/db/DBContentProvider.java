@@ -242,8 +242,8 @@ public class DBContentProvider extends ContentProvider {
 
     private void checkColumns(final String[] available, final String[] projection) {
         if (projection != null) {
-            final HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
-            final HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
+            final HashSet<String> requestedColumns = new HashSet<>(Arrays.asList(projection));
+            final HashSet<String> availableColumns = new HashSet<>(Arrays.asList(available));
             // check if all columns which are requested are available
             if (!availableColumns.containsAll(requestedColumns)) {
                 requestedColumns.removeAll(availableColumns);

@@ -19,8 +19,6 @@ public class BeerListActivity extends BeerMeActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     int breweryId = -1;
     BeerListAdapter adapter;
-    final String[] PROJECTION = DBContract.Beer.COLUMNS;
-    final String SELECTION = DBContract.Beer.COLUMN_BREWERYID + " = ?";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class BeerListActivity extends BeerMeActivity
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final Intent intent = new Intent(BeerListActivity.this, BeerActivity.class);
                 intent.putExtra("id", (int) id);
-                intent.putExtra("brewery_name", breweryName);
                 startActivity(intent);
             }
         });
@@ -59,6 +56,9 @@ public class BeerListActivity extends BeerMeActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        final String[] PROJECTION = DBContract.Beer.COLUMNS;
+        final String SELECTION = DBContract.Beer.COLUMN_BREWERYID + " = ?";
+
         return new CursorLoader(this, DBContract.Beer.CONTENT_URI,
                 PROJECTION,
                 SELECTION, new String[]{Integer.toString(breweryId)},

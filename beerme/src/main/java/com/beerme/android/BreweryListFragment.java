@@ -19,7 +19,6 @@ import com.beerme.android.db.DBContract;
 
 public class BreweryListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int BREWERY_LOADER = 0;
     private SearchAdapter adapter;
     private Context mContext;
     private static final String KEY_QUERY = "mQuery";
@@ -75,7 +74,7 @@ public class BreweryListFragment extends Fragment
         final Bundle breweryArgs = new Bundle();
         breweryArgs.putStringArray("selection_args", new String[]{"%" + query + "%"});
         breweryArgs.putStringArray("projection", projection);
-        getLoaderManager().initLoader(BREWERY_LOADER, breweryArgs, this);
+        getLoaderManager().initLoader(0, breweryArgs, this);
     }
 
     @Override
@@ -83,42 +82,21 @@ public class BreweryListFragment extends Fragment
         final String SELECTION = "name LIKE ?";
         final String ORDER = "name ASC";
 
-        switch (id) {
-            case BREWERY_LOADER:
-                return new CursorLoader(mContext,
-                        DBContract.Brewery.CONTENT_URI,
-                        args.getStringArray("projection"),
-                        SELECTION,
-                        args.getStringArray("selection_args"),
-                        ORDER);
-            default:
-                throw new IllegalArgumentException("Unknown id: " + id);
-        }
+        return new CursorLoader(mContext,
+                DBContract.Brewery.CONTENT_URI,
+                args.getStringArray("projection"),
+                SELECTION,
+                args.getStringArray("selection_args"),
+                ORDER);
     }
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
-        final int id = loader.getId();
-
-        switch (id) {
-            case BREWERY_LOADER:
-                adapter.swapCursor(data);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown id: " + id);
-        }
+        adapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        final int id = loader.getId();
-
-        switch (id) {
-            case BREWERY_LOADER:
-                adapter.swapCursor(null);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown id: " + id);
-        }
+        adapter.swapCursor(null);
     }
 }

@@ -22,7 +22,6 @@ public class BeerActivity extends BeerMeActivity {
 
         final Intent intent = getIntent();
         beerId = intent.getIntExtra("id", -1);
-        breweryName = intent.getStringExtra("brewery_name");
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +37,7 @@ public class BeerActivity extends BeerMeActivity {
         }
 
         final Beer beer = new Beer(this, beerId);
+        breweryName = beer.getBreweryName();
 
         final TextView breweryNameView = (TextView) findViewById(R.id.brewery_name);
         breweryNameView.setText(breweryName);

@@ -1,13 +1,14 @@
 package com.beerme.android;
 
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,25 @@ import android.widget.ListView;
 import com.beerme.android.db.DBContract;
 
 public class BreweryListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, SearchActivity.BeerMeSearch {
-    private final int BREWERY_LOADER = 0;
+        implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int BREWERY_LOADER = 0;
     private SearchAdapter breweryAdapter;
     private Context mContext;
+    private static final String KEY_QUERY = "mQuery";
+
+    public static BreweryListFragment newInstance(final String query) {
+        final BreweryListFragment frag = new BreweryListFragment();
+        final Bundle args = new Bundle();
+        args.putString(KEY_QUERY, query.trim());
+        frag.setArguments(args);
+        return frag;
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        search(args.getString(KEY_QUERY));
     }
 
     @Override
@@ -57,8 +69,8 @@ public class BreweryListFragment extends Fragment
         super.onDetach();
     }
 
-    @Override
-    public void search(final String query) {
+    private void search(final String query) {
+        Log.d("beerme", "search: <" + query + ">");
         final String[] projection = new String[]{DBContract.Brewery.COLUMN_ID, DBContract.Brewery.COLUMN_NAME, DBContract.Brewery.COLUMN_ADDRESS};
         final Bundle breweryArgs = new Bundle();
         breweryArgs.putStringArray("selection_args", new String[]{"%" + query + "%"});

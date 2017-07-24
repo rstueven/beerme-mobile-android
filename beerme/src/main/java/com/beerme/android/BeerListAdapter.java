@@ -41,17 +41,26 @@ class BeerListAdapter extends CursorAdapter {
         final String beerName = beer.getName();
         beerNameView.setText(beerName);
 
+        final TextView breweryNameView = (TextView) view.findViewById(R.id.brewery_name);
+        final String breweryName = beer.getBreweryName();
+        breweryNameView.setText(breweryName);
+
         final TextView styleNameView = (TextView) view.findViewById(R.id.style_name);
         styleNameView.setText(beer.getStyle());
 
         final double abv = beer.getAbv();
+        final TextView abvView = (TextView) view.findViewById(R.id.abv);
         if (abv > 0) {
-            final TextView abvView = (TextView) view.findViewById(R.id.abv);
-            abvView.setText(String.format(Locale.getDefault(), "%.2f%%", abv));
+            abvView.setText(String.format(Locale.getDefault(), "%.1f%% abv", abv));
         }
 
         final FrameLayout starFrame = (FrameLayout) view.findViewById(R.id.stars_layout);
-        final LinearLayout starLayout = beer.getStars();
-        starFrame.addView(starLayout);
+        if (beer.getBeermerating() <= 0) {
+            starFrame.setVisibility(View.INVISIBLE);
+        } else {
+            final LinearLayout starLayout = beer.getStars();
+            starFrame.addView(starLayout);
+            starFrame.setVisibility(View.VISIBLE);
+        }
     }
 }

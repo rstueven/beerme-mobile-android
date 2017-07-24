@@ -19,7 +19,7 @@ import com.beerme.android.db.DBContract;
 
 public class BeerListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private SearchAdapter adapter;
+    private BeerListAdapter adapter;
     private Context mContext;
     private static final String KEY_QUERY = "mQuery";
 
@@ -43,7 +43,7 @@ public class BeerListFragment extends Fragment
         final View view = inflater.inflate(R.layout.fragment_beer_list, container, false);
         final ListView listView = (ListView) view.findViewById(R.id.beer_list);
         listView.setEmptyView(view.findViewById(R.id.beer_list_empty));
-        adapter = new SearchAdapter(mContext, null);
+        adapter = new BeerListAdapter(mContext, null);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

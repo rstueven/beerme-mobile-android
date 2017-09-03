@@ -14,11 +14,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".SearchActivity" />
@@ -41,41 +39,40 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
-
         <activity
             android:name=".AppSettings"
             android:label="@string/action_settings" />
-
         <activity
             android:name=".BreweryActivity"
             android:label="@string/brewery" />
-
         <activity
             android:name=".BeerListActivity"
             android:label="@string/title_activity_main" />
-
         <activity
             android:name=".BeerActivity"
             android:label="@string/title_activity_main" />
-
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
+        <activity
+            android:name=".BreweryEditActivity"
+            android:label="@string/title_activity_brewery_edit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

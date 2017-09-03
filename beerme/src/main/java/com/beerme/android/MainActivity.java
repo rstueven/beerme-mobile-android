@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -369,5 +368,10 @@ public class MainActivity extends LocationActivity
                 }
             }
         }
+    }
+
+    public void addBrewery(final View v) {
+        final Intent intent = new Intent(this, BreweryEditActivity.class);
+        startActivity(intent);
     }
 }

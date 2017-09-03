@@ -23,7 +23,7 @@ public class ImageZoomer {
     public static void zoomImageFromThumb(final Activity activity, final ImageView thumb, final ImageView zoomed) {
         final int animationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        Animator animator;
+//        final Animator animator;
 //        if (animator != null) {
 //            animator.cancel();
 //        }
@@ -44,7 +44,7 @@ public class ImageZoomer {
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
 
         final float startScale;
-        if ((float) finalBounds.width() / finalBounds.height() > (float) startBounds.width() / startBounds.height()) {
+        if (((float) finalBounds.width() / finalBounds.height()) > ((float) startBounds.width() / startBounds.height())) {
             startScale = (float) startBounds.height() / finalBounds.height();
             final float startWidth = startScale * finalBounds.width();
             final float deltaWidth = (startWidth - startBounds.width()) / 2;
@@ -74,23 +74,22 @@ public class ImageZoomer {
         set.setInterpolator(new DecelerateInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(final Animator animation) {
 //                animator = null;
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
+            public void onAnimationCancel(final Animator animation) {
 //                animator = null;
             }
         });
 
         set.start();
-        animator = set;
+//        animator = set;
 
-        final float startScaleFinal = startScale;
         zoomed.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 //                if (animator != null) {
 //                    animator.cancel();
 //                }
@@ -99,20 +98,20 @@ public class ImageZoomer {
                 set
                         .play(ObjectAnimator.ofFloat(zoomed, View.X, startBounds.left))
                         .with(ObjectAnimator.ofFloat(zoomed, View.Y, startBounds.top))
-                        .with(ObjectAnimator.ofFloat(zoomed, View.SCALE_X, startScaleFinal))
-                        .with(ObjectAnimator.ofFloat(zoomed, View.SCALE_Y, startScaleFinal));
+                        .with(ObjectAnimator.ofFloat(zoomed, View.SCALE_X, startScale))
+                        .with(ObjectAnimator.ofFloat(zoomed, View.SCALE_Y, startScale));
                 set.setDuration(animationDuration);
                 set.setInterpolator(new DecelerateInterpolator());
                 set.addListener(new AnimatorListenerAdapter() {
                     @Override
-                    public void onAnimationEnd(Animator animation) {
+                    public void onAnimationEnd(final Animator animation) {
                         thumb.setAlpha(1f);
                         zoomed.setVisibility(View.GONE);
 //                        animator = null;
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) {
+                    public void onAnimationCancel(final Animator animation) {
                         thumb.setAlpha(1f);
                         zoomed.setVisibility(View.GONE);
 //                        animator = null;

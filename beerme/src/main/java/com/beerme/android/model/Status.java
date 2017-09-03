@@ -32,7 +32,7 @@ public class Status {
     public static String statusString(final int status) {
         String s = STATUS.get(status);
 
-        if ("".equals(s)) {
+        if ((s != null) && s.isEmpty()) {
             s = null;
         } else {
             s = "(" + s + ")";

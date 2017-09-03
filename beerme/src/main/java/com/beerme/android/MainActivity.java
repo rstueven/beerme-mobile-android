@@ -221,25 +221,33 @@ public class MainActivity extends LocationActivity
 
             try {
                 final Brewery brewery = new Brewery(this, (int) marker.getData());
+                final int status = brewery.getStatus();
 
-                final TextView name = (TextView) view.findViewById((R.id.name));
-                name.setText(brewery.getName());
-                final TextView address = (TextView) view.findViewById((R.id.address));
-                address.setText(brewery.getAddress());
-                final TextView status = (TextView) view.findViewById((R.id.status));
+                final TextView nameView = (TextView) view.findViewById((R.id.name));
+                nameView.setText(brewery.getName());
+                final TextView addressView = (TextView) view.findViewById((R.id.address));
+                addressView.setText(brewery.getAddress());
+                final TextView statusView = (TextView) view.findViewById((R.id.status));
                 final String statusString = Status.statusString(brewery.getStatus());
                 if (statusString == null) {
-                    status.setVisibility(View.GONE);
+                    statusView.setVisibility(View.GONE);
                 } else {
-                    status.setVisibility(View.VISIBLE);
-                    status.setText(statusString);
+                    statusView.setVisibility(View.VISIBLE);
+                    statusView.setText(statusString);
                 }
-                final TextView hours = (TextView) view.findViewById((R.id.hours));
-                hours.setText(brewery.getHours());
+
+                final TextView hoursView = (TextView) view.findViewById((R.id.hours));
+                hoursView.setText(brewery.getHours());
+                if (status == Status.CLOSED) {
+                    hoursView.setVisibility(View.GONE);
+                }
 
                 final LinearLayout svcLayout = Services.serviceIcons(this, brewery.getServices());
                 // TODO: Center this.
                 ((LinearLayout) view).addView(svcLayout);
+                if (status == Status.CLOSED) {
+                    svcLayout.setVisibility(View.GONE);
+                }
             } catch (final IllegalArgumentException e) {
                 Toast.makeText(this, "Database error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 view = null;

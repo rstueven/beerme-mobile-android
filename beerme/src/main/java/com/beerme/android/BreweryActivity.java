@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
+import com.beerme.android.model.Status;
 import com.beerme.android.util.DownloadImageTask;
 
 public class BreweryActivity extends BeerMeActivity {
@@ -31,6 +32,7 @@ public class BreweryActivity extends BeerMeActivity {
 
         try {
             final Brewery brewery = new Brewery(this, id);
+            final int status = brewery.getStatus();
 
             final TextView nameView = (TextView) findViewById(R.id.name);
             nameView.setText(brewery.getName());
@@ -55,16 +57,19 @@ public class BreweryActivity extends BeerMeActivity {
             final TextView hoursView = (TextView) findViewById(R.id.hours);
             final String hours = brewery.getHours();
             hoursView.setText(hours);
-            if ((hours == null) || hours.isEmpty()) {
+            if ((hours == null) || hours.isEmpty() || (status == Status.CLOSED)) {
                 hoursView.setVisibility(View.GONE);
             }
 
             final TableLayout svcView = Services.serviceView(this, brewery.getServices());
             ((FrameLayout) findViewById(R.id.services)).addView(svcView);
+            if (status == Status.CLOSED) {
+                svcView.setVisibility(View.GONE);
+            }
 
             final TextView phoneView = (TextView) findViewById(R.id.phone);
             final String phone = brewery.getPhone();
-            if ((phone == null) || phone.isEmpty()) {
+            if ((phone == null) || phone.isEmpty() || (status == Status.CLOSED)) {
                 phoneView.setVisibility(View.GONE);
             } else {
                 phoneView.setText(phone);
@@ -80,7 +85,7 @@ public class BreweryActivity extends BeerMeActivity {
 
             final TextView webView = (TextView) findViewById(R.id.web);
             final String web = brewery.getWebForDisplay();
-            if ((web == null) || web.isEmpty()) {
+            if ((web == null) || web.isEmpty() || (status == Status.CLOSED)) {
                 webView.setVisibility(View.GONE);
             } else {
                 webView.setText(web);

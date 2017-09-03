@@ -3,7 +3,9 @@ package com.beerme.android.model;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +99,7 @@ public class Services {
 
     public static LinearLayout serviceIcons(final Context context, final int svc) {
         final LinearLayout layout = new LinearLayout(context);
+
         final ArrayList<Service> cells = loadServices(svc);
 
         if (!cells.isEmpty()) {

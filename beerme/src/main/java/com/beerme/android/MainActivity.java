@@ -10,7 +10,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -243,7 +245,7 @@ public class MainActivity extends LocationActivity
                 }
 
                 final LinearLayout svcLayout = Services.serviceIcons(this, brewery.getServices());
-                // TODO: Center this.
+                svcLayout.setGravity(Gravity.CENTER_HORIZONTAL);
                 ((LinearLayout) view).addView(svcLayout);
                 if (status == Status.CLOSED) {
                     svcLayout.setVisibility(View.GONE);

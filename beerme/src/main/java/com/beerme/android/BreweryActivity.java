@@ -1,5 +1,6 @@
 package com.beerme.android;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
 import com.beerme.android.model.Status;
 import com.beerme.android.util.DownloadImageTask;
+import com.beerme.android.util.ImageZoomer;
 
 public class BreweryActivity extends BeerMeActivity {
     int id = -1;
@@ -134,6 +136,14 @@ public class BreweryActivity extends BeerMeActivity {
                     final String imageUrl = urlBuilder.toString();
                     new DownloadImageTask(imageView).execute(imageUrl);
                 }
+
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        ImageZoomer.zoomImageFromThumb(BreweryActivity.this, imageView, (ImageView) findViewById(R.id.image_zoomed));
+                    }
+                });
             }
         } catch (final IllegalArgumentException e) {
             Toast.makeText(this, "Database error: Illegal brewery ID " + id, Toast.LENGTH_LONG).show();

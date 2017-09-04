@@ -59,6 +59,9 @@
             android:name=".BeerActivity"
             android:label="@string/title_activity_main" />
         <activity
+            android:name=".EditBreweryActivity"
+            android:label="@string/title_activity_main" />
+        <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
@@ -69,10 +72,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity
-            android:name=".BreweryEditActivity"
-            android:label="@string/title_activity_brewery_edit"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

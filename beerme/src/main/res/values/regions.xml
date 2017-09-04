@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="regions_array">
+        <item>Afghanistan</item>
+        <item>Akrotiri</item>
+        <item>Albania</item>
+        <item>Algeria</item>
+        <item>American Samoa</item>
+        <item>Andorra</item>
+        <item>Angola</item>
+        <item>Anguilla</item>
+        <item>Antarctica</item>
+        <item>Antigua and Barbuda</item>
+        <item>Argentina</item>
+        <item>Armenia</item>
+        <item>Aruba</item>
+        <item>Ascencion</item>
+        <item>Australian Capital Territory, Australia</item>
+        <item>New South Wales, Australia</item>
+        <item>Northern Territory, Australia</item>
+        <item>Queensland, Australia</item>
+        <item>South Australia, Australia</item>
+        <item>Tasmania, Australia</item>
+        <item>Victoria, Australia</item>
+        <item>Western Australia, Australia</item>
+        <item>Australian External Territories</item>
+        <item>Austria</item>
+        <item>Azerbaijan</item>
+        <item>Åland</item>
+        <item>Bahamas</item>
+        <item>Bahrain</item>
+        <item>Baker Island</item>
+        <item>Bangladesh</item>
+        <item>Barbados</item>
+        <item>Bassas da India</item>
+        <item>Belarus</item>
+        <item>Antwerpen, Belgium</item>
+        <item>Brabant Wallon, Belgium</item>
+        <item>Brussel, Belgium</item>
+        <item>Hainaut, Belgium</item>
+        <item>Liège, Belgium</item>
+        <item>Limburg, Belgium</item>
+        <item>Luxembourg, Belgium</item>
+        <item>Namur, Belgium</item>
+        <item>Oost-Vlaanderen, Belgium</item>
+        <item>Vlaams Brabant, Belgium</item>
+        <item>West-Vlaanderen, Belgium</item>
+        <item>Belize</item>
+        <item>Benin</item>
+        <item>Bermuda</item>
+        <item>Bhutan</item>
+        <item>Bolivia</item>
+        <item>Bosnia and Herzegovina</item>
+        <item>Botswana</item>
+        <item>Bouvet Island</item>
+        <item>Acre, Brazil</item>
+        <item>Alagoas, Brazil</item>
+        <item>Amapá, Brazil</item>
+        <item>Amazonas, Brazil</item>
+        <item>Bahia, Brazil</item>
+        <item>Ceará, Brazil</item>
+        <item>Distrito Federal, Brazil</item>
+        <item>Espírito Santo, Brazil</item>
+        <item>Goiás, Brazil</item>
+        <item>Maranhão, Brazil</item>
+        <item>Mato Grosso, Brazil</item>
+        <item>Mato Grosso do Sul, Brazil</item>
+        <item>Minas Gerais, Brazil</item>
+        <item>Paraíba, Brazil</item>
+        <item>Paraná, Brazil</item>
+        <item>Pará, Brazil</item>
+        <item>Pernambuco, Brazil</item>
+        <item>Piauí, Brazil</item>
+        <item>Rio de Janeiro, Brazil</item>
+        <item>Rio Grande do Norte, Brazil</item>
+        <item>Rio Grande do Sul, Brazil</item>
+        <item>Rondônia, Brazil</item>
+        <item>Roraima, Brazil</item>
+        <item>Santa Catarina, Brazil</item>
+        <item>São Paulo, Brazil</item>
+        <item>Sergipe, Brazil</item>
+        <item>Tocantins, Brazil</item>
+        <item>British Indian Ocean Territory</item>
+        <item>British Virgin Islands</item>
+        <item>Brunei Darussalam</item>
+        <item>Bulgaria</item>
+        <item>Burkina Faso</item>
+        <item>Burundi</item>
+        <item>Cambodia</item>
+        <item>Cameroon</item>
+        <item>Alberta, Canada</item>
+        <item>British Columbia, Canada</item>
+        <item>Manitoba, Canada</item>
+        <item>New Brunswick, Canada</item>
+        <item>Newfoundland, Canada</item>
+        <item>Northwest Territories, Canada</item>
+        <item>Nova Scotia, Canada</item>
+        <item>Ontario, Canada</item>
+        <item>Prince Edward Island, Canada</item>
+        <item>Québec, Canada</item>
+        <item>Saskatchewan, Canada</item>
+        <item>Yukon Territory, Canada</item>
+        <item>Cape Verde Islands</item>
+        <item>Cayman Islands</item>
+        <item>Côte d\'Ivoire</item>
+        <item>Central African Republic</item>
+        <item>Chad</item>
+        <item>Chile</item>
+        <item>Anhui, China</item>
+        <item>Beijing Shi, China</item>
+        <item>Chongqing Shi, China</item>
+        <item>Fujian, China</item>
+        <item>Gansu, China</item>
+        <item>Guangdong, China</item>
+        <item>Guangxi Zizhiqu, China</item>
+        <item>Guizhou, China</item>
+        <item>Hainan, China</item>
+        <item>Hebei, China</item>
+        <item>Heilongjiang, China</item>
+        <item>Henan, China</item>
+        <item>Hubei, China</item>
+        <item>Hunan, China</item>
+        <item>Jiangsu, China</item>
+        <item>Jiangxi, China</item>
+        <item>Jilin, China</item>
+        <item>Liaoning, China</item>
+        <item>Nei Mongol Zizhiqu (Inner Mongolia), China</item>
+        <item>Ningxia, China</item>
+        <item>Qinghai, China</item>
+        <item>Shaanxi, China</item>
+        <item>Shandong, China</item>
+        <item>Shanghai Shi, China</item>
+        <item>Shanxi, China</item>
+        <item>Sichuan, China</item>
+        <item>Tianjin Shi, China</item>
+        <item>Xinjiang Zizhiqu, China</item>
+        <item>Xizang Zizhiqu (Tibet), China</item>
+        <item>Yunnan, China</item>
+        <item>Zhejiang, China</item>
+        <item>Christmas Island</item>
+        <item>Clipperton Island</item>
+        <item>Cocos-Keeling Islands</item>
+        <item>Colombia</item>
+        <item>Comoros</item>
+        <item>Congo</item>
+        <item>Cook Islands</item>
+        <item>Costa Rica</item>
+        <item>Croatia</item>
+        <item>Cuba</item>
+        <item>Curaçao</item>
+        <item>Cyprus</item>
+        <item>Czech Republic</item>
+        <item>Democratic People\'s Republic of Korea</item>
+        <item>Democratic Republic of the Congo</item>
+        <item>Denmark</item>
+        <item>Dhekelia</item>
+        <item>Djibouti</item>
+        <item>Dominica</item>
+        <item>Dominican Republic</item>
+        <item>East Timor</item>
+        <item>Ecuador</item>
+        <item>Egypt</item>
+        <item>El Salvador</item>
+        <item>Equatorial Guinea</item>
+        <item>Eritrea</item>
+        <item>Estonia</item>
+        <item>Ethiopia</item>
+        <item>Europa Island</item>
+        <item>Falkland Islands (Islas Malvinas)</item>
+        <item>Faroe Islands</item>
+        <item>Federated States of Micronesia</item>
+        <item>Fiji</item>
+        <item>Finland</item>
+        <item>Auvergne-Rhône-Alpes, France</item>
+        <item>Île-de-France, France</item>
+        <item>Bourgogne-Franche-Comté, France</item>
+        <item>Bretagne, France</item>
+        <item>Centre-Val de Loire, France</item>
+        <item>Corse, France</item>
+        <item>Grand Est, France</item>
+        <item>Hautes-de-France, France</item>
+        <item>Normandie, France</item>
+        <item>Nouvelle-Aquitaine, France</item>
+        <item>Occitanie, France</item>
+        <item>Pays de la Loire, France</item>
+        <item>Provence-Alpes-Côte d\'Azur, France</item>
+        <item>French Guiana</item>
+        <item>French Polynesia</item>
+        <item>French Southern and Antarctic Lands</item>
+        <item>Gabon</item>
+        <item>Gambia</item>
+        <item>Gaza Strip</item>
+        <item>Georgia</item>
+        <item>Baden-Württemberg, Germany</item>
+        <item>Bayern, Germany</item>
+        <item>Berlin, Germany</item>
+        <item>Brandenburg, Germany</item>
+        <item>Bremen, Germany</item>
+        <item>Hamburg, Germany</item>
+        <item>Hessen, Germany</item>
+        <item>Mecklenburg-Vorpommern, Germany</item>
+        <item>Niedersachsen, Germany</item>
+        <item>Nordrhein-Westfalen, Germany</item>
+        <item>Rheinland-Pfalz, Germany</item>
+        <item>Saarland, Germany</item>
+        <item>Sachsen, Germany</item>
+        <item>Sachsen-Anhalt, Germany</item>
+        <item>Schleswig-Holstein, Germany</item>
+        <item>Thüringen, Germany</item>
+        <item>Ghana</item>
+        <item>Gibraltar</item>
+        <item>Glorioso Islands</item>
+        <item>Greece</item>
+        <item>Greenland</item>
+        <item>Grenada</item>
+        <item>Guadeloupe</item>
+        <item>Guam</item>
+        <item>Guatemala</item>
+        <item>Guinea</item>
+        <item>Guinea-Bissau</item>
+        <item>Guyana</item>
+        <item>Haiti</item>
+        <item>Heard Island and McDonald Islands</item>
+        <item>Holy See (Vatican City State)</item>
+        <item>Honduras</item>
+        <item>Hong Kong</item>
+        <item>Howland Island</item>
+        <item>Hungary</item>
+        <item>Iceland</item>
+        <item>India</item>
+        <item>Indonesia</item>
+        <item>Iran</item>
+        <item>Iraq</item>
+        <item>Ireland</item>
+        <item>Isle of Man</item>
+        <item>Israel</item>
+        <item>Abruzzo, Italy</item>
+        <item>Basilicata, Italy</item>
+        <item>Calabria, Italy</item>
+        <item>Campania, Italy</item>
+        <item>Emilia-Romagna, Italy</item>
+        <item>Friuli-Venezia Giulia, Italy</item>
+        <item>Lazio, Italy</item>
+        <item>Liguria, Italy</item>
+        <item>Lombardy, Italy</item>
+        <item>Marche, Italy</item>
+        <item>Molise, Italy</item>
+        <item>Piemonte, Italy</item>
+        <item>Puglia, Italy</item>
+        <item>Sardegna, Italy</item>
+        <item>Sicilia, Italy</item>
+        <item>Toscana, Italy</item>
+        <item>Trentino-Alto Adige / Südtirol, Italy</item>
+        <item>Umbria, Italy</item>
+        <item>Valle d\'Aosta, Italy</item>
+        <item>Veneto, Italy</item>
+        <item>Jamaica</item>
+        <item>Jan Mayen</item>
+        <item>Aichi-ken, Japan</item>
+        <item>Akita-ken, Japan</item>
+        <item>Aomori-ken, Japan</item>
+        <item>Chiba-ken, Japan</item>
+        <item>Chubu, Japan</item>
+        <item>Chugoku, Japan</item>
+        <item>Ehime-ken, Japan</item>
+        <item>Fukui-ken, Japan</item>
+        <item>Fukuoka-ken, Japan</item>
+        <item>Fukushima-ken, Japan</item>
+        <item>Gifu-ken, Japan</item>
+        <item>Gunma-ken, Japan</item>
+        <item>Hiroshima-ken, Japan</item>
+        <item>Hokkai-dō, Japan</item>
+        <item>Hyōgo-ken, Japan</item>
+        <item>Ibaraki-ken, Japan</item>
+        <item>Ishikawa-ken, Japan</item>
+        <item>Iwate-ken, Japan</item>
+        <item>Kagawa-ken, Japan</item>
+        <item>Kagoshima-ken, Japan</item>
+        <item>Kanagawa-ken, Japan</item>
+        <item>Kanto, Japan</item>
+        <item>Kōchi-ken, Japan</item>
+        <item>Kinki, Japan</item>
+        <item>Kumamoto-ken, Japan</item>
+        <item>Kyōto-fu, Japan</item>
+        <item>Kyūshū, Japan</item>
+        <item>Mie-ken, Japan</item>
+        <item>Miyagi-ken, Japan</item>
+        <item>Miyazaki-ken, Japan</item>
+        <item>Nagano-ken, Japan</item>
+        <item>Nagasaki-ken, Japan</item>
+        <item>Nara-ken, Japan</item>
+        <item>Niigata-ken, Japan</item>
+        <item>Ōita-ken, Japan</item>
+        <item>Okayama-ken, Japan</item>
+        <item>Okinawa-ken, Japan</item>
+        <item>Ōsaka-fu, Japan</item>
+        <item>Ryukyu, Japan</item>
+        <item>Saga-ken, Japan</item>
+        <item>Saitama-ken, Japan</item>
+        <item>Shiga-ken, Japan</item>
+        <item>Shikoku, Japan</item>
+        <item>Shimane-ken, Japan</item>
+        <item>Shizuoka-ken, Japan</item>
+        <item>Tochigi-ken, Japan</item>
+        <item>Tohoku, Japan</item>
+        <item>Tokushima-ken, Japan</item>
+        <item>Tōkyō-to, Japan</item>
+        <item>Tottori-ken, Japan</item>
+        <item>Toyama-ken, Japan</item>
+        <item>Wakayama-ken, Japan</item>
+        <item>Yamagata-ken, Japan</item>
+        <item>Yamaguchi-ken, Japan</item>
+        <item>Yamanashi-ken, Japan</item>
+        <item>Jordan</item>
+        <item>Juan de Nova Island</item>
+        <item>Kazakhstan</item>
+        <item>Kenya</item>
+        <item>Kingman Reef</item>
+        <item>Kiribati</item>
+        <item>Kosovo</item>
+        <item>Kuwait</item>
+        <item>Kyrgyzstan</item>
+        <item>Lao People\'s Democratic Republic</item>
+        <item>Latvia</item>
+        <item>Lebanon</item>
+        <item>Lesotho</item>
+        <item>Liberia</item>
+        <item>Libyan Arab Jamahiriya</item>
+        <item>Liechtenstein</item>
+        <item>Lithuania</item>
+        <item>Luxembourg</item>
+        <item>Macau</item>
+        <item>Macedonia</item>
+        <item>Madagascar</item>
+        <item>Malawi</item>
+        <item>Malaysia</item>
+        <item>Maldives</item>
+        <item>Mali</item>
+        <item>Malta</item>
+        <item>Marshall Islands</item>
+        <item>Martinique</item>
+        <item>Mauritania</item>
+        <item>Mauritius</item>
+        <item>Mayotte</item>
+        <item>Baja California, México</item>
+        <item>Baja California Sur, México</item>
+        <item>Campeche, México</item>
+        <item>Chiapas, México</item>
+        <item>Chihuahua, México</item>
+        <item>Coahuila de Zaragoza, México</item>
+        <item>Colima, México</item>
+        <item>Distrito Federal, México</item>
+        <item>Durango, México</item>
+        <item>Estado de México, México</item>
+        <item>Guanajuato, México</item>
+        <item>Guerrero, México</item>
+        <item>Hidalgo, México</item>
+        <item>Jalisco, México</item>
+        <item>Michoacan de Ocampo, México</item>
+        <item>Morelos, México</item>
+        <item>Nayarit, México</item>
+        <item>Nuevo León, México</item>
+        <item>Oaxaca, México</item>
+        <item>Puebla, México</item>
+        <item>Queretaro de Arteaga, México</item>
+        <item>Quintana Roo, México</item>
+        <item>San Luis Potosi, México</item>
+        <item>Sinaloa, México</item>
+        <item>Sonora, México</item>
+        <item>Tabasco, México</item>
+        <item>Tamaulipas, México</item>
+        <item>Tlaxcala, México</item>
+        <item>Veracruz-Llave, México</item>
+        <item>Yucatán, México</item>
+        <item>Zacatecas, México</item>
+        <item>Midway Islands</item>
+        <item>Moldova</item>
+        <item>Monaco</item>
+        <item>Mongolia</item>
+        <item>Montenegro</item>
+        <item>Montserrat</item>
+        <item>Morocco</item>
+        <item>Mozambique</item>
+        <item>Myanmar</item>
+        <item>Namibia</item>
+        <item>Nauru</item>
+        <item>Navassa Island</item>
+        <item>Nepal</item>
+        <item>Netherlands</item>
+        <item>New Caledonia</item>
+        <item>New Zealand</item>
+        <item>Nicaragua</item>
+        <item>Niger</item>
+        <item>Nigeria</item>
+        <item>Niue</item>
+        <item>Norfolk Island</item>
+        <item>Northern Mariana Islands</item>
+        <item>Norway</item>
+        <item>Oman</item>
+        <item>Pakistan</item>
+        <item>Palau</item>
+        <item>Palestine</item>
+        <item>Palmyra Atoll</item>
+        <item>Panamá</item>
+        <item>Papua New Guinea</item>
+        <item>Paracel Islands</item>
+        <item>Paraguay</item>
+        <item>Perú</item>
+        <item>Philippines</item>
+        <item>Pitcairn</item>
+        <item>Poland</item>
+        <item>Portugal</item>
+        <item>Puerto Rico</item>
+        <item>Qatar</item>
+        <item>Réunion</item>
+        <item>Republic of Korea</item>
+        <item>Romania</item>
+        <item>Adygeya, Russia</item>
+        <item>Altay, Russia</item>
+        <item>Altayskiy Kray, Russia</item>
+        <item>Amurskaya Oblast\', Russia</item>
+        <item>Arkhangel\'skaya Oblast\', Russia</item>
+        <item>Astrakhanskaya Oblast\', Russia</item>
+        <item>Bashkortostan, Russia</item>
+        <item>Belgorodskaya Oblast\', Russia</item>
+        <item>Bryanskaya Oblast\', Russia</item>
+        <item>Buryatiya, Russia</item>
+        <item>Chechenskaya, Russia</item>
+        <item>Chelyabinskaya Oblast\', Russia</item>
+        <item>Chukotskiy Avtonomnyy Okrug, Russia</item>
+        <item>Chuvashskaya, Russia</item>
+        <item>Dagestan, Russia</item>
+        <item>Evenkiyskiy Avtonomnyy Okrug, Russia</item>
+        <item>Ingushetiya, Russia</item>
+        <item>Irkutskaya Oblast\', Russia</item>
+        <item>Ivanovskaya Oblast\', Russia</item>
+        <item>Kabardino-Balkariya, Russia</item>
+        <item>Kaliningradskaya Oblast\', Russia</item>
+        <item>Kalmykiya, Russia</item>
+        <item>Kaluzhskaya Oblast\', Russia</item>
+        <item>Kamchatskij Kray, Russia</item>
+        <item>Karachayevo-Cherkesiya, Russia</item>
+        <item>Kareliya, Russia</item>
+        <item>Kemerovskaya Oblast\', Russia</item>
+        <item>Khabarovskiy Kray, Russia</item>
+        <item>Khakasiya, Russia</item>
+        <item>Khanty-Mansiyskiy Avtonomnyy Okrug, Russia</item>
+        <item>Kirovskaya Oblast\', Russia</item>
+        <item>Komi, Russia</item>
+        <item>Komi-Permyatskiy Avtonomnyy Okrug, Russia</item>
+        <item>Koryakskiy Avtonomnyy Okrug, Russia</item>
+        <item>Kostromskaya Oblast\', Russia</item>
+        <item>Krasnodarskiy Kray, Russia</item>
+        <item>Krasnoyarskiy Kray, Russia</item>
+        <item>Kurganskaya Oblast\', Russia</item>
+        <item>Kurskaya Oblast\', Russia</item>
+        <item>Leningradskaya Oblast\', Russia</item>
+        <item>Lipetskaya Oblast\', Russia</item>
+        <item>Magadanskaya Oblast\', Russia</item>
+        <item>Mariy-El, Russia</item>
+        <item>Mordoviya, Russia</item>
+        <item>Moskovskaya Oblast\', Russia</item>
+        <item>Moskva, Russia</item>
+        <item>Murmanskaya Oblast\', Russia</item>
+        <item>Nenetskiy Avtonomnyy Okrug, Russia</item>
+        <item>Nizhegorodskaya Oblast\', Russia</item>
+        <item>Novgorodskaya Oblast\', Russia</item>
+        <item>Novosibirskaya Oblast\', Russia</item>
+        <item>Omskaya Oblast\', Russia</item>
+        <item>Orenburgskaya Oblast\', Russia</item>
+        <item>Orlovskaya Oblast\', Russia</item>
+        <item>Penzenskaya Oblast\', Russia</item>
+        <item>Permskij Kray, Russia</item>
+        <item>Primorskiy Kray, Russia</item>
+        <item>Pskovskaya Oblast\', Russia</item>
+        <item>Rostovskaya Oblast\', Russia</item>
+        <item>RSJA, Russia</item>
+        <item>Ryazanskaya Oblast\', Russia</item>
+        <item>Sakha (Yakutiya), Russia</item>
+        <item>Sakhalinskaya Oblast\', Russia</item>
+        <item>Samarskaya Oblast\', Russia</item>
+        <item>Sankt-Peterburg, Russia</item>
+        <item>Saratovskaya Oblast\', Russia</item>
+        <item>Severnaya Osetiya-Alaniya, Russia</item>
+        <item>Smolenskaya Oblast\', Russia</item>
+        <item>Stavropol\'skiy Kray, Russia</item>
+        <item>Sverdlovskaya Oblast\', Russia</item>
+        <item>Tambovskaya Oblast\', Russia</item>
+        <item>Tatarstan, Russia</item>
+        <item>Taymyrskiy (Dolgano-Nenetskiy) Avtonomnyy Okrug, Russia</item>
+        <item>Tomskaya Oblast\', Russia</item>
+        <item>Tul\'skaya Oblast\', Russia</item>
+        <item>Tverskaya Oblast\', Russia</item>
+        <item>Tyumenskaya Oblast\', Russia</item>
+        <item>Tyva, Russia</item>
+        <item>Udmurtskaya, Russia</item>
+        <item>Ul\'yanovskaya Oblast\', Russia</item>
+        <item>Ust\'-Ordynskiy Buryatskiy Avtonomnyy Okrug, Russia</item>
+        <item>Vladimirskaya Oblast\', Russia</item>
+        <item>Volgogradskaya Oblast\', Russia</item>
+        <item>Vologodskaya Oblast\', Russia</item>
+        <item>Voronezhskaya Oblast\', Russia</item>
+        <item>Yamalo-Nenetskiy Avtonomnyy Okrug, Russia</item>
+        <item>Yaroslavskaya Oblast\', Russia</item>
+        <item>Yevreyskaya Avtonomnaya Oblast\', Russia</item>
+        <item>Zabaykalsky Krai, Russia</item>
+        <item>Rwanda</item>
+        <item>Saint Helena</item>
+        <item>Saint Kitts and Nevis</item>
+        <item>Saint Lucia</item>
+        <item>Saint Pierre et Miquelon</item>
+        <item>Saint Vincent and the Grenadines</item>
+        <item>Samoa</item>
+        <item>San Marino</item>
+        <item>Saudi Arabia</item>
+        <item>São Tome and Principe</item>
+        <item>Senegal</item>
+        <item>Serbia</item>
+        <item>Seychelles</item>
+        <item>Sierra Leone</item>
+        <item>Singapore</item>
+        <item>Sint Maartin</item>
+        <item>Slovakia</item>
+        <item>Slovenia</item>
+        <item>Solomon Islands</item>
+        <item>Somalia</item>
+        <item>South Africa</item>
+        <item>South Georgia and South Sandwich Islands</item>
+        <item>South Sudan</item>
+        <item>Spain</item>
+        <item>Spratly Islands</item>
+        <item>Sri Lanka</item>
+        <item>Sudan</item>
+        <item>Suriname</item>
+        <item>Svalbard</item>
+        <item>Swaziland</item>
+        <item>Sweden</item>
+        <item>Switzerland</item>
+        <item>Syria</item>
+        <item>Taiwan (Republic of China)</item>
+        <item>Tajikistan</item>
+        <item>Tanzania</item>
+        <item>Thailand</item>
+        <item>Togo</item>
+        <item>Tokelau</item>
+        <item>Tonga</item>
+        <item>Trinidad and Tobago</item>
+        <item>Tromelin Island</item>
+        <item>Tunisia</item>
+        <item>Turkey</item>
+        <item>Turkmenistan</item>
+        <item>Turks and Caicos Islands</item>
+        <item>Tuvalu</item>
+        <item>Uganda</item>
+        <item>Ukraine</item>
+        <item>United Arab Emirates</item>
+        <item>Avon, United Kingdom</item>
+        <item>Bedford, United Kingdom</item>
+        <item>Berkshire, United Kingdom</item>
+        <item>Buckingham, United Kingdom</item>
+        <item>Cambridge, United Kingdom</item>
+        <item>Cheshire, United Kingdom</item>
+        <item>Cleveland, United Kingdom</item>
+        <item>Cornwall, United Kingdom</item>
+        <item>Cumbria, United Kingdom</item>
+        <item>Derby, United Kingdom</item>
+        <item>Devon, United Kingdom</item>
+        <item>Dorset, United Kingdom</item>
+        <item>Durham, United Kingdom</item>
+        <item>East Sussex, United Kingdom</item>
+        <item>East Yorkshire, United Kingdom</item>
+        <item>Essex, United Kingdom</item>
+        <item>Gloucestershire, United Kingdom</item>
+        <item>Guernsey, United Kingdom</item>
+        <item>Hampshire, United Kingdom</item>
+        <item>Hereford and Worcester, United Kingdom</item>
+        <item>Hertfordshire, United Kingdom</item>
+        <item>Humberside, United Kingdom</item>
+        <item>Isle of Man, United Kingdom</item>
+        <item>Isle of Wight, United Kingdom</item>
+        <item>Jersey, United Kingdom</item>
+        <item>Kent, United Kingdom</item>
+        <item>Lancashire, United Kingdom</item>
+        <item>Leicester, United Kingdom</item>
+        <item>Lincoln, United Kingdom</item>
+        <item>London, United Kingdom</item>
+        <item>Manchester, United Kingdom</item>
+        <item>Merseyside, United Kingdom</item>
+        <item>Norfolk, United Kingdom</item>
+        <item>North Yorkshire, United Kingdom</item>
+        <item>Northampton, United Kingdom</item>
+        <item>Northern Ireland, United Kingdom</item>
+        <item>Northumberland, United Kingdom</item>
+        <item>Nottingham, United Kingdom</item>
+        <item>Oxford, United Kingdom</item>
+        <item>Rutland, United Kingdom</item>
+        <item>Scotland, United Kingdom</item>
+        <item>Shropshire, United Kingdom</item>
+        <item>Somerset, United Kingdom</item>
+        <item>South Yorkshire, United Kingdom</item>
+        <item>Staffordshire, United Kingdom</item>
+        <item>Suffolk, United Kingdom</item>
+        <item>Surrey, United Kingdom</item>
+        <item>Tyne and Wear, United Kingdom</item>
+        <item>Wales, United Kingdom</item>
+        <item>Warwick, United Kingdom</item>
+        <item>West Midlands, United Kingdom</item>
+        <item>West Sussex, United Kingdom</item>
+        <item>West Yorkshire, United Kingdom</item>
+        <item>Wiltshire, United Kingdom</item>
+        <item>Alabama, United States</item>
+        <item>Alaska, United States</item>
+        <item>Arizona, United States</item>
+        <item>Arkansas, United States</item>
+        <item>California, United States</item>
+        <item>Colorado, United States</item>
+        <item>Connecticut, United States</item>
+        <item>Delaware, United States</item>
+        <item>District of Columbia, United States</item>
+        <item>Florida, United States</item>
+        <item>Georgia, United States</item>
+        <item>Hawaii, United States</item>
+        <item>Idaho, United States</item>
+        <item>Illinois, United States</item>
+        <item>Indiana, United States</item>
+        <item>Iowa, United States</item>
+        <item>Kansas, United States</item>
+        <item>Kentucky, United States</item>
+        <item>Louisiana, United States</item>
+        <item>Maine, United States</item>
+        <item>Maryland, United States</item>
+        <item>Massachusetts, United States</item>
+        <item>Michigan, United States</item>
+        <item>Minnesota, United States</item>
+        <item>Mississippi, United States</item>
+        <item>Missouri, United States</item>
+        <item>Montana, United States</item>
+        <item>Nebraska, United States</item>
+        <item>Nevada, United States</item>
+        <item>New Hampshire, United States</item>
+        <item>New Jersey, United States</item>
+        <item>New Mexico, United States</item>
+        <item>New York, United States</item>
+        <item>North Carolina, United States</item>
+        <item>North Dakota, United States</item>
+        <item>Ohio, United States</item>
+        <item>Oklahoma, United States</item>
+        <item>Oregon, United States</item>
+        <item>Pennsylvania, United States</item>
+        <item>Puerto Rico, United States</item>
+        <item>Rhode Island, United States</item>
+        <item>South Carolina, United States</item>
+        <item>South Dakota, United States</item>
+        <item>Tennessee, United States</item>
+        <item>Texas, United States</item>
+        <item>Utah, United States</item>
+        <item>Vermont, United States</item>
+        <item>Virginia, United States</item>
+        <item>Washington, United States</item>
+        <item>West Virginia, United States</item>
+        <item>Wisconsin, United States</item>
+        <item>Wyoming, United States</item>
+        <item>United States Virgin Islands</item>
+        <item>Uruguay</item>
+        <item>Uzbekistan</item>
+        <item>Vanuatu</item>
+        <item>Venezuela</item>
+        <item>Việt Nam</item>
+        <item>Wake Island</item>
+        <item>Wallis and Futuna</item>
+        <item>West Bank</item>
+        <item>Western Sahara</item>
+        <item>Yemen</item>
+        <item>Yugoslavia</item>
+        <item>Zambia</item>
+        <item>Zimbabwe</item>
+    </string-array>
+</resources>

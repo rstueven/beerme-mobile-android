@@ -16,4 +16,8 @@
     <string name="beers">Beers</string>
     <string name="no_beers_found">No beers found</string>
     <string name="title_activity_brewery_edit">BreweryEditActivity</string>
+    <string name="title_activity_edit_brewery">EditBreweryActivity</string>
+    <string name="edit_brewery_information">Edit Brewery Information</string>
+    <string name="add_a_brewery">Add a Brewery</string>
+    <string name="required">required</string>
 </resources>

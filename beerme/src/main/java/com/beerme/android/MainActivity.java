@@ -371,7 +371,7 @@ public class MainActivity extends LocationActivity
     }
 
     public void addBrewery(final View v) {
-        final Intent intent = new Intent(this, BreweryEditActivity.class);
+        final Intent intent = new Intent(this, EditBreweryActivity.class);
         startActivity(intent);
     }
 }

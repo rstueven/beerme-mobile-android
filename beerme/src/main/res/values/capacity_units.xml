@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="capacity_units_array">
+        <item>bbl</item>
+        <item>hl</item>
+    </string-array>
+</resources>

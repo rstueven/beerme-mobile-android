@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.beerme.android.util.SparseArrayAdapter;
 
 /**
  * Created by rstueven on 3/5/17.
@@ -22,7 +28,7 @@ public class Status {
     public static final SparseArray<String> STATUS = new SparseArray<>();
 
     static {
-        STATUS.put(OPEN, "");
+        STATUS.put(OPEN, "Open");
         STATUS.put(PLANNED, "Planned");
         STATUS.put(NO_LONGER_BREWING, "No longer brewing");
         STATUS.put(CLOSED, "Closed");
@@ -32,7 +38,7 @@ public class Status {
     public static String statusString(final int status) {
         String s = STATUS.get(status);
 
-        if ((s != null) && s.isEmpty()) {
+        if ((status == OPEN) || ((s != null) && s.isEmpty())) {
             s = null;
         } else {
             s = "(" + s + ")";
@@ -53,5 +59,27 @@ public class Status {
         final int closed = prefs.getBoolean("status_filter_closed", false) ? CLOSED : 0;
 
         return open | planned | nlb | closed;
+    }
+
+    // https://stackoverflow.com/questions/21677866/how-to-use-sparsearray-as-a-source-for-adapter
+    public static class StatusAdapter extends SparseArrayAdapter<String> {
+        private final LayoutInflater mInflater;
+
+        public StatusAdapter(final Context context) {
+            mInflater = LayoutInflater.from(context);
+            setData(STATUS);
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            TextView result = (TextView) convertView;
+
+            if (result == null) {
+                result = (TextView) mInflater.inflate(android.R.layout.simple_list_item_1, null);
+            }
+
+            result.setText(getItem(position));
+            return result;
+        }
     }
 }

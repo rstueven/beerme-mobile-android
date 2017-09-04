@@ -7,6 +7,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.beerme.android.model.Status;
+
 public class EditBreweryActivity extends BeerMeActivity {
 
     @Override
@@ -26,7 +28,15 @@ public class EditBreweryActivity extends BeerMeActivity {
 
         final AutoCompleteTextView regionView = (AutoCompleteTextView) findViewById(R.id.region_view);
         final ArrayAdapter<CharSequence> regionAdapter = ArrayAdapter.createFromResource(this, R.array.regions_array, android.R.layout.simple_spinner_item);
-//        regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionView.setAdapter(regionAdapter);
+
+        final Spinner statusView = (Spinner) findViewById(R.id.status_view);
+        final Status.StatusAdapter statusAdapter = new Status.StatusAdapter(this);
+        statusView.setAdapter(statusAdapter);
+
+        final Spinner capUnitView = (Spinner) findViewById(R.id.capacity_unit_view);
+        final ArrayAdapter<CharSequence> capUnitAdapter = ArrayAdapter.createFromResource(this, R.array.capacity_units_array, android.R.layout.simple_spinner_item);
+        capUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        capUnitView.setAdapter(capUnitAdapter);
     }
 }

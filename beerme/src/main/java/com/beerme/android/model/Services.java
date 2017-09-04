@@ -13,6 +13,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.beerme.android.BeerMeActivity;
+import com.beerme.android.BeerMeApplication;
 import com.beerme.android.R;
 
 import java.util.ArrayList;
@@ -51,15 +53,15 @@ public class Services {
     }
 
     static {
-        SERVICES.put(OPEN, new Service(OPEN, "Not open to the public", R.drawable.ic_block_black_24dp));
-        SERVICES.put(BAR, new Service(BAR, "Bar/Tasting Room", R.drawable.ic_local_drink_black_24dp));
-        SERVICES.put(BEERGARDEN, new Service(BEERGARDEN, "Beer Garden", R.drawable.ic_nature_people_black_24dp));
-        SERVICES.put(FOOD, new Service(FOOD, "Food", R.drawable.ic_restaurant_black_24dp));
-        SERVICES.put(GIFTSHOP, new Service(GIFTSHOP, "Items for Sale", R.drawable.ic_local_mall_black_24dp));
-        SERVICES.put(HOTEL, new Service(HOTEL, "Hotel Rooms", R.drawable.ic_hotel_black_24dp));
-        SERVICES.put(INTERNET, new Service(INTERNET, "Internet Access", R.drawable.ic_wifi_black_24dp));
-        SERVICES.put(RETAIL, new Service(RETAIL, "Beer to Go", R.drawable.ic_shopping_cart_black_24dp));
-        SERVICES.put(TOURS, new Service(TOURS, "Tours", R.drawable.ic_directions_walk_black_24dp));
+        SERVICES.put(OPEN, new Service(OPEN, BeerMeApplication.getInstance().getString(R.string.not_open), R.drawable.ic_block_black_24dp));
+        SERVICES.put(BAR, new Service(BAR, BeerMeApplication.getInstance().getString(R.string.bar), R.drawable.ic_local_drink_black_24dp));
+        SERVICES.put(BEERGARDEN, new Service(BEERGARDEN, BeerMeApplication.getInstance().getString(R.string.beer_garden), R.drawable.ic_nature_people_black_24dp));
+        SERVICES.put(FOOD, new Service(FOOD, BeerMeApplication.getInstance().getString(R.string.food), R.drawable.ic_restaurant_black_24dp));
+        SERVICES.put(GIFTSHOP, new Service(GIFTSHOP, BeerMeApplication.getInstance().getString(R.string.giftshop), R.drawable.ic_local_mall_black_24dp));
+        SERVICES.put(HOTEL, new Service(HOTEL, BeerMeApplication.getInstance().getString(R.string.hotel), R.drawable.ic_hotel_black_24dp));
+        SERVICES.put(INTERNET, new Service(INTERNET, BeerMeApplication.getInstance().getString(R.string.wifi), R.drawable.ic_wifi_black_24dp));
+        SERVICES.put(RETAIL, new Service(RETAIL, BeerMeApplication.getInstance().getString(R.string.retail), R.drawable.ic_shopping_cart_black_24dp));
+        SERVICES.put(TOURS, new Service(TOURS, BeerMeApplication.getInstance().getString(R.string.tours), R.drawable.ic_directions_walk_black_24dp));
     }
 
     private static ArrayList<Service> loadServices(final int svc) {

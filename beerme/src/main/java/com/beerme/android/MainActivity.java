@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.abs;
 
 public class MainActivity extends LocationActivity
         implements
@@ -160,18 +163,29 @@ public class MainActivity extends LocationActivity
         stopLocationUpdates();
 
         if (marker.isCluster()) {
-//            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+            Log.d("beerme", "OLD: " + oldBounds);
             final List<Marker> markers = marker.getMarkers();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            boolean samePosition = true;
+            final LatLng firstPosition = markers.get(0).getPosition();
+            LatLng position;
+            double deltaLat, deltaLng;
 
             for (final Marker m : markers) {
-                builder.include(m.getPosition());
+                position = m.getPosition();
+                builder.include(position);
+                if (samePosition) {
+                    deltaLat = abs(position.latitude - firstPosition.latitude);
+                    deltaLng = abs(position.longitude - firstPosition.longitude);
+                    if ((deltaLat > 0.0001) || (deltaLng > 0.001)) {
+                        samePosition = false;
+                    }
+                }
             }
 
             final LatLngBounds bounds = builder.build();
 
-//            Log.d("beerme", "OLD: " + oldBounds);
-//            Log.d("beerme", "NEW: " + bounds);
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
 
             return true;

@@ -164,7 +164,7 @@ public class MainActivity extends LocationActivity
 
         if (marker.isCluster()) {
             final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-            Log.d("beerme", "OLD: " + oldBounds);
+//            Log.d("beerme", "OLD: " + oldBounds);
             final List<Marker> markers = marker.getMarkers();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
             boolean samePosition = true;
@@ -187,6 +187,10 @@ public class MainActivity extends LocationActivity
             final LatLngBounds bounds = builder.build();
 
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
+
+            if (samePosition) {
+                marker.showInfoWindow();
+            }
 
             return true;
         }
@@ -212,7 +216,7 @@ public class MainActivity extends LocationActivity
 
             final Cursor c = contentResolver.query(DBContract.Brewery.CONTENT_URI,
                     DBContract.Brewery.COLUMNS,
-                    "id IN (" + TextUtils.join(",", ids) + ")",
+                    "_id IN (" + TextUtils.join(",", ids) + ")",
                     null,
                     "name");
 

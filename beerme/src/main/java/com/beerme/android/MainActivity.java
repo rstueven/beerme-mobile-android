@@ -189,11 +189,20 @@ public class MainActivity extends LocationActivity
 
             final LatLngBounds bounds = builder.build();
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
+            final boolean allTogether = samePosition;
 
-            if (samePosition) {
-                declusterify(marker);
-            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30), 750,
+                    new GoogleMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            if (allTogether) {
+                                declusterify(marker);
+                            }
+                        }
+
+                        @Override
+                        public void onCancel() {}
+                    });
 
             return true;
         }
@@ -206,13 +215,9 @@ public class MainActivity extends LocationActivity
         clusterifyMarkers();
         declusterifiedMarkers = cluster.getMarkers();
         final LatLng clusterPosition = cluster.getPosition();
-        try {
-            Thread.sleep(576);
-        } catch (InterruptedException e) {
-//                    e.printStackTrace();
-        }
         final double distance = calculateDistanceBetweenMarkers();
         double currentDistance = (-declusterifiedMarkers.size() / 2) * distance;
+
         for (final Marker marker : declusterifiedMarkers) {
             final MarkerData data = marker.getData();
             marker.setData(new MarkerData(data.position, data.id));
@@ -232,16 +237,10 @@ public class MainActivity extends LocationActivity
     }
 
     private void clusterifyMarkers() {
-        final LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-
         if (declusterifiedMarkers != null) {
             for (final Marker marker : declusterifiedMarkers) {
                 marker.setClusterGroup(ClusterGroup.DEFAULT);
-//                if (bounds.contains(marker.getPosition())) {
-                    final MarkerData data = marker.getData();
-                    final LatLng position = data.position;
-                    marker.setPosition(position);
-//                }
+                marker.setPosition(((MarkerData)marker.getData()).position);
             }
 
             declusterifiedMarkers = null;

@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidmapsextensions.ClusterGroup;
 import com.androidmapsextensions.ClusteringSettings;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.Marker;
@@ -32,6 +33,7 @@ import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Services;
 import com.beerme.android.model.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -46,12 +48,13 @@ public class MainActivity extends LocationActivity
         OnMapReadyCallback, TouchableWrapper.UpdateMapAfterUserInteraction,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapClickListener {
     private static final String KEY_CAMERA_POSITION = "KEY_CAMERA_POSITION";
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     final private SparseArray<Marker> mPointsOnMap = new SparseArray<>();
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
+    private List<Marker> declusterifiedMarkers;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -104,6 +107,7 @@ public class MainActivity extends LocationActivity
 
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnMapClickListener(this);
         mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setInfoWindowAdapter(this);
@@ -163,22 +167,21 @@ public class MainActivity extends LocationActivity
         stopLocationUpdates();
 
         if (marker.isCluster()) {
-            final LatLngBounds oldBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-//            Log.d("beerme", "OLD: " + oldBounds);
             final List<Marker> markers = marker.getMarkers();
-            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
             boolean samePosition = true;
             final LatLng firstPosition = markers.get(0).getPosition();
             LatLng position;
             double deltaLat, deltaLng;
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             for (final Marker m : markers) {
                 position = m.getPosition();
                 builder.include(position);
+
                 if (samePosition) {
                     deltaLat = abs(position.latitude - firstPosition.latitude);
                     deltaLng = abs(position.longitude - firstPosition.longitude);
-                    if ((deltaLat > 0.0001) || (deltaLng > 0.001)) {
+                    if ((deltaLat > 0.0001) || (deltaLng > 0.0001)) {
                         samePosition = false;
                     }
                 }
@@ -189,13 +192,49 @@ public class MainActivity extends LocationActivity
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
 
             if (samePosition) {
-                marker.showInfoWindow();
+                declusterify(marker);
             }
 
             return true;
         }
 
         return false;
+    }
+
+    private void declusterify(Marker cluster) {
+        clusterifyMarkers();
+        declusterifiedMarkers = cluster.getMarkers();
+        LatLng clusterPosition = cluster.getPosition();
+        double distance = calculateDistanceBetweenMarkers();
+        double currentDistance = -declusterifiedMarkers.size() / 2 * distance;
+        for (Marker marker : declusterifiedMarkers) {
+            MarkerData data = marker.getData();
+            marker.setData(new MarkerData(data.position, data.id));
+            marker.setClusterGroup(ClusterGroup.NOT_CLUSTERED);
+            LatLng newPosition = new LatLng(clusterPosition.latitude, clusterPosition.longitude + currentDistance);
+            marker.animatePosition(newPosition);
+            currentDistance += distance;
+        }
+    }
+
+    private double calculateDistanceBetweenMarkers() {
+        Projection projection = mMap.getProjection();
+        Point point = projection.toScreenLocation(new LatLng(0.0, 0.0));
+        point.x += getResources().getDimensionPixelSize(R.dimen.distance_between_markers);
+        LatLng nextPosition = projection.fromScreenLocation(point);
+        return nextPosition.longitude;
+    }
+
+    private void clusterifyMarkers() {
+        if (declusterifiedMarkers != null) {
+            for (Marker marker : declusterifiedMarkers) {
+                MarkerData data = marker.getData();
+                LatLng position = data.position;
+                marker.setPosition(position);
+                marker.setClusterGroup(ClusterGroup.DEFAULT);
+            }
+            declusterifiedMarkers = null;
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -211,7 +250,7 @@ public class MainActivity extends LocationActivity
 
             final ArrayList<String> ids = new ArrayList<>();
             for (final Marker m : marker.getMarkers()) {
-                ids.add(Integer.toString((int) m.getData()));
+                ids.add(Integer.toString(((MarkerData)m.getData()).id));
             }
 
             final Cursor c = contentResolver.query(DBContract.Brewery.CONTENT_URI,
@@ -239,7 +278,7 @@ public class MainActivity extends LocationActivity
             view = inflater.inflate(R.layout.infowindow, null);
 
             try {
-                final Brewery brewery = new Brewery(this, (int) marker.getData());
+                final Brewery brewery = new Brewery(this, ((MarkerData)marker.getData()).id);
                 final int status = brewery.getStatus();
 
                 final TextView nameView = (TextView) view.findViewById((R.id.name));
@@ -284,12 +323,17 @@ public class MainActivity extends LocationActivity
     @Override
     public void onInfoWindowClick(final Marker marker) {
 //        Log.d("beerme", "onInfoWindowClick(" + marker.getData() + " : " + marker.getTitle() + ")");
-        final Integer id = marker.getData();
-        if (id != null) {
+        final Integer id = ((MarkerData)marker.getData()).id;
+//        if (id != null) {
             final Intent intent = new Intent(this, BreweryActivity.class);
             intent.putExtra("id", id);
             startActivity(intent);
-        }
+//        }
+    }
+
+    @Override
+    public void onMapClick(final LatLng position) {
+        clusterifyMarkers();
     }
 
     private class PrefsChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -371,7 +415,7 @@ public class MainActivity extends LocationActivity
 
             for (final Placemark p : placemarks) {
                 if (mPointsOnMap.get(p.id) == null) {
-                    marker = mMap.addMarker(options.title(p.name).position(p.position).data(p.id));
+                    marker = mMap.addMarker(options.title(p.name).position(p.position).data(new MarkerData(p.position, p.id)));
                     mPointsOnMap.append(p.id, marker);
                 }
             }
@@ -385,6 +429,21 @@ public class MainActivity extends LocationActivity
                     marker.remove();
                 }
             }
+        }
+    }
+
+    private class MarkerData {
+        LatLng position;
+        int id;
+
+        public MarkerData(final LatLng p, final int i) {
+            position = p;
+            id = i;
+        }
+
+        @Override
+        public String toString() {
+            return "id: " + id + " — position: " + position.toString();
         }
     }
 

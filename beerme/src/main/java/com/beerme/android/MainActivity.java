@@ -219,8 +219,6 @@ public class MainActivity extends LocationActivity
         double currentDistance = (-declusterifiedMarkers.size() / 2) * distance;
 
         for (final Marker marker : declusterifiedMarkers) {
-            final MarkerData data = marker.getData();
-            marker.setData(new MarkerData(data.position, data.id));
             marker.setClusterGroup(ClusterGroup.NOT_CLUSTERED);
             final LatLng newPosition = new LatLng(clusterPosition.latitude, clusterPosition.longitude + currentDistance);
             marker.animatePosition(newPosition);

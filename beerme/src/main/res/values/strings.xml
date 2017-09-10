@@ -48,5 +48,9 @@
     <string name="web_site">Web Site</string>
     <string name="wifi">WiFi</string>
     <string name="year">year</string>
+    <string name="hours">Hours</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="your_comments">Your Comments</string>
 
 </resources>

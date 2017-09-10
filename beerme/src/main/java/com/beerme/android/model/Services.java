@@ -28,15 +28,15 @@ import java.util.Iterator;
 
 // TODO: Should this be an enum?
 public class Services {
-    private static final int OPEN = 0x0001;
-    private static final int BAR = 0x0002;
-    private static final int BEERGARDEN = 0x0004;
-    private static final int FOOD = 0x0008;
-    private static final int GIFTSHOP = 0x0010;
-    private static final int HOTEL = 0x0020;
-    private static final int INTERNET = 0x0040;
-    private static final int RETAIL = 0x0080;
-    private static final int TOURS = 0x0100;
+    public static final int OPEN = 0x0001;
+    public static final int BAR = 0x0002;
+    public static final int BEERGARDEN = 0x0004;
+    public static final int FOOD = 0x0008;
+    public static final int GIFTSHOP = 0x0010;
+    public static final int HOTEL = 0x0020;
+    public static final int INTERNET = 0x0040;
+    public static final int RETAIL = 0x0080;
+    public static final int TOURS = 0x0100;
 
     private static final SparseArray<Service> SERVICES = new SparseArray<>();
 

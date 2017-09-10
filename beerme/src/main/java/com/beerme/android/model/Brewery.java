@@ -138,4 +138,44 @@ public class Brewery {
             return webForDisplay;
         }
     }
+
+    private boolean checkService(final int svc) {
+        return (services & svc) == svc;
+    }
+
+    public boolean isOpen() {
+        return checkService(Services.OPEN);
+    }
+
+    public boolean hasBar() {
+        return checkService(Services.BAR);
+    }
+
+    public boolean hasBeergarden() {
+        return checkService(Services.BEERGARDEN);
+    }
+
+    public boolean hasFood() {
+        return checkService(Services.FOOD);
+    }
+
+    public boolean hasGiftshop() {
+        return checkService(Services.GIFTSHOP);
+    }
+
+    public boolean hasHotel() {
+        return checkService(Services.HOTEL);
+    }
+
+    public boolean hasInternet() {
+        return checkService(Services.INTERNET);
+    }
+
+    public boolean hasRetail() {
+        return checkService(Services.RETAIL);
+    }
+
+    public boolean hasTours() {
+        return checkService(Services.TOURS);
+    }
 }

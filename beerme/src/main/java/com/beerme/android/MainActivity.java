@@ -201,38 +201,49 @@ public class MainActivity extends LocationActivity
         return false;
     }
 
-    private void declusterify(Marker cluster) {
+    @SuppressWarnings("ObjectAllocationInLoop")
+    private void declusterify(final Marker cluster) {
         clusterifyMarkers();
         declusterifiedMarkers = cluster.getMarkers();
-        LatLng clusterPosition = cluster.getPosition();
-        double distance = calculateDistanceBetweenMarkers();
-        double currentDistance = -declusterifiedMarkers.size() / 2 * distance;
-        for (Marker marker : declusterifiedMarkers) {
-            MarkerData data = marker.getData();
+        final LatLng clusterPosition = cluster.getPosition();
+        try {
+            Thread.sleep(576);
+        } catch (InterruptedException e) {
+//                    e.printStackTrace();
+        }
+        final double distance = calculateDistanceBetweenMarkers();
+        double currentDistance = (-declusterifiedMarkers.size() / 2) * distance;
+        for (final Marker marker : declusterifiedMarkers) {
+            final MarkerData data = marker.getData();
             marker.setData(new MarkerData(data.position, data.id));
             marker.setClusterGroup(ClusterGroup.NOT_CLUSTERED);
-            LatLng newPosition = new LatLng(clusterPosition.latitude, clusterPosition.longitude + currentDistance);
+            final LatLng newPosition = new LatLng(clusterPosition.latitude, clusterPosition.longitude + currentDistance);
             marker.animatePosition(newPosition);
             currentDistance += distance;
         }
     }
 
     private double calculateDistanceBetweenMarkers() {
-        Projection projection = mMap.getProjection();
-        Point point = projection.toScreenLocation(new LatLng(0.0, 0.0));
+        final Projection projection = mMap.getProjection();
+        final Point point = projection.toScreenLocation(new LatLng(0.0, 0.0));
         point.x += getResources().getDimensionPixelSize(R.dimen.distance_between_markers);
-        LatLng nextPosition = projection.fromScreenLocation(point);
+        final LatLng nextPosition = projection.fromScreenLocation(point);
         return nextPosition.longitude;
     }
 
     private void clusterifyMarkers() {
+        final LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
         if (declusterifiedMarkers != null) {
-            for (Marker marker : declusterifiedMarkers) {
-                MarkerData data = marker.getData();
-                LatLng position = data.position;
-                marker.setPosition(position);
+            for (final Marker marker : declusterifiedMarkers) {
                 marker.setClusterGroup(ClusterGroup.DEFAULT);
+//                if (bounds.contains(marker.getPosition())) {
+                    final MarkerData data = marker.getData();
+                    final LatLng position = data.position;
+                    marker.setPosition(position);
+//                }
             }
+
             declusterifiedMarkers = null;
         }
     }
@@ -415,28 +426,32 @@ public class MainActivity extends LocationActivity
 
             for (final Placemark p : placemarks) {
                 if (mPointsOnMap.get(p.id) == null) {
+                    //noinspection ObjectAllocationInLoop
                     marker = mMap.addMarker(options.title(p.name).position(p.position).data(new MarkerData(p.position, p.id)));
                     mPointsOnMap.append(p.id, marker);
                 }
             }
 
             // Remove markers that aren't on the map anymore.
-            final int n = mPointsOnMap.size();
-            for (int i = 0; i < n; i++) {
-                marker = mPointsOnMap.valueAt(i);
-                if ((marker != null) && !bounds.contains(marker.getPosition())) {
-                    mPointsOnMap.removeAt(i);
-                    marker.remove();
+            // Unless we're declusterified.
+            if (declusterifiedMarkers == null) {
+                final int n = mPointsOnMap.size();
+                for (int i = 0; i < n; i++) {
+                    marker = mPointsOnMap.valueAt(i);
+                    if ((marker != null) && !bounds.contains(marker.getPosition())) {
+                        mPointsOnMap.removeAt(i);
+                        marker.remove();
+                    }
                 }
             }
         }
     }
 
-    private class MarkerData {
+    private static class MarkerData {
         LatLng position;
         int id;
 
-        public MarkerData(final LatLng p, final int i) {
+        MarkerData(final LatLng p, final int i) {
             position = p;
             id = i;
         }

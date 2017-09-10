@@ -1,431 +1,493 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.beerme.android.EditBreweryActivity"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
+    android:orientation="vertical"
     android:padding="8dp"
+    tools:context="com.beerme.android.EditBreweryActivity"
     tools:showIn="@layout/activity_edit_brewery">
 
-    <TableLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="1">
-        <TableRow>
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/brewery_name"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <EditText
-                    android:id="@+id/name_view"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <TableRow>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/brewery_name"
                     android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/name_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/required"
+                        android:inputType="textCapWords"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/name2_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brewery_address"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/address_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/address2_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/city"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/city_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/required"
                     android:inputType="textCapWords"
-                    android:hint="@string/required"/>
-                <EditText
-                    android:id="@+id/name2_view"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/region"
                     android:textSize="14sp"
-                    android:inputType="textCapWords"/>
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/brewery_address"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <EditText
-                    android:id="@+id/address_view"
+                    android:textStyle="bold" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/region_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:inputType="textPostalAddress"/>
-                <EditText
-                    android:id="@+id/address2_view"
+                    android:hint="@string/required"
+                    android:textSize="14sp" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/postal_code"
                     android:textSize="14sp"
-                    android:inputType="textPostalAddress"/>
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/city"/>
-            <EditText
-                android:id="@+id/city_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="textCapWords"
-                android:hint="@string/required"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/region"/>
-
-            <AutoCompleteTextView
-                android:id="@+id/region_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/required"
-                android:textSize="14sp" />
-
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/postal_code"/>
-            <EditText
-                android:id="@+id/zip_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="textCapWords"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/gps"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/lat_view"
-                    android:layout_width="0dp"
+                    android:id="@+id/zip_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal|numberSigned"
+                    android:inputType="textCapWords"
                     android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gps"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/lat_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/lng_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/telephone"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/lng_view"
-                    android:layout_width="0dp"
+                    android:id="@+id/phone_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal|numberSigned"
+                    android:inputType="phone"
                     android:textSize="14sp" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/telephone"/>
-            <EditText
-                android:id="@+id/phone_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="phone"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/status"/>
+            </TableRow>
 
-            <Spinner
-                android:id="@+id/status_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/opened_for_business"/>
-            <EditText
-                android:id="@+id/opened_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="date"
-                android:hint="@string/year"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/brewers"/>
-            <EditText
-                android:id="@+id/brewers_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="textPersonName"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/annual_production"/>
+            <TableRow>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/capacity_view"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:textSize="14sp" />
+                    android:text="@string/status"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <Spinner
-                    android:id="@+id/capacity_unit_view"
-                    android:layout_width="0dp"
+                    android:id="@+id/status_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/web_site"/>
-            <EditText
-                android:id="@+id/web_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="textWebEditText"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/email_address"/>
-            <EditText
-                android:id="@+id/email_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:inputType="textWebEmailAddress"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/open_to_the_public"/>
+                    android:textSize="14sp" />
+            </TableRow>
 
-            <CheckBox
-                android:id="@+id/public_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow
-            android:id="@+id/svcs_row">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/opened_for_business"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/services"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/opened_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/year"
+                    android:inputType="date"
+                    android:textSize="14sp" />
+            </TableRow>
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stretchColumns="1">
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/bar_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+            <TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brewers"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/brewers_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/annual_production"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/capacity_view"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_local_drink_black_24dp"
-                        android:text="@string/bar"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/beergarden_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:textSize="14sp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <Spinner
+                        android:id="@+id/capacity_unit_view"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_nature_people_black_24dp"
-                        android:text="@string/beer_garden"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/food_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_weight="1"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_restaurant_black_24dp"
-                        android:text="@string/food"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/giftshop_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+            <TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_local_mall_black_24dp"
-                        android:text="@string/giftshop"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/hotel_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/web_site"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_hotel_black_24dp"
-                        android:text="@string/hotel"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/retail_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/web_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textWebEditText"
+                    android:textSize="14sp" />
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
-                        android:text="@string/retail"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/tours_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+            <TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_directions_walk_black_24dp"
-                        android:text="@string/tours"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-                <TableRow>
-                    <CheckBox
-                        android:id="@+id/wifi_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_address"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_wifi_black_24dp"
-                        android:text="@string/wifi"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </TableRow>
-            </TableLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/comments"/>
+                <EditText
+                    android:id="@+id/email_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textWebEmailAddress"
+                    android:textSize="14sp" />
+            </TableRow>
 
-            <EditText
-                android:id="@+id/comments_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:textSize="14sp" />
-        </TableRow>
-        <TableRow>
+            <TableRow>
 
-            <Button
-                android:id="@+id/submit_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:text="@string/submit" />
-        </TableRow>
-    </TableLayout>
-</ScrollView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/open_to_the_public"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/public_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow android:id="@+id/svcs_row">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/services"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1">
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/bar_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_local_drink_black_24dp"
+                            android:text="@string/bar"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/beergarden_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_nature_people_black_24dp"
+                            android:text="@string/beer_garden"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/food_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_restaurant_black_24dp"
+                            android:text="@string/food"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/giftshop_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_local_mall_black_24dp"
+                            android:text="@string/giftshop"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/hotel_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_hotel_black_24dp"
+                            android:text="@string/hotel"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/retail_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
+                            android:text="@string/retail"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/tours_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_directions_walk_black_24dp"
+                            android:text="@string/tours"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <CheckBox
+                            android:id="@+id/wifi_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_wifi_black_24dp"
+                            android:text="@string/wifi"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comments"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/comments_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:textSize="14sp" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+</LinearLayout>

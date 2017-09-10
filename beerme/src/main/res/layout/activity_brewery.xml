@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".BreweryActivity">
 
     <!--<android.support.design.widget.AppBarLayout-->
@@ -21,12 +22,16 @@
 
     <include layout="@layout/content_brewery" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fab"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|end"-->
-    <!--android:layout_margin="@dimen/fab_margin"-->
-    <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:alpha="0.875"
+        android:onClick="editBrewery"
+        android:src="@android:drawable/ic_menu_edit"
+        android:tint="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimaryDark" />
 
 </android.support.design.widget.CoordinatorLayout>

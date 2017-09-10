@@ -20,6 +20,7 @@ import com.beerme.android.util.ImageZoomer;
 
 public class BreweryActivity extends BeerMeActivity {
     int id = -1;
+    Brewery brewery;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class BreweryActivity extends BeerMeActivity {
         }
 
         try {
-            final Brewery brewery = new Brewery(this, id);
+            brewery = new Brewery(this, id);
             final int status = brewery.getStatus();
 
             final TextView nameView = (TextView) findViewById(R.id.name);
@@ -150,5 +151,11 @@ public class BreweryActivity extends BeerMeActivity {
             Log.e("beerme", e.getLocalizedMessage());
             this.finish();
         }
+    }
+
+    public void editBrewery(final View v) {
+        final Intent intent = new Intent(this, EditBreweryActivity.class);
+        intent.putExtra("brewery", brewery.getId());
+        startActivity(intent);
     }
 }

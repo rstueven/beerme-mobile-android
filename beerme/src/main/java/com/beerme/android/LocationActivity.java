@@ -1,5 +1,6 @@
 package com.beerme.android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -81,6 +82,27 @@
             android:text="@string/gps"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/gps_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/address_label"
+            android:layout_alignTop="@id/gps_label"
+            android:layout_alignBottom="@id/gps_label"
+            android:layout_toEndOf="@+id/gps_label"
+            android:layout_toStartOf="@id/lat_view"
+            app:srcCompat="@android:drawable/ic_menu_mylocation"
+            android:onClick="useMyLocation" />
+
+        <!--ImageButton
+            android:id="@+id/gps_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/address_label"
+            android:layout_toEndOf="@id/gps_label"
+            android:layout_toStartOf="@id/lat_view"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" /-->
 
         <!-- TODO: Put these in a LinearLayout for balance -->
         <EditText

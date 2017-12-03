@@ -71,8 +71,8 @@ public class Status {
 
     public static int statusMask(final Context context) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final int open = prefs.getBoolean("status_filter_open", false) ? OPEN : 0;
-        final int planned = prefs.getBoolean("status_filter_planned", false) ? PLANNED : 0;
+        final int open = prefs.getBoolean("status_filter_open", true) ? OPEN : 0;
+        final int planned = prefs.getBoolean("status_filter_planned", true) ? PLANNED : 0;
         final int nlb = prefs.getBoolean("status_filter_no_longer_brewing", false) ? NO_LONGER_BREWING : 0;
         final int closed = prefs.getBoolean("status_filter_closed", false) ? CLOSED : 0;
 

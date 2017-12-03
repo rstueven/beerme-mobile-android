@@ -1,5 +1,6 @@
 package com.beerme.android.util;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.widget.BaseAdapter;
 
@@ -14,6 +15,10 @@ public abstract class SparseArrayAdapter<E> extends BaseAdapter {
 
     public void setData(final SparseArray<E> data) {
         mData = data;
+    }
+
+    public SparseArray<E> getData() {
+        return mData;
     }
 
     @Override

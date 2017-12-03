@@ -2,6 +2,7 @@ package com.beerme.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -75,7 +76,8 @@ public class EditBreweryActivity extends BeerMeActivity {
             latView.setText(String.format(Locale.getDefault(), "%.6f", brewery.getLatitude()));
             lngView.setText(String.format(Locale.getDefault(), "%.6f", brewery.getLongitude()));
             phoneView.setText(brewery.getPhone());
-            statusView.setSelection(brewery.getStatus());
+            Log.d("beerme", "getIndex(" + brewery.getStatus() + "): " + Status.getIndex(brewery.getStatus()));
+            statusView.setSelection(Status.getIndex(brewery.getStatus()));
             webView.setText(brewery.getWebForDisplay());
             hoursView.setText(brewery.getHours());
             final int services = brewery.getServices();

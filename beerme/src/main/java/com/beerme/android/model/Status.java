@@ -3,6 +3,7 @@ package com.beerme.android.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,23 @@ public class Status {
         STATUS.put(NO_LONGER_BREWING, "No longer brewing");
         STATUS.put(CLOSED, "Closed");
         STATUS.put(DELETED, "Deleted");
+    }
+
+    public static int getIndex(final int status) {
+        switch(status) {
+            case OPEN:
+                return 0;
+            case PLANNED:
+                return 1;
+            case NO_LONGER_BREWING:
+                return 2;
+            case CLOSED:
+                return 3;
+            case DELETED:
+                return 4;
+            default:
+                throw new IllegalArgumentException("status: " + status);
+        }
     }
 
     public static String statusString(final int status) {
@@ -78,6 +96,7 @@ public class Status {
                 result = (TextView) mInflater.inflate(android.R.layout.simple_list_item_1, null);
             }
 
+            Log.d("beerme", "POSITION: " + position);
             result.setText(getItem(position));
             return result;
         }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,16 +40,16 @@ public class EditBreweryActivity extends LocationActivity {
         final Status.StatusAdapter statusAdapter = new Status.StatusAdapter(this);
         statusView.setAdapter(statusAdapter);
         final EditText webView = findViewById(R.id.web_view);
-        final CheckBox publicView = findViewById(R.id.public_view);
+        final Button publicView = findViewById(R.id.public_view);
         final EditText hoursView = findViewById(R.id.hours_view);
-        final CheckBox barView = findViewById(R.id.bar_view);
-        final CheckBox beergardenView = findViewById(R.id.beergarden_view);
-        final CheckBox foodView = findViewById(R.id.food_view);
-        final CheckBox giftshopView = findViewById(R.id.giftshop_view);
-        final CheckBox hotelView = findViewById(R.id.hotel_view);
-        final CheckBox retailView = findViewById(R.id.retail_view);
-        final CheckBox toursView = findViewById(R.id.tours_view);
-        final CheckBox wifiView = findViewById(R.id.wifi_view);
+        final Button barView = findViewById(R.id.bar_button);
+        final Button beergardenView = findViewById(R.id.beergarden_button);
+        final Button foodView = findViewById(R.id.food_button);
+        final Button giftshopView = findViewById(R.id.giftshop_button);
+        final Button hotelView = findViewById(R.id.hotel_button);
+        final Button retailView = findViewById(R.id.retail_button);
+        final Button toursView = findViewById(R.id.tours_button);
+        final Button wifiView = findViewById(R.id.wifi_button);
         final EditText commentsView = findViewById(R.id.comments_view);
         final Button submitBtn = findViewById(R.id.submit_btn);
 
@@ -72,15 +72,15 @@ public class EditBreweryActivity extends LocationActivity {
             webView.setText(brewery.getWebForDisplay());
             hoursView.setText(brewery.getHours());
             final int services = brewery.getServices();
-            publicView.setChecked(brewery.isOpen());
-            barView.setChecked(brewery.hasBar());
-            beergardenView.setChecked(brewery.hasBeergarden());
-            foodView.setChecked(brewery.hasFood());
-            giftshopView.setChecked(brewery.hasGiftshop());
-            hotelView.setChecked(brewery.hasHotel());
-            retailView.setChecked(brewery.hasRetail());
-            toursView.setChecked(brewery.hasTours());
-            wifiView.setChecked(brewery.hasInternet());
+//            publicView.setChecked(brewery.isOpen());
+//            barView.setChecked(brewery.hasBar());
+//            beergardenView.setChecked(brewery.hasBeergarden());
+//            foodView.setChecked(brewery.hasFood());
+//            giftshopView.setChecked(brewery.hasGiftshop());
+//            hotelView.setChecked(brewery.hasHotel());
+//            retailView.setChecked(brewery.hasRetail());
+//            toursView.setChecked(brewery.hasTours());
+//            wifiView.setChecked(brewery.hasInternet());
         }
 
         // TODO: A simple way to mass show/hide the fields.

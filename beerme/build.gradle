@@ -32,6 +32,7 @@ dependencies {
 
 
     compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:gridlayout-v7:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:27.0.2'
     compile 'com.google.android.gms:play-services-location:11.6.2'

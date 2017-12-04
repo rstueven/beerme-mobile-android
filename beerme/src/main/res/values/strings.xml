@@ -52,5 +52,6 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="your_comments">Your Comments</string>
+    <string name="use_my_location">Use my location</string>
 
 </resources>

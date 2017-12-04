@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -93,16 +94,8 @@
             android:layout_toEndOf="@+id/gps_label"
             android:layout_toStartOf="@id/lat_view"
             app:srcCompat="@android:drawable/ic_menu_mylocation"
-            android:onClick="useMyLocation" />
-
-        <!--ImageButton
-            android:id="@+id/gps_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/address_label"
-            android:layout_toEndOf="@id/gps_label"
-            android:layout_toStartOf="@id/lat_view"
-            app:srcCompat="@android:drawable/ic_menu_mylocation" /-->
+            android:onClick="useMyLocation"
+            android:contentDescription="@string/use_my_location" />
 
         <!-- TODO: Put these in a LinearLayout for balance -->
         <EditText
@@ -128,6 +121,7 @@
 
         <TextView
             android:id="@+id/phone_label"
+            android:labelFor="@+id/phone_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -165,6 +159,7 @@
 
         <TextView
             android:id="@+id/web_label"
+            android:labelFor="@+id/web_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -202,6 +197,7 @@
 
         <TextView
             android:id="@+id/hours_label"
+            android:labelFor="@id/hours_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -230,156 +226,95 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/bar_view"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/services_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/services_label"
-            android:layout_alignStart="@+id/public_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/bar_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/bar_view"
-            android:drawableStart="@drawable/ic_local_drink_black_24dp"
-            android:text="@string/bar"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/beergarden_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/bar_view"
-            android:layout_below="@+id/bar_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/beergarden_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/beergarden_view"
-            android:drawableStart="@drawable/ic_nature_people_black_24dp"
-            android:text="@string/beer_garden"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/food_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/beergarden_view"
-            android:layout_below="@+id/beergarden_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/food_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/food_view"
-            android:drawableStart="@drawable/ic_restaurant_black_24dp"
-            android:text="@string/food"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/giftshop_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/food_view"
-            android:layout_below="@+id/food_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/giftshop_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/giftshop_view"
-            android:drawableStart="@drawable/ic_local_mall_black_24dp"
-            android:text="@string/giftshop"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/hotel_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/giftshop_view"
-            android:layout_below="@+id/giftshop_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/hotel_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/hotel_view"
-            android:drawableStart="@drawable/ic_hotel_black_24dp"
-            android:text="@string/hotel"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/retail_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/hotel_view"
-            android:layout_below="@+id/hotel_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/retail_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/retail_view"
-            android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
-            android:text="@string/retail"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/tours_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/retail_view"
-            android:layout_below="@+id/retail_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tours_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/tours_view"
-            android:drawableStart="@drawable/ic_directions_walk_black_24dp"
-            android:text="@string/tours"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/wifi_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tours_view"
-            android:layout_below="@+id/tours_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wifi_view"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/wifi_view"
-            android:drawableStart="@drawable/ic_wifi_black_24dp"
-            android:text="@string/wifi"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_centerHorizontal="true"
+            grid:alignmentMode="alignBounds"
+            grid:columnCount="2"
+            android:layout_below="@id/services_label">
+            <Button
+                android:id="@+id/bar_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_local_drink_black_24dp"
+                android:text="@string/bar" />
+            <Button
+                android:id="@+id/food_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_restaurant_black_24dp"
+                android:text="@string/food" />
+            <Button
+                android:id="@+id/beergarden_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_nature_people_black_24dp"
+                android:text="@string/beer_garden" />
+            <Button
+                android:id="@+id/giftshop_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_local_mall_black_24dp"
+                android:text="@string/giftshop" />
+            <Button
+                android:id="@+id/hotel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_hotel_black_24dp"
+                android:text="@string/hotel" />
+            <Button
+                android:id="@+id/retail_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
+                android:text="@string/retail" />
+            <Button
+                android:id="@+id/tours_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_directions_walk_black_24dp"
+                android:text="@string/tours" />
+            <Button
+                android:id="@+id/wifi_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                grid:layout_columnWeight="1"
+                grid:layout_rowWeight="1"
+                grid:layout_gravity="fill"
+                android:drawableStart="@drawable/ic_wifi_black_24dp"
+                android:text="@string/wifi" />
+        </android.support.v7.widget.GridLayout>
 
         <TextView
             android:id="@+id/comments_label"
+            android:labelFor="@id/comments_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/wifi_view"
+            android:layout_below="@+id/services_layout"
             android:text="@string/your_comments"
             android:textSize="14sp"
             android:textStyle="bold" />

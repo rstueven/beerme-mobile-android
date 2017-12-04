@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,9 +14,6 @@ import android.widget.ToggleButton;
 
 import com.beerme.android.model.Brewery;
 import com.beerme.android.model.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Locale;
 
@@ -30,13 +27,6 @@ public class EditBreweryActivity extends LocationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_brewery);
 
-        final Intent intent = getIntent();
-        final int breweryId = intent.getIntExtra("brewery", -1);
-
-        if (breweryId > 0) {
-            brewery = new Brewery(this, breweryId);
-        }
-
         final TextView titleView = findViewById(R.id.title);
         titleView.setText(R.string.add_a_brewery);
         final EditText nameView = findViewById(R.id.name_view);
@@ -48,18 +38,25 @@ public class EditBreweryActivity extends LocationActivity {
         final Status.StatusAdapter statusAdapter = new Status.StatusAdapter(this);
         statusView.setAdapter(statusAdapter);
         final EditText webView = findViewById(R.id.web_view);
-        final Button publicView = findViewById(R.id.public_view);
+        final CheckBox publicView = findViewById(R.id.public_view);
         final EditText hoursView = findViewById(R.id.hours_view);
-        final Button barView = svcBtnSetup(R.id.bar_button, brewery.hasBar());
-        final Button beergardenView = svcBtnSetup(R.id.beergarden_button, brewery == null && brewery.hasBeergarden());
-        final Button foodView = svcBtnSetup(R.id.food_button, brewery == null && brewery.hasFood());
-        final Button giftshopView = svcBtnSetup(R.id.giftshop_button, brewery == null && brewery.hasGiftshop());
-        final Button hotelView = svcBtnSetup(R.id.hotel_button, brewery == null && brewery.hasHotel());
-        final Button retailView = svcBtnSetup(R.id.retail_button, brewery == null && brewery.hasRetail());
-        final Button toursView = svcBtnSetup(R.id.tours_button, brewery == null && brewery.hasTours());
-        final Button wifiView = svcBtnSetup(R.id.wifi_button, brewery == null && brewery.hasInternet());
+        final ToggleButton barView = svcBtnSetup(R.id.bar_button);
+        final ToggleButton beergardenView = svcBtnSetup(R.id.beergarden_button);
+        final ToggleButton foodView = svcBtnSetup(R.id.food_button);
+        final ToggleButton giftshopView = svcBtnSetup(R.id.giftshop_button);
+        final ToggleButton hotelView = svcBtnSetup(R.id.hotel_button);
+        final ToggleButton retailView = svcBtnSetup(R.id.retail_button);
+        final ToggleButton toursView = svcBtnSetup(R.id.tours_button);
+        final ToggleButton wifiView = svcBtnSetup(R.id.wifi_button);
         final EditText commentsView = findViewById(R.id.comments_view);
         final Button submitBtn = findViewById(R.id.submit_btn);
+
+        final Intent intent = getIntent();
+        final int breweryId = intent.getIntExtra("brewery", -1);
+
+        if (breweryId > 0) {
+            brewery = new Brewery(this, breweryId);
+        }
 
         if (brewery != null) {
             titleView.setText(R.string.edit_brewery_information);
@@ -68,11 +65,19 @@ public class EditBreweryActivity extends LocationActivity {
             latView.setText(String.format(Locale.getDefault(), "%.6f", brewery.getLatitude()));
             lngView.setText(String.format(Locale.getDefault(), "%.6f", brewery.getLongitude()));
             phoneView.setText(brewery.getPhone());
-            Log.d("beerme", "getIndex(" + brewery.getStatus() + "): " + Status.getIndex(brewery.getStatus()));
             statusView.setSelection(Status.getIndex(brewery.getStatus()));
             webView.setText(brewery.getWebForDisplay());
+            publicView.setChecked(brewery.isOpen());
             hoursView.setText(brewery.getHours());
-            final int services = brewery.getServices();
+//            final int services = brewery.getServices();
+            barView.setChecked(brewery.hasBar());
+            beergardenView.setChecked(brewery.hasBeergarden());
+            foodView.setChecked(brewery.hasFood());
+            giftshopView.setChecked(brewery.hasGiftshop());
+            hotelView.setChecked(brewery.hasHotel());
+            retailView.setChecked(brewery.hasRetail());
+            toursView.setChecked(brewery.hasTours());
+            wifiView.setChecked(brewery.hasInternet());
         }
 
         // TODO: A simple way to mass show/hide the fields.
@@ -90,9 +95,9 @@ public class EditBreweryActivity extends LocationActivity {
 //
 //    }
 
-    private Button svcBtnSetup(final int id, final boolean tag) {
-        Button btn = findViewById(id);
-        btn.setTag(tag);
+    private ToggleButton svcBtnSetup(final int id) {
+        ToggleButton btn = findViewById(id);
+        btn.setChecked(false);
         btn.setOnClickListener(svcBtnListener);
 
         return btn;
@@ -101,14 +106,13 @@ public class EditBreweryActivity extends LocationActivity {
     private View.OnClickListener svcBtnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Log.d("beerme", ((ToggleButton)view).isChecked() ? "ON" : "OFF");
-            view.setTag(!(boolean)view.getTag());
+            Log.d("beerme", ((ToggleButton) view).isChecked() ? "ON" : "OFF");
         }
     };
 
     public void useMyLocation(final View view) {
         Location location = mCurrentLocation;
-        latView.setText(String.format(Locale.getDefault(),"%.6f", location.getLatitude()));
-        lngView.setText(String.format(Locale.getDefault(),"%.6f", location.getLongitude()));
+        latView.setText(String.format(Locale.getDefault(), "%.6f", location.getLatitude()));
+        lngView.setText(String.format(Locale.getDefault(), "%.6f", location.getLongitude()));
     }
 }

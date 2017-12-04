@@ -234,7 +234,7 @@
             grid:alignmentMode="alignBounds"
             grid:columnCount="2"
             android:layout_below="@id/services_label">
-            <Button
+            <ToggleButton
                 android:id="@+id/bar_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -242,8 +242,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_local_drink_black_24dp"
-                android:text="@string/bar" />
-            <Button
+                android:textOff="@string/no_bar"
+                android:textOn="@string/bar" />
+            <ToggleButton
                 android:id="@+id/food_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -251,8 +252,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_restaurant_black_24dp"
-                android:text="@string/food" />
-            <Button
+                android:textOff="@string/no_food"
+                android:textOn="@string/food" />
+            <ToggleButton
                 android:id="@+id/beergarden_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -260,8 +262,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_nature_people_black_24dp"
-                android:text="@string/beer_garden" />
-            <Button
+                android:textOff="@string/no_beer_garden"
+                android:textOn="@string/beer_garden" />
+            <ToggleButton
                 android:id="@+id/giftshop_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -269,8 +272,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_local_mall_black_24dp"
-                android:text="@string/giftshop" />
-            <Button
+                android:textOff="@string/no_giftshop"
+                android:textOn="@string/giftshop" />
+            <ToggleButton
                 android:id="@+id/hotel_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -278,8 +282,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_hotel_black_24dp"
-                android:text="@string/hotel" />
-            <Button
+                android:textOff="@string/no_hotel"
+                android:textOn="@string/hotel" />
+            <ToggleButton
                 android:id="@+id/retail_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -287,8 +292,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
-                android:text="@string/retail" />
-            <Button
+                android:textOff="@string/no_retail"
+                android:textOn="@string/retail" />
+            <ToggleButton
                 android:id="@+id/tours_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -296,8 +302,9 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_directions_walk_black_24dp"
-                android:text="@string/tours" />
-            <Button
+                android:textOff="@string/no_tours"
+                android:textOn="@string/tours" />
+            <ToggleButton
                 android:id="@+id/wifi_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -305,7 +312,8 @@
                 grid:layout_rowWeight="1"
                 grid:layout_gravity="fill"
                 android:drawableStart="@drawable/ic_wifi_black_24dp"
-                android:text="@string/wifi" />
+                android:textOff="@string/no_wifi"
+                android:textOn="@string/wifi" />
         </android.support.v7.widget.GridLayout>
 
         <TextView

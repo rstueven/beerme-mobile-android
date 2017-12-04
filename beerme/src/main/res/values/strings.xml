@@ -6,8 +6,10 @@
     <string name="annual_production">Annual Production</string>
     <string name="app_name">Beer Me!</string>
     <string name="bar">Bar/Tasting Room</string>
+    <string name="no_bar">No Bar/Tasting Room</string>
     <string name="beer">Beer</string>
     <string name="beer_garden">Beer Garden</string>
+    <string name="no_beer_garden">No Beer Garden</string>
     <string name="beer_list">Beer List</string>
     <string name="beers">Beers</string>
     <string name="breweries">Breweries</string>
@@ -20,9 +22,12 @@
     <string name="edit_brewery_information">Edit Brewery Information</string>
     <string name="email_address">Email Address</string>
     <string name="food">Food</string>
+    <string name="no_food">No Food</string>
     <string name="giftshop">Items for Sale</string>
+    <string name="no_giftshop">No Items for Sale</string>
     <string name="gps">GPS</string>
     <string name="hotel">Hotel Rooms</string>
+    <string name="no_hotel">No Hotel Rooms</string>
     <string name="location_permission_rationale">Your location is necessary to show nearby breweries.</string>
     <string name="no_beers_found">No beers found</string>
     <string name="no_breweries_found">No breweries found</string>
@@ -34,6 +39,7 @@
     <string name="region">Region</string>
     <string name="required">required</string>
     <string name="retail">Beer to Go</string>
+    <string name="no_retail">No Beer to Go</string>
     <string name="search_hint">Search breweries, beers, locations</string>
     <string name="services">Services</string>
     <string name="status">Status</string>
@@ -45,8 +51,10 @@
     <string name="title_activity_edit_brewery">EditBreweryActivity</string>
     <string name="title_activity_main">Beer Me!</string>
     <string name="tours">Tours</string>
+    <string name="no_tours">No Tours</string>
     <string name="web_site">Web Site</string>
     <string name="wifi">WiFi</string>
+    <string name="no_wifi">No WiFi</string>
     <string name="year">year</string>
     <string name="hours">Hours</string>
     <string name="latitude">Latitude</string>

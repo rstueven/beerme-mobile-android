@@ -28,21 +28,33 @@ public class DBUpdateService extends IntentService {
         super("DBUpdateService");
     }
 
-    @Override
-    protected void onHandleIntent(final Intent intent) {
-        Log.d("beerme", "onHandleIntent(" + intent.toString() + ")");
-        final DBHelper dbHelper = DBHelper.getInstance(this);
-        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+    private String getLatestDate(final SQLiteDatabase db, final String table) {
         String latestDate = null;
-        final String latestSql = "SELECT MAX(updated) FROM brewery";
+        final String latestSql = "SELECT MAX(updated) FROM " + table;
         final Cursor c = db.rawQuery(latestSql, null);
         if (c.moveToFirst()) {
             latestDate = c.getString(0);
         }
         c.close();
 
-        final String urlString = UPDATE_URL + ((latestDate != null) ? ("?t=" + latestDate) : "");
+        return latestDate;
+    }
+
+    @Override
+    protected void onHandleIntent(final Intent intent) {
+        Log.d("beerme", "onHandleIntent(" + intent.toString() + ")");
+        final DBHelper dbHelper = DBHelper.getInstance(this);
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String breweryLatest = getLatestDate(db, "brewery");
+        String beerLatest = getLatestDate(db, "beer");
+        String styleLatest = getLatestDate(db, "style");
+
+        final String urlString = UPDATE_URL
+                + "?brewery=" + breweryLatest
+                + "?beer=" + beerLatest
+                + "?style=" + styleLatest;
         Log.d("beerme", urlString);
+
         BufferedReader reader = null;
 
         try {

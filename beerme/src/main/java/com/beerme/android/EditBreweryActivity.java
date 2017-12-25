@@ -153,7 +153,7 @@ public class EditBreweryActivity extends LocationActivity {
             }
 
             s = webView.getText().toString();
-            if (isNew || !brewery.getWebForDisplay().equals(s)) {
+            if (isNew || !(brewery.getWebForDisplay().equals(s) || brewery.getWeb().equals(s))) {
                 body.append("Web Site(s): " + s + "\n");
             }
 

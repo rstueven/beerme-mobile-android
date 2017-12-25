@@ -96,7 +96,6 @@ public class Status {
                 result = (TextView) mInflater.inflate(android.R.layout.simple_list_item_1, null);
             }
 
-            Log.d("beerme", "POSITION: " + position);
             result.setText(getItem(position));
             return result;
         }

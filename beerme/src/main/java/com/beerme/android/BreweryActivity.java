@@ -3,6 +3,7 @@ package com.beerme.android;
 import android.animation.Animator;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.beerme.android.util.DownloadImageTask;
 import com.beerme.android.util.ImageZoomer;
 
 public class BreweryActivity extends BeerMeActivity {
+    private static String appVersion = "-";
+    private static String platformVersion = Build.VERSION.RELEASE;
     int id = -1;
     Brewery brewery;
 
@@ -157,5 +160,13 @@ public class BreweryActivity extends BeerMeActivity {
         final Intent intent = new Intent(this, EditBreweryActivity.class);
         intent.putExtra("brewery", brewery.getId());
         startActivity(intent);
+    }
+
+    public static String getAppVersion() {
+        return appVersion;
+    }
+
+    public static String getPlatformVersion() {
+        return platformVersion;
     }
 }

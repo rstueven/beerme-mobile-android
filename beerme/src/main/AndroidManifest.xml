@@ -62,6 +62,9 @@
             android:name=".EditBreweryActivity"
             android:label="@string/title_activity_main" />
         <activity
+            android:name=".EditBeerActivity"
+            android:label="@string/title_activity_main" />
+        <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_main">
             <intent-filter>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.beerme.android.BeerMeApplication;
 import com.beerme.android.db.DBContract;
 import com.beerme.android.db.DBHelper;
 
@@ -61,5 +62,9 @@ public class Style {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public static String getNameFromStyle(final int id) {
+        return (id > 0) ? new Style(BeerMeApplication.getInstance(), id).getName() : null;
     }
 }

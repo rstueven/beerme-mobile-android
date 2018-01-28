@@ -61,5 +61,10 @@
     <string name="longitude">Longitude</string>
     <string name="your_comments">Your Comments</string>
     <string name="use_my_location">Use my location</string>
+    <string name="add_a_beer">Add a Beer</string>
+    <string name="beer_name">Beer Name</string>
+    <string name="style">Style</string>
+    <string name="abv">ABV%</string>
+    <string name="edit_beer_information">Edit Beer Information</string>
 
 </resources>

@@ -111,7 +111,7 @@ public class EditBreweryActivity extends LocationActivity {
     private View.OnClickListener submit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Log.d("beerme", "SUBMIT");
+            // TODO: POST request that actually updates the database and returns the new ID as appropriate.
             String s;
             boolean isNew = (brewery == null);
 

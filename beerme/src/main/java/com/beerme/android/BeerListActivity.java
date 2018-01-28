@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,7 +30,7 @@ public class BeerListActivity extends BeerMeActivity
         breweryId = intent.getIntExtra("id", -1);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new ActionButtonOnClickListener());
+//        fab.setOnClickListener(new ActionButtonOnClickListener());
 
         if (breweryId <= 0) {
             throw new IllegalArgumentException("BeerListActivity: invalid breweryId (" + breweryId + ")");
@@ -75,11 +76,9 @@ public class BeerListActivity extends BeerMeActivity
         adapter.swapCursor(null);
     }
 
-    private static class ActionButtonOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(final View view) {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
+    public void addBeer(final View v) {
+        final Intent intent = new Intent(this, EditBeerActivity.class);
+        intent.putExtra("brewery", breweryId);
+        startActivity(intent);
     }
 }

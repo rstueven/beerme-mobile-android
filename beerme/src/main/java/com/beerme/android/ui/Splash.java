@@ -19,7 +19,6 @@ import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.prefs.SharedPreferenceSaver;
-import com.beerme.android.utils.CheckLicenseTask;
 import com.beerme.android.utils.DatabaseUpdateAlert;
 import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
 import com.beerme.android.utils.ErrLog;
@@ -30,7 +29,7 @@ import java.lang.ref.WeakReference;
 /**
  * @author rstueven
  */
-public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLicenseListener,
+public class Splash extends FragmentActivity implements
         DbOpenHelper.OnDbOpenListener, DatabaseUpdateAlerter {
     private static final int DATABASE_CHECK = 2;
     private static final int DATABASE_DONE = 3;
@@ -68,17 +67,6 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
     public void onStop() {
         super.onStop();
         Utils.trackActivityStop(this);
-    }
-
-    @Override
-    public void onLicenseChecked(boolean result) {
-        mLicensed = result;
-        Context context = getApplicationContext();
-        Editor editor = Prefs.getSettingsEditor(context);
-        SharedPreferenceSaver saver = Prefs.getSettingsSaver(context);
-        editor.putBoolean(Prefs.KEY_LICENSED, result);
-        saver.savePreferences(editor, false);
-        mHandler.sendEmptyMessage(result ? LICENSE_OK : NOT_LICENSED);
     }
 
     private void checkDatabase() {
@@ -145,7 +133,7 @@ public class Splash extends FragmentActivity implements CheckLicenseTask.CheckLi
 //                    }
 
                     // Known bug: https://code.google.com/p/android/issues/detail?id=78505
-                    Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
+//                    Log.w(Utils.APPTAG, "SKIPPING LICENSE CHECK <" + Utils.getPlatformVersion() + ">");
                     instance.mLicensed = true;
                     mHandler.sendEmptyMessage(LICENSE_OK);
                     break;

@@ -53,7 +53,7 @@ public class Utils {
     private static String appVersion = "-";
     private static String platformVersion = Build.VERSION.RELEASE;
     public static final String DISTANT_PAST = "1970-01-01";
-    public static final String BEERME_URL = "http://" + (DEBUG_LOCAL_NET ? "beerme-local" : "beerme.com") + "/mobile/v2/";
+    public static final String BEERME_URL = (DEBUG_LOCAL_NET ? "http://beerme-local" : "https://beerme.com") + "/mobile/v2/";
     public static final String NEWS_URL = BEERME_URL + "news.php";
     // public static final String UPDATES_URL = BEERME_URL + "updates.php";
     // public static final String BEER_RATING_URL = BEERME_URL + "beerRating.php";

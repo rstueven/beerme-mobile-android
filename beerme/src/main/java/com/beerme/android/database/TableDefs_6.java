@@ -392,21 +392,19 @@ public class TableDefs_6 extends TableDefs {
                     parse(file, insertStatement, builder);
                     mDb.setTransactionSuccessful();
                 } catch (FileNotFoundException e) {
-                    ErrLog.log(
-                            mContext,
-                            "onUrlToFileDownloaded(" + fileName
-                                    + "): FileNotFoundException: ",
+                    ErrLog.log(mContext,
+                            "onUrlToFileDownloaded(" + fileName + "): FileNotFoundException: ",
                             e,
-                            String.format(
-                                    mContext.getString(R.string.Failed_to_update_TABLE_data),
-                                    mName));
+                            String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
                 } catch (IOException e) {
-                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName
-                            + "): IOException: ", e, String.format(mContext
-                                    .getString(R.string.Failed_to_update_TABLE_data),
-                            mName));
+                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName + "): IOException: ",
+                            e,
+                            String.format(mContext
+                                    .getString(R.string.Failed_to_update_TABLE_data), mName));
                 } finally {
-                    mDb.endTransaction();
+                    if (mDb.inTransaction()) {
+                        mDb.endTransaction();
+                    }
                     file.delete();
                     Log.i(Utils.APPTAG, "onUrlToFileDownloaded(" + mName
                             + ") elapsed: "

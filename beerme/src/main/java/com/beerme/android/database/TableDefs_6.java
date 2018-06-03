@@ -385,12 +385,17 @@ public class TableDefs_6 extends TableDefs {
 
                 start = System.currentTimeMillis();
 
-                insertStatement = mDb.compileStatement(mInsertSql);
-
                 try {
+                    insertStatement = mDb.compileStatement(mInsertSql);
+
                     mDb.beginTransaction();
                     parse(file, insertStatement, builder);
                     mDb.setTransactionSuccessful();
+                } catch (IllegalStateException e) {
+                    ErrLog.log(mContext,
+                        "onUrlToFileDownloaded(" + fileName + "): IllegalStateException: ",
+                        e,
+                        String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
                 } catch (FileNotFoundException e) {
                     ErrLog.log(mContext,
                             "onUrlToFileDownloaded(" + fileName + "): FileNotFoundException: ",

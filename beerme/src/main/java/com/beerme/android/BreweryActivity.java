@@ -121,7 +121,7 @@ public class BreweryActivity extends BeerMeActivity {
             if ((breweryImage == null) || breweryImage.isEmpty()) {
                 imageView.setVisibility(View.GONE);
             } else {
-                final StringBuilder urlBuilder = new StringBuilder("http://beerme.com/graphics/brewery/" + (brewery.getId() / 1000) + "/" + brewery.getId() + "/");
+                final StringBuilder urlBuilder = new StringBuilder("https://beerme.com/graphics/brewery/" + (brewery.getId() / 1000) + "/" + brewery.getId() + "/");
                 switch (breweryImage.charAt(0)) {
                     case 'P':
                         // Premises

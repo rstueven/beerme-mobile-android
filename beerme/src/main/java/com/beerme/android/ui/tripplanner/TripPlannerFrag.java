@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.GoogleMap.OnInfoWindowClickListener;
 import com.androidmapsextensions.Marker;
+import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.Polyline;
 import com.androidmapsextensions.PolylineOptions;
 import com.androidmapsextensions.SupportMapFragment;
@@ -193,7 +194,12 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 		super.onActivityCreated(savedInstanceState);
 
 		if (Utils.isOnline(getActivity())) {
-			mMap = mMapFrag.getExtendedMap();
+			mMapFrag.getExtendedMapAsync(new OnMapReadyCallback() {
+				@Override
+				public void onMapReady(GoogleMap googleMap) {
+					mMap = googleMap;
+				}
+			});
 		} else {
 			ErrLog.log(getActivity(), "TripPlannerFrag.onCreateView()", null, R.string.No_network_connection);
 		}
@@ -204,16 +210,21 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 		super.onResume();
 
 		if (Utils.isOnline(getActivity())) {
-			mMap = mMapFrag.getExtendedMap();
-
-			// Check if we were successful in obtaining the map.
-			if (mMap != null) {
-				mMap.setMyLocationEnabled(true);
-				mMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
-				mMap.setOnInfoWindowClickListener(this);
-			} else {
-				Log.e(Utils.APPTAG, "null map");
-			}
+			final TripPlannerFrag self = this;
+			mMapFrag.getExtendedMapAsync(new OnMapReadyCallback() {
+				@Override
+				public void onMapReady(GoogleMap googleMap) {
+					mMap = googleMap;
+					// Check if we were successful in obtaining the map.
+					if (mMap != null) {
+						mMap.setMyLocationEnabled(true);
+						mMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
+						mMap.setOnInfoWindowClickListener(self);
+					} else {
+						Log.e(Utils.APPTAG, "null map");
+					}
+				}
+			});
 		} else {
 			ErrLog.log(getActivity(), "TripPlannerFrag.onResume()", null, R.string.No_network_connection);
 		}

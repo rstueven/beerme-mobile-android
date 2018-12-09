@@ -9,6 +9,7 @@ import com.beerme.android.utils.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -23,7 +24,12 @@ public class RouteDisplayer implements Runnable {
 	public RouteDisplayer(SupportMapFragment mMapFrag, Route route,
 			Segment overview, int distance) {
 		this.mMapFrag = mMapFrag;
-		this.mMap = mMapFrag.getMap();
+		mMapFrag.getMapAsync(new OnMapReadyCallback() {
+			@Override
+			public void onMapReady(GoogleMap googleMap) {
+				mMap = googleMap;
+			}
+		});
 		this.route = route;
 		this.overview = overview;
 		this.distance = distance;

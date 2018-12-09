@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +33,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-public abstract class BeerMeActionBarActivity extends ActionBarActivity {
+public abstract class BeerMeActionBarActivity extends AppCompatActivity {
 	// https://developers.google.com/mobile-ads-sdk/docs/admob/play-migration
 	private AdView adView = null;
 

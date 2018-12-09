@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 48
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 49
     }
 
     buildTypes {
@@ -24,11 +24,11 @@ android {
     productFlavors {
         paid {
             applicationId "com.beerme.android"
-            versionName "2.4.7"
+            versionName "2.5.0"
         }
         free {
             applicationId "com.beerme.android_free"
-            versionName "2.4.7 (free)"
+            versionName "2.5.0 (free)"
         }
     }
 }

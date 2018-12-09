@@ -13,7 +13,7 @@ import com.beerme.android.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
 public class BreweryListActivity extends BeerMeActionBarActivity implements
-		LocationFragment.LocationCallbacks {
+		LocationFragment.LocationListener {
 	private static final String TAG_BREWERYLIST_FRAG = "brewerylistFrag";
 	public static final String LAT_KEY = "latitude";
 	public static final String LNG_KEY = "longitude";
@@ -28,8 +28,7 @@ public class BreweryListActivity extends BeerMeActionBarActivity implements
 		double lat = intent.getDoubleExtra(LAT_KEY, Double.MAX_VALUE);
 		double lng = intent.getDoubleExtra(LNG_KEY, Double.MAX_VALUE);
 		if (lat != Double.MAX_VALUE && lng != Double.MAX_VALUE) {
-			mBreweryListFrag = BreweryListFrag
-					.getInstance(new LatLng(lat, lng));
+			mBreweryListFrag = BreweryListFrag.getInstance(new LatLng(lat, lng));
 		} else {
 			mBreweryListFrag = BreweryListFrag.getInstance();
 		}
@@ -60,9 +59,9 @@ public class BreweryListActivity extends BeerMeActionBarActivity implements
 	}
 
 	@Override
-	public void onLocationReceived(Location location) {
+	public void onLocationUpdated(Location location) {
 		if (mBreweryListFrag != null) {
-			mBreweryListFrag.onLocationReceived(location);
+			mBreweryListFrag.onLocationUpdated(location);
 		}
 	}
 }

@@ -272,4 +272,8 @@
     <string name="zero">0</string>
     <string name="Zoom_here">Zoom here</string>
 
+    <string name="title_location_permission">Location Permission</string>
+    <string name="text_location_permission">Location access is required.</string>
+    <string name="ok">OK</string>
+
 </resources>

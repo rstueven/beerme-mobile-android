@@ -1,100 +1,229 @@
 package com.beerme.android.location;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.beerme.android.R;
-import com.beerme.android.prefs.Prefs;
-import com.beerme.android.utils.ErrLog;
-import com.beerme.android.utils.Utils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class LocationFragment extends Fragment {
-	protected static final int MIN_TIME = 10000;
-	protected static final int MIN_DIST = 100;
-	protected static final int UPDATE_INTERVAL = 10000;
-    protected static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL / 2;
-	protected static final String KEY_LOCATION_UPDATES_ON = "KEY_LOCATION_UPDATES_ON";
-	protected Activity mActivity;
-	protected ArrayList<LocationCallbacks> mCallbacks = new ArrayList<LocationCallbacks>();
-	protected int mTimeout = MIN_TIME;
-	protected long mLastUpdateTime = 0;
+public class LocationFragment extends Fragment {
+    private static final String PERMISSIONS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final int REQUEST_FINE_LOCATION = 1;
+    private static final String IS_REQUESTING_LOCATION_UPDATES = "isRequestingLocationUpdates";
+    protected Activity mActivity;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location mCurrentLocation;
+    private boolean isRequestingLocationUpdates = false;
+    private LocationCallback mLocationCallback;
+    private final List<LocationListener> locationListeners = new ArrayList<>();
+    private LocationRequest mLocationRequest;
 
-	public interface LocationCallbacks {
-		public void onLocationReceived(Location location);
-	}
+    public interface LocationListener {
+        void onLocationUpdated(Location location);
+    }
 
-	public static LocationFragment getInstance(Activity activity) {
-		LocationFragment frag;
-
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity) == ConnectionResult.SUCCESS) {
-			// Get a Location Services instance
-			// http://developer.android.com/google/play-services/location.html
-			frag = new LocationFragment_Services();
-		} else {
-			// Get an old-school instance
-			// http://developer.android.com/guide/topics/location/strategies.html
-			frag = new LocationFragment_Legacy();
-		}
-
-		return frag;
+	public static LocationFragment getInstance() {
+		return new LocationFragment();
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mActivity = activity;
-	}
+    public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Utils.trackFragment(this);
-	}
+	    mActivity = getActivity();
 
-	public void registerListener(LocationCallbacks callback) {
-		if (!mCallbacks.contains(callback)) {
-			mCallbacks.add(callback);
-		}
-	}
+        updateValuesFromBundle(savedInstanceState);
 
-	public void unregisterListener(LocationCallbacks callback) {
-		if (mCallbacks.contains(callback)) {
-			mCallbacks.remove(callback);
-		}
-	}
+        checkLocationPermission();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("nfs", "AgSimplifiedActivity.onPause()");
+        super.onPause();
+
+        // Is this necessarily true? Or should it be controlled by the Fragments?
+        stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("nfs", "AgSimplifiedActivity.onResume()");
+        super.onResume();
+        if (isRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.d("nfs", "AgSimplifiedActivity.onSaveInstanceState()");
+        outState.putBoolean(IS_REQUESTING_LOCATION_UPDATES, isRequestingLocationUpdates);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        Log.d("nfs", "AgSimplifiedActivity.updateValuesFromBundle()");
+        if (savedInstanceState != null) {
+            if (savedInstanceState.keySet().contains(IS_REQUESTING_LOCATION_UPDATES)) {
+                isRequestingLocationUpdates = savedInstanceState.getBoolean(IS_REQUESTING_LOCATION_UPDATES);
+            }
+        }
+    }
+
+//	@Override
+//	public void onActivityCreated(Bundle savedInstanceState) {
+//		super.onActivityCreated(savedInstanceState);
+//		Utils.trackFragment(this);
+//	}
+
+    private void checkLocationPermission() {
+        Log.d("nfs", "AgSimplifiedActivity.checkLocationPermission()");
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(mActivity)
+                        .setTitle(R.string.title_location_permission)
+                        .setMessage(R.string.text_location_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(mActivity, new String[] {PERMISSIONS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(mActivity, new String[] {PERMISSIONS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+            }
+        } else {
+            setupLocationClient();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        Log.d("nfs", "AgSimplifiedActivity.onRequestPermissionsResult()");
+        if (requestCode == REQUEST_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setupLocationClient();
+            }
+        }
+    }
+
+    private void setupLocationClient() {
+        Log.d("nfs", "AgSimplifiedActivity.setupLocationClient()");
+        if (mFusedLocationClient == null) {
+            if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mActivity);
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(5000);
+
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult != null) {
+                        for (Location location : locationResult.getLocations()) {
+//                            Log.d("nfs", "LOCATION_RESULT: " + location.toString());
+                            mCurrentLocation = location;
+
+                            for (LocationListener listener : locationListeners) {
+                                listener.onLocationUpdated(location);
+                            }
+                        }
+                    }
+                }
+            };
+
+            checkCurrentLocation();
+            startLocationUpdates();
+        }
+    }
+
+    public void registerLocationListener(LocationListener listener) {
+        if (listener != null && !locationListeners.contains(listener)) {
+            locationListeners.add(listener);
+            isRequestingLocationUpdates = true;
+            startLocationUpdates();
+        }
+    }
+
+    protected void unRegisterLocationListener(LocationListener listener) {
+        if (listener != null) {
+            locationListeners.remove(listener);
+            if (locationListeners.size() == 0) {
+                isRequestingLocationUpdates = false;
+                stopLocationUpdates();
+            }
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (mFusedLocationClient != null) {
+            if (ContextCompat.checkSelfPermission(mActivity, PERMISSIONS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+            }
+        }
+    }
+
+    private void stopLocationUpdates() {
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    private void checkCurrentLocation() {
+        if (mCurrentLocation == null) {
+            if (ContextCompat.checkSelfPermission(mActivity, PERMISSIONS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                loadCurrentLocation();
+            }
+        }
+    }
+
+    private void loadCurrentLocation() {
+        if (mFusedLocationClient != null) {
+            if (ContextCompat.checkSelfPermission(mActivity, PERMISSIONS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(mActivity, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        mCurrentLocation = location;
+                        //                onGotCurrentLocation();
+                    }
+                });
+            }
+        }
+    }
 
 	protected void publishLocation(Location location) {
-		for (LocationCallbacks callback : mCallbacks) {
-			callback.onLocationReceived(location);
+		for (LocationListener callback : locationListeners) {
+			callback.onLocationUpdated(location);
 		}
 	}
 
-	protected Location getDefaultLocation() {
-		Location location = new Location("default");
-		SharedPreferences settings = Prefs.getSettings(mActivity);
-
-		if (settings.getString(Prefs.KEY_DEFAULT_LOCATION, null) != null) {
-			location = new Location("default");
-			location.setLatitude(settings.getFloat(Prefs.KEY_DEFAULT_LATITUDE,
-					0));
-			location.setLongitude(settings.getFloat(
-					Prefs.KEY_DEFAULT_LONGITUDE, 0));
-		} else {
-			ErrLog.log(mActivity, "LocationFragment.getDefaultLocation",
-					null, R.string.Unknown_location);
-		}
-
-		return location;
-	}
-
-	public abstract Location getLocation();
-
-	//public abstract void setTimeout(int timeout);
+    public Location getCurrentLocation() {
+        return mCurrentLocation;
+    }
 }

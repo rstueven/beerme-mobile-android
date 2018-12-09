@@ -1,25 +1,12 @@
 package com.beerme.android.ui.tripplanner;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -65,7 +52,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListener, LocationFragment.LocationCallbacks,
+import org.json.JSONException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListener, LocationFragment.LocationListener,
 		MessageHandler.MessageListener, DirectionsFragment.DirectionsListener, BreweriesFragment.BreweriesListener,
 		BreweriesDisplayer.BreweriesDisplayerListener, MarkerDialogFragment.MarkerDialogListener,
 		SaveTrip.SaveTripListener, FileListFragment.FileListListener, FileExistsFragment.FileExistsListener,
@@ -129,7 +130,7 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.tripplanner_frag, container, false);
 		ViewGroup layoutView = (ViewGroup) view.findViewById(R.id.tripplanner_layout);
 		setupContextMenu(layoutView);
@@ -138,8 +139,8 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 		FragmentTransaction fragTrans = fragMgr.beginTransaction();
 
 		if (mLocationFrag == null) {
-			mLocationFrag = LocationFragment.getInstance(getActivity());
-			mLocationFrag.registerListener(this);
+			mLocationFrag = LocationFragment.getInstance();
+			mLocationFrag.registerLocationListener(this);
 			fragTrans.add(mLocationFrag, LOCATION_FRAGMENT_TAG);
 		}
 
@@ -373,11 +374,11 @@ public class TripPlannerFrag extends Fragment implements OnInfoWindowClickListen
 	}
 
 	@Override
-	public void onLocationReceived(Location location) {
+	public void onLocationUpdated(Location location) {
 		if (location != null) {
 			mHere = location;
 		} else {
-			Log.w(Utils.APPTAG, "TripPlannerFrag.onLocationReceived(null)");
+			Log.w(Utils.APPTAG, "TripPlannerFrag.onLocationUpdated(null)");
 		}
 	}
 

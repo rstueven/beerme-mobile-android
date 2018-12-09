@@ -1,8 +1,5 @@
 package com.beerme.android.ui;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,8 +31,10 @@ import com.beerme.android.prefs.Prefs;
 import com.beerme.android.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
-public class BreweryListFrag extends Fragment implements
-		LocationFragment.LocationCallbacks {
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+public class BreweryListFrag extends Fragment implements LocationFragment.LocationListener {
 	/**
 	 * Tag for the LoadBreweryList Thread
 	 */
@@ -127,8 +126,8 @@ public class BreweryListFrag extends Fragment implements
 
 		mPrefs = Prefs.getSettings(getActivity());
 
-		mLocationFrag = LocationFragment.getInstance(getActivity());
-		mLocationFrag.registerListener(this);
+		mLocationFrag = LocationFragment.getInstance();
+		mLocationFrag.registerLocationListener(this);
 		getChildFragmentManager().beginTransaction()
 				.add(mLocationFrag, LOCATION_FRAGMENT_TAG).commit();
 
@@ -342,7 +341,7 @@ public class BreweryListFrag extends Fragment implements
 	}
 
 	@Override
-	public void onLocationReceived(Location location) {
+	public void onLocationUpdated(Location location) {
 		if (location != null) {
 			if (mTrackLocation) {
 				mLocation = new LatLng(location.getLatitude(),

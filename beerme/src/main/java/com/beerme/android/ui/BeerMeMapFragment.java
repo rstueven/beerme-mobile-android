@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.InflateException;
@@ -23,6 +22,7 @@ import com.androidmapsextensions.GoogleMap.OnInfoWindowClickListener;
 import com.androidmapsextensions.GoogleMap.OnMyLocationButtonClickListener;
 import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
+import com.androidmapsextensions.OnMapReadyCallback;
 import com.androidmapsextensions.SupportMapFragment;
 import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
@@ -50,8 +50,8 @@ import java.util.List;
  *
  * @author rstueven
  */
-public class BeerMeMapFragment extends Fragment implements
-        LocationFragment.LocationCallbacks, UpdateMapAfterUserInteraction,
+public class BeerMeMapFragment extends LocationFragment implements
+        LocationFragment.LocationListener, UpdateMapAfterUserInteraction,
         OnCameraChangeListener, OnInfoWindowClickListener {
     /**
      * Tag for the LocationFragment, which keeps track of the user's location
@@ -186,13 +186,11 @@ public class BeerMeMapFragment extends Fragment implements
 
         mMapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
 
-        LocationFragment locationFragment = LocationFragment.getInstance(getActivity());
-        locationFragment.registerListener(this);
+        LocationFragment locationFragment = LocationFragment.getInstance();
+        locationFragment.registerLocationListener(this);
         FragmentTransaction trans = mFragMgr.beginTransaction();
         trans.add(locationFragment, LOCATION_FRAGMENT_TAG);
         trans.commit();
-
-        mMap = setupMap();
 
         Bundle params;
         Bundle args = getArguments();
@@ -217,8 +215,7 @@ public class BeerMeMapFragment extends Fragment implements
             zoom = params.getFloat(SAVE_ZOOM_KEY, DEFAULT_ZOOM);
         }
 
-        mLocation = new LatLng(lat, lng);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, zoom));
+        setupMap(lat, lng, zoom);
     }
 
     /*
@@ -431,36 +428,44 @@ public class BeerMeMapFragment extends Fragment implements
     /**
      * Initializes map parameters
      */
-    private GoogleMap setupMap() {
-        GoogleMap map = mMapFrag.getExtendedMap();
-        if (map != null) {
-            LatLng latLng = (mLocation != null) ? mLocation : new LatLng(0, 0);
-            map.setMyLocationEnabled(true);
-            mTrackLocation = true;
-            map.setOnCameraChangeListener(this);
-            map.setClustering(new ClusteringSettings()
-                    .clusterSize(DEFAULT_CLUSTER_SIZE)
-                    .clusterOptionsProvider(
-                            new BeerMeClusterOptionsProvider(getResources()))
-                    .addMarkersDynamically(true));
-            map.setInfoWindowAdapter(new BreweryInfoWindowAdapter(
-                    getActivity(), (LayoutInflater) getActivity()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
+    private void setupMap(final double lat, final double lng, final float zoom) {
+        final BeerMeMapFragment self = this;
+        final Context context = getContext();
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
-                    DEFAULT_ZOOM));
+        mMapFrag.getExtendedMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                mMap = map;
 
-            map.setOnInfoWindowClickListener(this);
-            map.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
+                if (mMap != null) {
+                    LatLng latLng = (mLocation != null) ? mLocation : new LatLng(0, 0);
+                    mMap.setMyLocationEnabled(true);
                     mTrackLocation = true;
-                    return false;
-                }
-            });
-        }
+                    mMap.setOnCameraChangeListener(self);
+                    mMap.setClustering(new ClusteringSettings()
+                            .clusterSize(DEFAULT_CLUSTER_SIZE)
+                            .clusterOptionsProvider(
+                                    new BeerMeClusterOptionsProvider(getResources()))
+                            .addMarkersDynamically(true));
+                    mMap.setInfoWindowAdapter(new BreweryInfoWindowAdapter(context, (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
 
-        return map;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+                            DEFAULT_ZOOM));
+
+                    mMap.setOnInfoWindowClickListener(self);
+                    mMap.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
+                        @Override
+                        public boolean onMyLocationButtonClick() {
+                            mTrackLocation = true;
+                            return false;
+                        }
+                    });
+
+                    mLocation = new LatLng(lat, lng);
+                    BeerMeMapFragment.this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, zoom));
+                }
+            }
+        });
     }
 
     /**
@@ -484,10 +489,10 @@ public class BeerMeMapFragment extends Fragment implements
      * (non-Javadoc)
      *
      * @see com.beerme.android.location.LocationFragment.LocationCallbacks#
-     * onLocationReceived(android.location.Location)
+     * onLocationUpdated(android.location.Location)
      */
     @Override
-    public void onLocationReceived(Location location) {
+    public void onLocationUpdated(Location location) {
         // If the user's location is being tracked, move the center of the map
         // to the new Location
         if (location != null) {

@@ -1,9 +1,5 @@
-/**
- *
- */
 package com.beerme.android.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -57,11 +53,6 @@ public class Utils {
     public static final String NEWS_URL = BEERME_URL + "news.php";
     // public static final String UPDATES_URL = BEERME_URL + "updates.php";
     // public static final String BEER_RATING_URL = BEERME_URL + "beerRating.php";
-
-    // public static boolean SUPPORTS_ECLAIR = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ECLAIR;
-    public static boolean SUPPORTS_FROYO = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.FROYO;
-    public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
-    public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB;
 
     public static final int MILES = 0;
     public static final int KM = 1;
@@ -130,6 +121,7 @@ public class Utils {
         }
     }
 
+    // TODO: Replace with join()?
     public static String stringify(String[] strings, String delimiter) {
         StringBuilder buf = new StringBuilder();
         int num = strings.length;
@@ -454,7 +446,6 @@ public class Utils {
         return (score <= 0) ? 0 : (float) Math.max((Math.floor(score - 10.5) / 2) + 0.5, 0.5);
     }
 
-    @SuppressLint("InlinedApi")
     public static boolean isLocationServiceEnabled(Context context) {
         if (context == null) {
             return false;
@@ -466,10 +457,6 @@ public class Utils {
         }
 
         String provider = lm.getBestProvider(new Criteria(), true);
-        if (SUPPORTS_FROYO) {
-            return (!(provider == null || LocationManager.PASSIVE_PROVIDER.equals(provider)));
-        } else {
-            return (provider != null);
-        }
+        return (provider != null);
     }
 }

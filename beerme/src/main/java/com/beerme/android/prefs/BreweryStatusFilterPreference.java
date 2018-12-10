@@ -35,7 +35,7 @@ public class BreweryStatusFilterPreference extends DialogPreference {
 
 	@Override
 	protected void onBindDialogView(View view) {
-		super.onBindView(view);
+		super.onBindDialogView(view);
 
 		ckOpen = (CheckBox) view.findViewById(R.id.open);
 		ckOpen.setOnCheckedChangeListener(ckListener);

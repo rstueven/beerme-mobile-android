@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -33,329 +34,315 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Locale;
 
 public class BreweryListFrag extends Fragment implements LocationFragment.LocationListener {
-	/**
-	 * Tag for the LoadBreweryList Thread
-	 */
-	private static final String THREAD_TAG = "LoadBreweryList";
-	/**
-	 * Tag for the LocationFragment, which keeps track of the user's location
-	 */
-	private static final String LOCATION_FRAGMENT_TAG = "locationFragment";
-	/**
-	 * savedInstanceState key for the list's latitude
-	 */
-	private static final String SAVE_LAT_KEY = "latitude";
-	/**
-	 * savedInstanceState key for the list's longitude
-	 */
-	private static final String SAVE_LNG_KEY = "longitude";
-	/**
-	 * savedInstanceState key for tracking the user's location
-	 */
-	private static final String SAVE_TRACKING_KEY = "tracking";
-	/**
-	 * Representation of the user's current brewery status filter.
-	 * 
-	 * @see BreweryStatusFilterPreference
-	 */
-	private int mStatusFilter = BreweryStatusFilterPreference.DEFAULT_VALUE;
-	/**
-	 * True if map should track user's location, false otherwise
-	 */
-	private boolean mTrackLocation = true;
-	/**
-	 * The list itself
-	 */
-	private BreweryList mList = null;
-	/**
-	 * Current center point of the map
-	 */
-	private LatLng mLocation = null;
-	/**
-	 * View of the list in the Layout
-	 */
-	private ListView mListView = null;
-	private ProgressBar mProgress = null;
-	private static BreweryListHandler mHandler = null;
-	private int mDistUnit = -1;
-	private SharedPreferences mPrefs;
-	private boolean mOKtoLoad = false;
-	private LocationFragment mLocationFrag = null;
+    /**
+     * Tag for the LoadBreweryList Thread
+     */
+    private static final String THREAD_TAG = "LoadBreweryList";
+    /**
+     * Tag for the LocationFragment, which keeps track of the user's location
+     */
+    private static final String LOCATION_FRAGMENT_TAG = "locationFragment";
+    /**
+     * savedInstanceState key for the list's latitude
+     */
+    private static final String SAVE_LAT_KEY = "latitude";
+    /**
+     * savedInstanceState key for the list's longitude
+     */
+    private static final String SAVE_LNG_KEY = "longitude";
+    /**
+     * savedInstanceState key for tracking the user's location
+     */
+    private static final String SAVE_TRACKING_KEY = "tracking";
+    /**
+     * Representation of the user's current brewery status filter.
+     *
+     * @see BreweryStatusFilterPreference
+     */
+    private int mStatusFilter = BreweryStatusFilterPreference.DEFAULT_VALUE;
+    /**
+     * True if map should track user's location, false otherwise
+     */
+    private boolean mTrackLocation = true;
+    /**
+     * The list itself
+     */
+    private BreweryList mList = null;
+    /**
+     * Current center point of the map
+     */
+    private LatLng mLocation = null;
+    /**
+     * View of the list in the Layout
+     */
+    private ListView mListView = null;
+    private ProgressBar mProgress = null;
+    private static BreweryListHandler mHandler = null;
+    private int mDistUnit = -1;
+    private SharedPreferences mPrefs;
+    private boolean mOKtoLoad = false;
 
-	// LOW: AND0035: RFE: Brewery list sort options
+    // LOW: AND0035: RFE: Brewery list sort options
 
-	/**
-	 * @return A new instance of the Fragment
-	 */
+    /**
+     * @return A new instance of the Fragment
+     */
 
-	public static BreweryListFrag getInstance() {
-		BreweryListFrag frag = new BreweryListFrag();
+    public static BreweryListFrag getInstance() {
+        return new BreweryListFrag();
+    }
 
-		return frag;
-	}
+    public static BreweryListFrag getInstance(LatLng latLng) {
+        BreweryListFrag frag = new BreweryListFrag();
 
-	public static BreweryListFrag getInstance(LatLng latLng) {
-		BreweryListFrag frag = new BreweryListFrag();
+        Bundle args = new Bundle();
+        args.putDouble(SAVE_LAT_KEY, latLng.latitude);
+        args.putDouble(SAVE_LNG_KEY, latLng.longitude);
+        frag.setArguments(args);
 
-		Bundle args = new Bundle();
-		args.putDouble(SAVE_LAT_KEY, latLng.latitude);
-		args.putDouble(SAVE_LNG_KEY, latLng.longitude);
-		frag.setArguments(args);
+        return frag;
+    }
 
-		return frag;
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        setRetainInstance(true);
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		setRetainInstance(true);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            double lat = args.getDouble(SAVE_LAT_KEY, Double.MAX_VALUE);
+            double lng = args.getDouble(SAVE_LNG_KEY, Double.MAX_VALUE);
+            mLocation = new LatLng(lat, lng);
+        }
 
-		Bundle args = getArguments();
-		if (args != null) {
-			double lat = args.getDouble(SAVE_LAT_KEY, Double.MAX_VALUE);
-			double lng = args.getDouble(SAVE_LNG_KEY, Double.MAX_VALUE);
-			mLocation = new LatLng(lat, lng);
-		}
+        mPrefs = Prefs.getSettings(getActivity());
 
-		mPrefs = Prefs.getSettings(getActivity());
+        LocationFragment mLocationFrag = LocationFragment.getInstance();
+        mLocationFrag.registerLocationListener(this);
+        getChildFragmentManager().beginTransaction().add(mLocationFrag, LOCATION_FRAGMENT_TAG).commit();
 
-		mLocationFrag = LocationFragment.getInstance();
-		mLocationFrag.registerLocationListener(this);
-		getChildFragmentManager().beginTransaction()
-				.add(mLocationFrag, LOCATION_FRAGMENT_TAG).commit();
+        mHandler = new BreweryListHandler(this);
 
-		mHandler = new BreweryListHandler(this);
+        if (savedInstanceState != null) {
+            double lat = savedInstanceState.getDouble(SAVE_LAT_KEY);
+            double lng = savedInstanceState.getDouble(SAVE_LNG_KEY);
+            mLocation = new LatLng(lat, lng);
+            mTrackLocation = savedInstanceState.getBoolean(SAVE_TRACKING_KEY);
+        }
+    }
 
-		if (savedInstanceState != null) {
-			double lat = savedInstanceState.getDouble(SAVE_LAT_KEY);
-			double lng = savedInstanceState.getDouble(SAVE_LNG_KEY);
-			mLocation = new LatLng(lat, lng);
-			mTrackLocation = savedInstanceState.getBoolean(SAVE_TRACKING_KEY);
-		}
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Utils.trackFragment(this);
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Utils.trackFragment(this);
-	}
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.brewerylist_frag, container, false);
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.brewerylist_frag, container,
-				false);
+        mListView = view.findViewById(R.id.brewerylist);
+        mListView.setOnItemClickListener(brewerylistItemClickListener);
+        mProgress = view.findViewById(R.id.brewerylist_progress);
 
-		mListView = (ListView) view.findViewById(R.id.brewerylist);
-		mListView.setOnItemClickListener(brewerylistItemClickListener);
-		mProgress = (ProgressBar) view.findViewById(R.id.brewerylist_progress);
+        return view;
+    }
 
-		return view;
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
 
-	@Override
-	public void onResume() {
-		super.onResume();
+        mOKtoLoad = true;
 
-		mOKtoLoad = true;
+        int newDistUnit = Integer.parseInt(mPrefs.getString(Prefs.KEY_DIST_UNIT, "0"));
+        int newFilter = mPrefs.getInt(Prefs.KEY_STATUS_FILTER, BreweryStatusFilterPreference.DEFAULT_VALUE);
 
-		int newDistUnit = Integer.parseInt(mPrefs.getString(
-				Prefs.KEY_DIST_UNIT, "0"));
-		int newFilter = mPrefs.getInt(Prefs.KEY_STATUS_FILTER,
-				BreweryStatusFilterPreference.DEFAULT_VALUE);
-		if (newDistUnit != mDistUnit || newFilter != mStatusFilter) {
-			mDistUnit = newDistUnit;
-			mStatusFilter = newFilter;
-			if (mLocation != null) {
-				new Thread(new LoadBreweryList(mLocation, mStatusFilter),
-						THREAD_TAG).start();
-			}
-		} else {
-			refresh();
-		}
-	}
+        if (newDistUnit != mDistUnit || newFilter != mStatusFilter) {
+            mDistUnit = newDistUnit;
+            mStatusFilter = newFilter;
+            if (mLocation != null) {
+                new Thread(new LoadBreweryList(mLocation, mStatusFilter), THREAD_TAG).start();
+            }
+        } else {
+            refresh();
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (mLocation != null) {
-			double lat = mLocation.latitude;
-			double lng = mLocation.longitude;
-			outState.putDouble(SAVE_LAT_KEY, lat);
-			outState.putDouble(SAVE_LNG_KEY, lng);
-		}
-		outState.putBoolean(SAVE_TRACKING_KEY, mTrackLocation);
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (mLocation != null) {
+            outState.putDouble(SAVE_LAT_KEY, mLocation.latitude);
+            outState.putDouble(SAVE_LNG_KEY, mLocation.longitude);
+        }
 
-		super.onSaveInstanceState(outState);
-	}
+        outState.putBoolean(SAVE_TRACKING_KEY, mTrackLocation);
 
-	@Override
-	public void onPause() {
-		mOKtoLoad = false;
-		super.onPause();
-	}
+        super.onSaveInstanceState(outState);
+    }
 
-	private void refresh() {
-		FragmentActivity activity = getActivity();
+    @Override
+    public void onPause() {
+        mOKtoLoad = false;
+        super.onPause();
+    }
 
-		if (activity != null) {
-			if (mList != null) {
-				mListView.setAdapter(new BreweryListAdapter(getActivity(),
-						R.id.brewerylist, mList));
-			}
+    private void refresh() {
+        FragmentActivity activity = getActivity();
 
-			mProgress.setVisibility(View.GONE);
-			mOKtoLoad = true;
-		}
-	}
+        if (activity != null) {
+            if (mList != null) {
+                mListView.setAdapter(new BreweryListAdapter(getActivity(), R.id.brewerylist, mList));
+            }
 
-	public class BreweryListAdapter extends ArrayAdapter<Brewery> {
-		private Context mContext;
+            mProgress.setVisibility(View.GONE);
+            mOKtoLoad = true;
+        }
+    }
 
-		public BreweryListAdapter(Context context, int resource,
-				List<Brewery> objects) {
-			super(context, resource, objects);
-			this.mContext = context;
-		}
+    public class BreweryListAdapter extends ArrayAdapter<Brewery> {
+        private Context mContext;
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
+        BreweryListAdapter(Context context, int resource, List<Brewery> objects) {
+            super(context, resource, objects);
+            this.mContext = context;
+        }
 
-			if (view == null) {
-				LayoutInflater viewInflater = (LayoutInflater) mContext
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = viewInflater.inflate(R.layout.brewerylist_row, null);
-			}
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
 
-			Brewery brewery = getItem(position);
+            if (view == null) {
+                LayoutInflater viewInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = viewInflater.inflate(R.layout.brewerylist_row, parent);
+            }
 
-			if (brewery != null) {
-				TextView nameView = (TextView) view.findViewById(R.id.brewerylist_name);
-				nameView.setText(brewery.getName());
-				
-				TextView addressView = (TextView) view.findViewById(R.id.brewerylist_address);
-				addressView.setText(brewery.getAddress());
+            Brewery brewery = getItem(position);
 
-				TextView phoneView = (TextView) view.findViewById(R.id.brewerylist_phone);
-				String phone = brewery.getPhone();
-				if (phone.equals("")) {
-					phoneView.setVisibility(View.GONE);
-				} else {
-					phoneView.setText(brewery.getPhone());
-					phoneView.setVisibility(View.VISIBLE);
-				}
+            if (brewery != null) {
+                TextView nameView = view.findViewById(R.id.brewerylist_name);
+                nameView.setText(brewery.getName());
 
-				TextView distanceView = (TextView) view.findViewById(R.id.brewerylist_distance);
-				float distanceResults[] = new float[2];
-				Location.distanceBetween(mLocation.latitude, mLocation.longitude,
-						brewery.getLatitude(), brewery.getLongitude(), distanceResults);
-				float distance = distanceResults[0];
-				String bearing = getString(Utils.bearingToCompass(distanceResults[1]));
-				distanceView.setText(Utils.metersToUnits(getActivity(), distance) + " " + bearing);
+                TextView addressView = view.findViewById(R.id.brewerylist_address);
+                addressView.setText(brewery.getAddress());
 
-				LinearLayout servicesView = (LinearLayout) view.findViewById(R.id.brewery_services);
-				brewery.displayServiceIcons(getActivity(), servicesView);
-			}
+                TextView phoneView = view.findViewById(R.id.brewerylist_phone);
+                String phone = brewery.getPhone();
+                if (phone.equals("")) {
+                    phoneView.setVisibility(View.GONE);
+                } else {
+                    phoneView.setText(brewery.getPhone());
+                    phoneView.setVisibility(View.VISIBLE);
+                }
 
-			return view;
-		}
-	}
+                TextView distanceView = view.findViewById(R.id.brewerylist_distance);
+                float distanceResults[] = new float[2];
+                Location.distanceBetween(mLocation.latitude, mLocation.longitude,
+                        brewery.getLatitude(), brewery.getLongitude(), distanceResults);
+                float distance = distanceResults[0];
+                String bearing = getString(Utils.bearingToCompass(distanceResults[1]));
+                distanceView.setText(String.format(Locale.getDefault(), "%s %s", Utils.metersToUnits(getActivity(), distance), bearing));
 
-	public OnItemClickListener brewerylistItemClickListener = new OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			if (mList != null) {
-				Brewery brewery = mList.get(position);
+                LinearLayout servicesView = view.findViewById(R.id.brewery_services);
+                brewery.displayServiceIcons(getActivity(), servicesView);
+            }
 
-				if (brewery != null) {
-					Intent intent = new Intent(getActivity(),
-							BreweryActivity.class);
-					intent.putExtra("id", brewery.getId());
-					startActivity(intent);
-				}
-			}
-		}
-	};
+            return view;
+        }
+    }
 
-	private class LoadBreweryList implements Runnable {
-		private Location mLoadLocation;
-		private int mLoadFilter;
+    public OnItemClickListener brewerylistItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            if (mList != null) {
+                Brewery brewery = mList.get(position);
 
-		public LoadBreweryList(LatLng location, int filter) {
-			this.mLoadLocation = new Location("");
-			this.mLoadLocation.setLatitude(location.latitude);
-			this.mLoadLocation.setLongitude(location.longitude);
-			this.mLoadFilter = filter;
-		}
+                if (brewery != null) {
+                    Intent intent = new Intent(getActivity(),
+                            BreweryActivity.class);
+                    intent.putExtra("id", brewery.getId());
+                    startActivity(intent);
+                }
+            }
+        }
+    };
 
-		@Override
-		public void run() {
-			if (mOKtoLoad && mLoadLocation != null) {
-				mOKtoLoad = false;
-				mHandler.sendEmptyMessage(LOADING);
-				mList = new BreweryList(getActivity(), mLoadFilter,
-						mLoadLocation);
-				mHandler.sendEmptyMessage(LOADED);
-			}
-		}
-	}
+    private class LoadBreweryList implements Runnable {
+        private Location mLoadLocation;
+        private int mLoadFilter;
 
-	private final static int LOADING = 1;
-	private final static int LOADED = 2;
+        LoadBreweryList(LatLng location, int filter) {
+            this.mLoadLocation = new Location("");
+            this.mLoadLocation.setLatitude(location.latitude);
+            this.mLoadLocation.setLongitude(location.longitude);
+            this.mLoadFilter = filter;
+        }
 
-	private final static class BreweryListHandler extends Handler {
-		private WeakReference<BreweryListFrag> mReference;
+        @Override
+        public void run() {
+            if (mOKtoLoad && mLoadLocation != null) {
+                mOKtoLoad = false;
+                mHandler.sendEmptyMessage(LOADING);
+                mList = new BreweryList(getActivity(), mLoadFilter,
+                        mLoadLocation);
+                mHandler.sendEmptyMessage(LOADED);
+            }
+        }
+    }
 
-		public BreweryListHandler(BreweryListFrag fragment) {
-			mReference = new WeakReference<BreweryListFrag>(fragment);
-		}
+    private final static int LOADING = 1;
+    private final static int LOADED = 2;
 
-		@Override
-		public void handleMessage(Message msg) {
-			BreweryListFrag frag = mReference.get();
+    private final static class BreweryListHandler extends Handler {
+        private WeakReference<BreweryListFrag> mReference;
 
-			switch (msg.what) {
-			case LOADING:
-				frag.mProgress.setVisibility(View.VISIBLE);
-				break;
-			case LOADED:
-				frag.refresh();
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-	}
+        BreweryListHandler(BreweryListFrag fragment) {
+            mReference = new WeakReference<BreweryListFrag>(fragment);
+        }
 
-	@Override
-	public void onLocationUpdated(Location location) {
-		if (location != null) {
-			if (mTrackLocation) {
-				mLocation = new LatLng(location.getLatitude(),
-						location.getLongitude());
-				// mLocationFrag.setTimeout(60000);
+        @Override
+        public void handleMessage(Message msg) {
+            BreweryListFrag frag = mReference.get();
 
-				if (mOKtoLoad) {
-					new Thread(new LoadBreweryList(mLocation, mStatusFilter),
-							THREAD_TAG).start();
-				}
-			}
-		} else {
-			Toast.makeText(getActivity(), R.string.Waiting_for_location,
-					Toast.LENGTH_LONG).show();
-		}
-	}
+            switch (msg.what) {
+                case LOADING:
+                    frag.mProgress.setVisibility(View.VISIBLE);
+                    break;
+                case LOADED:
+                    frag.refresh();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+        if (location != null) {
+            if (mTrackLocation) {
+                mLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                // mLocationFrag.setTimeout(60000);
+
+                if (mOKtoLoad) {
+                    new Thread(new LoadBreweryList(mLocation, mStatusFilter), THREAD_TAG).start();
+                }
+            }
+        } else {
+            Toast.makeText(getActivity(), R.string.Waiting_for_location, Toast.LENGTH_LONG).show();
+        }
+    }
 }

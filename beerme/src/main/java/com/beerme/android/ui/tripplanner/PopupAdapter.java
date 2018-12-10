@@ -16,6 +16,7 @@ package com.beerme.android.ui.tripplanner;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidmapsextensions.GoogleMap.InfoWindowAdapter;
@@ -38,7 +39,7 @@ public class PopupAdapter implements InfoWindowAdapter {
 
 	@Override
 	public View getInfoContents(Marker marker) {
-		View popup = inflater.inflate(R.layout.popup, null);
+		View popup = inflater.inflate(R.layout.popup, (ViewGroup) null);
 
 		TextView tv = (TextView) popup.findViewById(R.id.info_title);
 

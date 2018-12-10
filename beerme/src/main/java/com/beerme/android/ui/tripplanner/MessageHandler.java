@@ -68,8 +68,7 @@ public class MessageHandler extends Handler {
 			bar.setIndeterminate(false);
 			int nBreweries = msg.arg1;
 			bar.setMax(nBreweries);
-			text.setText(frag.getString(R.string.Loading_N_breweries,
-					nBreweries));
+			text.setText(frag.getString(R.string.Loading_N_breweries, nBreweries));
 			break;
 		case BREWERIES_END:
 			bar.setIndeterminate(false);

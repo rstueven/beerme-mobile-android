@@ -1,5 +1,7 @@
 package com.beerme.android.utils;
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,8 +12,8 @@ public class NewsItem {
 	private String title = "";
 	private String source = "";
 	private Date date = new Date();
-	private final static SimpleDateFormat df = new SimpleDateFormat(
-			"yyyy-MM-dd", Locale.getDefault());
+	@SuppressLint("ConstantLocale")
+	private final static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 	public NewsItem(String[] fields) throws ParseException {
 		if (fields != null) {

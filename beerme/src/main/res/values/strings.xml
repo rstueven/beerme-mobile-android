@@ -54,16 +54,16 @@
     <string name="Close">Close</string>
     <string name="Closed">Closed</string>
     <string name="contact">Contact</string>
-    <string name="copyright">©1992–2015 Richard Stueven</string>
+    <string name="copyright">©1992–2018 Richard Stueven</string>
     <string name="current_location">Current location</string>
     <string name="Database">Database</string>
-    <string name="Database_downgrade_unsupported" formatted="false">Database downgrade from %d to %d is not supported.</string>
+    <string name="Database_downgrade_unsupported">Database downgrade from %1$d to %2$d is not supported.</string>
     <string name="Database_is_busy">Database is temporarily busy.</string>
     <string name="Database_problem">Database problem</string>
     <string name="Database_update">Database update</string>
     <string name="Database_updates_take_minutes">Database updates can run for several minutes, depending on how much new data there is.</string>
     <string name="Database_upgrade_failed">Database upgrade failed</string>
-    <string name="Database_upgrade_unsupported" formatted="false">Database upgrade from %d to %d is not supported.</string>
+    <string name="Database_upgrade_unsupported">Database upgrade from %1$d to %2$d is not supported.</string>
     <string name="Data_problem">Data problem</string>
     <string name="Date">Date</string>
     <string name="default_distance">10</string>
@@ -169,7 +169,6 @@
     <string name="kilometers">km</string>
     <string name="List">List</string>
     <string name="Loading">Loading</string>
-    <string name="Loading_N_breweries">Loading %s breweries</string>
     <string name="Loading_TABLE_data">Loading %s data</string>
     <string name="locationDialogTitle">Select a location</string>
     <string name="Map">Map</string>
@@ -216,7 +215,6 @@
     <string name="outOfTwenty">/20</string>
     <string name="Overall">Overall</string>
     <string name="Package">Package</string>
-    <string name="pct_abv">% abv</string>
     <string name="Phone">Phone: </string>
     <string name="Place">Place</string>
     <string name="Planned">Planned</string>
@@ -264,6 +262,8 @@
     <string name="Update">Update</string>
     <string name="Use_as_destination">Use as destination</string>
     <string name="Use_as_starting_point">Use as starting point</string>
+    <string name="Version">Version: %s</string>
+    <string name="Platform">Platform: %s</string>
     <string name="Waiting_for_location">Waiting for location</string>
     <string name="Web">Web</string>
     <string name="west">W</string>
@@ -275,5 +275,7 @@
     <string name="title_location_permission">Location Permission</string>
     <string name="text_location_permission">Location access is required.</string>
     <string name="ok">OK</string>
+    <string name="From">From: %s</string>
+    <string name="To">To: %s</string>
 
 </resources>

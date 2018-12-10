@@ -1,17 +1,19 @@
 package com.beerme.android.ui.tripplanner;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.beerme.android.R;
+
+import java.util.ArrayList;
 
 public class SaveTrip extends DialogFragment {
 	private static final String START_TAG = "start";
@@ -58,15 +60,16 @@ public class SaveTrip extends DialogFragment {
 		}
 	}
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.savetrip, null);
+		View view = inflater.inflate(R.layout.savetrip, (ViewGroup) null);
 		final EditText nameView = (EditText) view.findViewById(R.id.name);
 
-		StringBuffer defaultFileName = new StringBuffer();
+		StringBuilder defaultFileName = new StringBuilder();
 
 		if (!"".equals(mStart)) {
 			defaultFileName.append(mStart + '-');

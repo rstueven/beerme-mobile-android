@@ -3,19 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.BeerNoteFrag" >
+    tools:context=".ui.BeerNoteFrag">
 
     <RelativeLayout
         android:id="@+id/beernote_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/beernote_sampledLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Date"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -26,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/beernote_sampledLabel"
+            android:layout_toEndOf="@id/beernote_sampledLabel"
             android:layout_toRightOf="@id/beernote_sampledLabel"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -33,17 +36,21 @@
             android:id="@+id/beernote_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap" />
 
         <TextView
             android:id="@+id/beernote_pkgLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_sampledLabel"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Package"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -55,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/beernote_pkgLabel"
             android:layout_alignBottom="@id/beernote_pkgLabel"
+            android:layout_toEndOf="@id/beernote_pkgLabel"
             android:layout_toRightOf="@id/beernote_pkgLabel"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -62,8 +70,10 @@
             android:id="@+id/beernote_placeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_pkgLabel"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Place"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -74,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/beernote_placeLabel"
+            android:layout_toEndOf="@id/beernote_placeLabel"
             android:layout_toRightOf="@id/beernote_placeLabel"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -81,8 +92,10 @@
             android:id="@+id/beernote_appLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_place"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Appearance"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -92,8 +105,9 @@
             android:id="@+id/beernote_appRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@id/beernote_appLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -101,16 +115,19 @@
             android:id="@+id/beernote_appearance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_appLabel"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/beernote_aroLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_appearance"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Aroma"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -120,8 +137,9 @@
             android:id="@+id/beernote_aroRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@id/beernote_aroLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -129,16 +147,19 @@
             android:id="@+id/beernote_aroma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_aroRating"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/beernote_mouLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_aroma"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Mouthfeel"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -148,8 +169,9 @@
             android:id="@+id/beernote_mouRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@id/beernote_mouLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -157,16 +179,19 @@
             android:id="@+id/beernote_mouthfeel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_mouRating"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/beernote_ovrLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_mouthfeel"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/Overall"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -176,8 +201,9 @@
             android:id="@+id/beernote_ovrRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@id/beernote_ovrLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -185,8 +211,9 @@
             android:id="@+id/beernote_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/beernote_ovrRating"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 

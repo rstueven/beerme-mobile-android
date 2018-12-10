@@ -1,19 +1,20 @@
 package com.beerme.android.ui.maps;
 
-import java.text.Collator;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidmapsextensions.GoogleMap.InfoWindowAdapter;
 import com.androidmapsextensions.Marker;
 import com.beerme.android.R;
+
+import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class BreweryInfoWindowAdapter implements InfoWindowAdapter {
 	private LayoutInflater inflater;
@@ -74,7 +75,7 @@ public class BreweryInfoWindowAdapter implements InfoWindowAdapter {
 			tv.setText(text);
 			return tv;
 		} else {
-			View popup = inflater.inflate(R.layout.popup, null);
+			View popup = inflater.inflate(R.layout.popup, (ViewGroup)null);
 
 			TextView titleView = (TextView) popup.findViewById(R.id.info_title);
 

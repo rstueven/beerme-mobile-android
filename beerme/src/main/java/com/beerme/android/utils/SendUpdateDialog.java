@@ -1,7 +1,5 @@
 package com.beerme.android.utils;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -22,6 +21,8 @@ import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
 import com.beerme.android.prefs.BreweryStatusFilterPreference;
 import com.beerme.android.utils.StatusPickerFragment.StatusSetter;
+
+import java.util.Date;
 
 public class SendUpdateDialog extends DialogFragment implements
 		StatusPickerFragment.StatusSetter {
@@ -87,8 +88,7 @@ public class SendUpdateDialog extends DialogFragment implements
 		
 		// setStyle(R.style.BeerMeTheme, R.style.BeerMeTheme);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		View view = getActivity().getLayoutInflater().inflate(
-				R.layout.sendupdate_dialog, null);
+		View view = getActivity().getLayoutInflater().inflate(R.layout.sendupdate_dialog, (ViewGroup) null);
 		builder.setView(view)
 				.setInverseBackgroundForced(true)
 				.setTitle((mBreweryId > 0) ? R.string.Update : R.string.Add_a_brewery)

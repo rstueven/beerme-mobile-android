@@ -1,9 +1,6 @@
 package com.beerme.android.database;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Locale;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.SQLException;
@@ -15,13 +12,17 @@ import com.beerme.android.prefs.Prefs;
 import com.beerme.android.prefs.SharedPreferenceSaver;
 import com.beerme.android.utils.ErrLog;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Locale;
+
 public class DbOpenHelper extends SQLiteOpenHelper implements
 		TableDefs.UpdateListener {
 	public static final int DB_VERSION = 6;
 	public static final String DB_NAME = "beerme";
 	public static String DB_FILEPATH = null;
-	public static final SimpleDateFormat sqlDateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd", Locale.getDefault());
+	@SuppressLint("ConstantLocale")
+	public static final SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 	private static Context mContext;
 	private static OnDbOpenListener mListener;
 	private static DbOpenHelper mInstance = null;
@@ -32,7 +33,7 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 
 	private DbOpenHelper(final Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
-
+		
 		if (context == null) {
 			throw new IllegalArgumentException("null context");
 		}
@@ -113,11 +114,9 @@ public class DbOpenHelper extends SQLiteOpenHelper implements
 
 	@Override
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		String msg = String.format(
-				mContext.getString(R.string.Database_downgrade_unsupported),
+		String msg = String.format(mContext.getString(R.string.Database_downgrade_unsupported),
 				oldVersion, newVersion);
-		ErrLog.log(mContext, "DbOpenHelper.onDowngrade(" + oldVersion + ", "
-				+ newVersion + ")", null, msg);
+		ErrLog.log(mContext, "DbOpenHelper.onDowngrade(" + oldVersion + ", " + newVersion + ")", null, msg);
 	}
 
 	public static void setUpdating(Context context, boolean updating) {

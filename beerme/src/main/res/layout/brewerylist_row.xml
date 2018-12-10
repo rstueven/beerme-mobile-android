@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.BreweryListFrag" >
+    tools:context=".ui.BreweryListFrag">
 
     <TextView
         android:id="@+id/brewerylist_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:maxLines="1"
@@ -19,24 +20,27 @@
         android:id="@+id/brewerylist_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/brewerylist_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/brewerylist_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/brewerylist_address"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/brewerylist_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/brewerylist_phone"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout
@@ -44,8 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/brewerylist_distance"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
 </RelativeLayout>

@@ -3,17 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.BreweryNoteFrag" >
+    tools:context=".ui.BreweryNoteFrag">
 
     <TableLayout
         android:id="@+id/brewerynote_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TableRow>
 
             <TextView
                 android:id="@+id/brewerynote_visitedLabel"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/Date"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -30,6 +31,7 @@
 
             <TextView
                 android:id="@+id/brewerynote_ratingLabel"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/Rating"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -45,6 +47,7 @@
 
             <TextView
                 android:id="@+id/brewerynote_notesLabel"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/Notes"
                 android:textAppearance="?android:attr/textAppearanceMedium"

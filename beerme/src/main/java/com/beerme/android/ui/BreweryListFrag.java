@@ -97,7 +97,6 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
 
     public static BreweryListFrag getInstance(LatLng latLng) {
         BreweryListFrag frag = new BreweryListFrag();
-
         Bundle args = new Bundle();
         args.putDouble(SAVE_LAT_KEY, latLng.latitude);
         args.putDouble(SAVE_LNG_KEY, latLng.longitude);
@@ -217,7 +216,7 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
         private Context mContext;
 
         BreweryListAdapter(Context context, int resource, List<Brewery> objects) {
-            super(context, resource, objects);
+            super(context, 0, objects);
             this.mContext = context;
         }
 
@@ -225,8 +224,7 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
             View view = convertView;
 
             if (view == null) {
-                LayoutInflater viewInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = viewInflater.inflate(R.layout.brewerylist_row, parent);
+                view = LayoutInflater.from(mContext).inflate(R.layout.brewerylist_row, parent, false);
             }
 
             Brewery brewery = getItem(position);
@@ -340,6 +338,8 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
                 if (mOKtoLoad) {
                     new Thread(new LoadBreweryList(mLocation, mStatusFilter), THREAD_TAG).start();
                 }
+                // Only update the location once.
+                mTrackLocation = false;
             }
         } else {
             Toast.makeText(getActivity(), R.string.Waiting_for_location, Toast.LENGTH_LONG).show();

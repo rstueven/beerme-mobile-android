@@ -50,6 +50,6 @@
         android:layout_alignBottom="@+id/brewerylist_distance"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
 </RelativeLayout>

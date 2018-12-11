@@ -1,7 +1,5 @@
 package com.beerme.android.ui;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,6 +31,8 @@ import com.beerme.android.utils.ErrLog;
 import com.beerme.android.utils.URIDispatcher;
 import com.beerme.android.utils.Utils;
 
+import java.util.ArrayList;
+
 public class BeerNoteFrag extends Fragment {
 	private static final String TAG_NOTE = "note";
 	protected static final int CONTEXT_MENU_ID = R.menu.note_context_menu;
@@ -50,13 +50,7 @@ public class BeerNoteFrag extends Fragment {
 			throw new IllegalArgumentException("null note");
 		}
 
-		BeerNoteFrag frag = null;
-
-		if (Utils.SUPPORTS_HONEYCOMB) {
-			frag = new BeerNoteHC_Frag();
-		} else {
-			frag = new BeerNoteFrag();
-		}
+		BeerNoteFrag frag = new BeerNoteHC_Frag();
 
 		Bundle args = new Bundle();
 		args.putSerializable(TAG_NOTE, note);

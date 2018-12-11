@@ -169,6 +169,7 @@
     <string name="kilometers">km</string>
     <string name="List">List</string>
     <string name="Loading">Loading</string>
+    <string name="Loading_N_breweries">Loading %d breweries</string>
     <string name="Loading_TABLE_data">Loading %s data</string>
     <string name="locationDialogTitle">Select a location</string>
     <string name="Map">Map</string>

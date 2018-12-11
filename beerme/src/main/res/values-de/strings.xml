@@ -169,10 +169,7 @@
     <string name="kilometers">km</string>
     <string name="List">Liste</string>
     <string name="Loading">Geladen</string>
-    <plurals name="Loading_N_breweries">
-        <item quantity="one">%d Brauerei wird geladen.</item>
-        <item quantity="other">%d Brauereien warden geladen.</item>
-    </plurals>
+    <string name="Loading_N_breweries">%d Brauereien warden geladen.</string>
     <string name="Loading_TABLE_data">%s Daten warden geladen.</string>
     <string name="locationDialogTitle">Wählen Sie einen Ort aus.</string>
     <string name="Map">Karte</string>

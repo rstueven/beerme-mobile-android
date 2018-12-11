@@ -2,11 +2,8 @@ package com.beerme.android.prefs;
 
 import android.content.Context;
 
-import com.beerme.android.utils.Utils;
-
 public class PreferenceFactory {
-
-
+	// TODO: No longer necessary to have a factory here.
 	/**
 	 * Create a new SharedPreferenceSaver
 	 * 
@@ -15,9 +12,6 @@ public class PreferenceFactory {
 	 * @return SharedPreferenceSaver
 	 */
 	public static SharedPreferenceSaver getSharedPreferenceSaver(Context context) {
-		return Utils.SUPPORTS_GINGERBREAD ? new GingerbreadSharedPreferenceSaver(
-				context)
-				: Utils.SUPPORTS_FROYO ? new FroyoSharedPreferenceSaver(
-						context) : new LegacySharedPreferenceSaver(context);
+		return new GingerbreadSharedPreferenceSaver(context);
 	}
 }

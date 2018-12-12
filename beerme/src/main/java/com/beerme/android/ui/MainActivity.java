@@ -2,14 +2,15 @@ package com.beerme.android.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.beerme.android.R;
+import com.beerme.android.location.LocationFragment;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.ui.tripplanner.TripPlannerFrag;
@@ -19,7 +20,6 @@ public class MainActivity extends BeerMeActionBarActivity {
     private MainPagerAdapter mAdapter;
     private int mOpenGLVersion;
     private boolean mServicesAvailable;
-    private Location mHere = null;
     private SharedPreferences mPrefs;
     private String mNearbyPref = Prefs.KEY_NEARBY_DISPLAY_LIST;
     private boolean mStarting = true;
@@ -32,11 +32,14 @@ public class MainActivity extends BeerMeActionBarActivity {
         mOpenGLVersion = Utils.checkOpenGLVersion(this);
         mServicesAvailable = Utils.checkPlayServices(this);
 
+        // Checks location permissions
+        new LocationFragment();
+
         mPrefs = Prefs.getSettings(this);
         mNearbyPref = mPrefs.getString(Prefs.KEY_NEARBY_DISPLAY, Prefs.KEY_NEARBY_DISPLAY_LIST);
 
         mAdapter = new MainPagerAdapter(this, getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.main_pager);
+        ViewPager mViewPager = findViewById(R.id.main_pager);
         mViewPager.setAdapter(mAdapter);
     }
 
@@ -72,11 +75,11 @@ public class MainActivity extends BeerMeActionBarActivity {
     public class MainPagerAdapter extends FragmentPagerAdapter {
         // Trip Planner is not available if OpenGLVersion < 2
         private final int NUM_PAGES = (mOpenGLVersion < 2) ? 3 : 4;
-        private Context mContext = null;
-        private FragmentManager mFragmentManager = null;
+        private Context mContext;
+        private FragmentManager mFragmentManager;
         private Fragment mFrag0 = null;
 
-        public MainPagerAdapter(Context context, FragmentManager fragmentManager) {
+        MainPagerAdapter(Context context, FragmentManager fragmentManager) {
             super(fragmentManager);
             this.mContext = context;
             this.mFragmentManager = fragmentManager;
@@ -130,7 +133,7 @@ public class MainActivity extends BeerMeActionBarActivity {
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NonNull Object object) {
             if ((object instanceof BeerMeMapFragment && mFrag0 instanceof BreweryListFrag)
                     || (object instanceof BreweryListFrag && mFrag0 instanceof BeerMeMapFragment)) {
                 return POSITION_NONE;
@@ -138,7 +141,7 @@ public class MainActivity extends BeerMeActionBarActivity {
             return POSITION_UNCHANGED;
         }
 
-        public void switchNearby() {
+        void switchNearby() {
             mFragmentManager.beginTransaction().remove(mFrag0).commit();
             mFrag0 = getNearbyBreweriesFragment();
             notifyDataSetChanged();
@@ -159,9 +162,5 @@ public class MainActivity extends BeerMeActionBarActivity {
                     return getString(R.string.Unknown);
             }
         }
-    }
-
-    public Location getHere() {
-        return mHere;
     }
 }

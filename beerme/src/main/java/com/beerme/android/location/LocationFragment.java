@@ -57,7 +57,7 @@ public class LocationFragment extends Fragment {
 
     @Override
     public void onPause() {
-        Log.d("nfs", "AgSimplifiedActivity.onPause()");
+        Log.d("nfs", "LocationFragment.onPause()");
         super.onPause();
 
         // Is this necessarily true? Or should it be controlled by the Fragments?
@@ -66,7 +66,7 @@ public class LocationFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("nfs", "AgSimplifiedActivity.onResume()");
+        Log.d("nfs", "LocationFragment.onResume()");
         super.onResume();
         if (isRequestingLocationUpdates) {
             startLocationUpdates();
@@ -75,14 +75,14 @@ public class LocationFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.d("nfs", "AgSimplifiedActivity.onSaveInstanceState()");
+        Log.d("nfs", "LocationFragment.onSaveInstanceState()");
         outState.putBoolean(IS_REQUESTING_LOCATION_UPDATES, isRequestingLocationUpdates);
 
         super.onSaveInstanceState(outState);
     }
 
     private void updateValuesFromBundle(Bundle savedInstanceState) {
-        Log.d("nfs", "AgSimplifiedActivity.updateValuesFromBundle()");
+        Log.d("nfs", "LocationFragment.updateValuesFromBundle()");
         if (savedInstanceState != null) {
             if (savedInstanceState.keySet().contains(IS_REQUESTING_LOCATION_UPDATES)) {
                 isRequestingLocationUpdates = savedInstanceState.getBoolean(IS_REQUESTING_LOCATION_UPDATES);
@@ -97,7 +97,7 @@ public class LocationFragment extends Fragment {
 //	}
 
     private void checkLocationPermission() {
-        Log.d("nfs", "AgSimplifiedActivity.checkLocationPermission()");
+        Log.d("nfs", "LocationFragment.checkLocationPermission()");
         if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(mActivity)
@@ -120,7 +120,7 @@ public class LocationFragment extends Fragment {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.d("nfs", "AgSimplifiedActivity.onRequestPermissionsResult()");
+        Log.d("nfs", "LocationFragment.onRequestPermissionsResult()");
         if (requestCode == REQUEST_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupLocationClient();
@@ -129,7 +129,7 @@ public class LocationFragment extends Fragment {
     }
 
     private void setupLocationClient() {
-        Log.d("nfs", "AgSimplifiedActivity.setupLocationClient()");
+        Log.d("nfs", "LocationFragment.setupLocationClient()");
         if (mFusedLocationClient == null) {
             if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mActivity);

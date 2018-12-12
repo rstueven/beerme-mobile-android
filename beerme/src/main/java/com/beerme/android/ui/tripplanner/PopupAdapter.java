@@ -14,39 +14,30 @@
 
 package com.beerme.android.ui.tripplanner;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.androidmapsextensions.GoogleMap.InfoWindowAdapter;
-import com.androidmapsextensions.Marker;
-import com.beerme.android.R;
-
 // https://github.com/commonsguy/cw-omnibus/blob/master/MapsV2/Popups/src/com/commonsware/android/mapsv2/popups/PopupAdapter.java
 
-public class PopupAdapter implements InfoWindowAdapter {
-	LayoutInflater inflater = null;
-
-	public PopupAdapter(LayoutInflater inflater) {
-		this.inflater = inflater;
-	}
-
-	@Override
-	public View getInfoWindow(Marker marker) {
-		return (null);
-	}
-
-	@Override
-	public View getInfoContents(Marker marker) {
-		View popup = inflater.inflate(R.layout.popup, (ViewGroup) null);
-
-		TextView tv = (TextView) popup.findViewById(R.id.info_title);
-
-		tv.setText(marker.getTitle());
-		tv = (TextView) popup.findViewById(R.id.info_snippet);
-		tv.setText(marker.getSnippet());
-
-		return (popup);
-	}
+public class PopupAdapter { //implements InfoWindowAdapter {
+//	LayoutInflater inflater = null;
+//
+//	public PopupAdapter(LayoutInflater inflater) {
+//		this.inflater = inflater;
+//	}
+//
+//	@Override
+//	public View getInfoWindow(Marker marker) {
+//		return (null);
+//	}
+//
+//	@Override
+//	public View getInfoContents(Marker marker) {
+//		View popup = inflater.inflate(R.layout.popup, (ViewGroup) null);
+//
+//		TextView tv = (TextView) popup.findViewById(R.id.info_title);
+//
+//		tv.setText(marker.getTitle());
+//		tv = (TextView) popup.findViewById(R.id.info_snippet);
+//		tv.setText(marker.getSnippet());
+//
+//		return (popup);
+//	}
 }

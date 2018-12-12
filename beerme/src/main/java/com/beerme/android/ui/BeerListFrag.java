@@ -145,8 +145,7 @@ public class BeerListFrag extends Fragment {
             View view = convertView;
 
             if (view == null) {
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.beerlist_row, parent);
+                view = LayoutInflater.from(mContext).inflate(R.layout.beerlist_row, parent, false);
             }
 
             Beer beer = getItem(position);

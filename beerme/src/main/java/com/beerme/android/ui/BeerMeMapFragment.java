@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.InflateException;
@@ -117,8 +118,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     private View mMapView;
 
     // HIGH: Integrate Trip Planner
-    // MEDIUM: A new constructor that zooms out until at least N breweries are
-    // displayed
+    // MEDIUM: A new constructor that zooms out until at least N breweries are displayed
 
     /**
      * @return A new instance of the Fragment
@@ -130,12 +130,12 @@ public class BeerMeMapFragment extends LocationFragment implements
     /**
      * @return A new instance of the Fragment
      */
-    public static BeerMeMapFragment getInstance(double latitude,
-                                                double longitude) {
+    public static BeerMeMapFragment getInstance(double latitude, double longitude, boolean trackLocation) {
         final BeerMeMapFragment frag = new BeerMeMapFragment();
         Bundle args = new Bundle();
         args.putDouble(SAVE_LAT_KEY, latitude);
         args.putDouble(SAVE_LNG_KEY, longitude);
+        args.putBoolean(SAVE_TRACKING_KEY, trackLocation);
         frag.setArguments(args);
         return frag;
     }
@@ -144,12 +144,10 @@ public class BeerMeMapFragment extends LocationFragment implements
      * (non-Javadoc)
      *
      * @see
-     * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
-     * android.view.ViewGroup, android.os.Bundle)
+     * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mMapView != null) {
             final ViewGroup parent = (ViewGroup) mMapView.getParent();
             if (parent != null) {
@@ -159,8 +157,7 @@ public class BeerMeMapFragment extends LocationFragment implements
 
         try {
             mMapView = inflater.inflate(R.layout.map_fragment, container, false);
-
-            TouchableWrapper mapLayout = (TouchableWrapper) mMapView.findViewById(R.id.mapLayout);
+            TouchableWrapper mapLayout = mMapView.findViewById(R.id.mapLayout);
             mapLayout.setUpdateMapAfterUserInteraction(this);
         } catch (InflateException e) {
             // MapFactory is already there, ignore.
@@ -200,9 +197,6 @@ public class BeerMeMapFragment extends LocationFragment implements
             mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, true);
         } else {
             params = args;
-            if (params != null) {
-                mTrackLocation = false;
-            }
         }
 
         double lat = 0;
@@ -213,6 +207,7 @@ public class BeerMeMapFragment extends LocationFragment implements
             lat = params.getDouble(SAVE_LAT_KEY, 0);
             lng = params.getDouble(SAVE_LNG_KEY, 0);
             zoom = params.getFloat(SAVE_ZOOM_KEY, DEFAULT_ZOOM);
+            mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, false);
         }
 
         setupMap(lat, lng, zoom);
@@ -229,8 +224,7 @@ public class BeerMeMapFragment extends LocationFragment implements
 
         SharedPreferences prefs = Prefs.getSettings(getActivity());
 
-        int newFilter = prefs.getInt(Prefs.KEY_STATUS_FILTER,
-                BreweryStatusFilterPreference.DEFAULT_VALUE);
+        int newFilter = prefs.getInt(Prefs.KEY_STATUS_FILTER, BreweryStatusFilterPreference.DEFAULT_VALUE);
 
         if (newFilter != mStatusFilter) {
             mStatusFilter = newFilter;
@@ -241,11 +235,10 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see
-     * android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
+     * @see android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (mMap != null) {
             CameraPosition cameraPosition = mMap.getCameraPosition();
             LatLng target = cameraPosition.target;
@@ -264,9 +257,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see
-     * com.beerme.android.utils.TouchableWrapper.UpdateMapAfterUserInteraction
-     * #onUpdateMapAfterUserInteraction()
+     * @see com.beerme.android.utils.TouchableWrapper.UpdateMapAfterUserInteraction#onUpdateMapAfterUserInteraction()
      */
     @Override
     public void onUpdateMapAfterUserInteraction() {
@@ -276,8 +267,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see pl.mg6.android.maps.extensions.GoogleMap.OnInfoWindowClickListener#
-     * onInfoWindowClick(pl.mg6.android.maps.extensions.Marker)
+     * @see pl.mg6.android.maps.extensions.GoogleMap.OnInfoWindowClickListener#onInfoWindowClick(pl.mg6.android.maps.extensions.Marker)
      */
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -288,8 +278,7 @@ public class BeerMeMapFragment extends LocationFragment implements
                 builder.include(m.getPosition());
             }
             LatLngBounds bounds = builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,
-                    getResources().getDimensionPixelSize(R.dimen.padding)));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, getResources().getDimensionPixelSize(R.dimen.padding)));
         } else {
             long id = getMarkerId(marker);
             if (id > 0) {
@@ -303,8 +292,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see pl.mg6.android.maps.extensions.GoogleMap.OnCameraChangeListener#
-     * onCameraChange(com.google.android.gms.maps.model.CameraPosition)
+     * @see pl.mg6.android.maps.extensions.GoogleMap.OnCameraChangeListener#onCameraChange(com.google.android.gms.maps.model.CameraPosition)
      */
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
@@ -323,15 +311,13 @@ public class BeerMeMapFragment extends LocationFragment implements
         SQLiteDatabase db = null;
 
         try {
-            final Iterator<Brewery> iterator = visibleBreweries.values()
-                    .iterator();
+            final Iterator<Brewery> iterator = visibleBreweries.values().iterator();
 
             // Remove markers that were filtered out
             while (iterator.hasNext()) {
                 brewery = iterator.next();
                 if (brewery != null) {
-                    if (!BreweryStatusFilterPreference.match(getActivity(),
-                            brewery.getStatus())) {
+                    if (!BreweryStatusFilterPreference.match(getActivity(), brewery.getStatus())) {
                         id = brewery.getId();
                         visibleMarkers.get(id).remove();
                         visibleMarkers.remove(id);
@@ -346,19 +332,16 @@ public class BeerMeMapFragment extends LocationFragment implements
             String[] columns = {"_id", "latitude", "longitude"};
             String selection = "(status & " + mStatusFilter + ") != 0";
 
-            cursor = db.query("brewery", columns, selection, null, null, null,
-                    null);
+            cursor = db.query("brewery", columns, selection, null, null, null, null);
 
             while (cursor.moveToNext()) {
                 id = cursor.getInt(0);
-                if (mapBounds.contains(new LatLng(cursor.getDouble(1), cursor
-                        .getDouble(2)))) {
+                if (mapBounds.contains(new LatLng(cursor.getDouble(1), cursor.getDouble(2)))) {
                     // On-screen
                     if (visibleMarkers.get(id) == null) {
                         // Not already displayed
                         brewery = new Brewery(getActivity(), id);
-                        visibleMarkers.put(id,
-                                mMap.addMarker(initMarker(brewery)));
+                        visibleMarkers.put(id, mMap.addMarker(initMarker(brewery)));
                         visibleBreweries.put(id, brewery);
                     }
                 } else {
@@ -373,8 +356,7 @@ public class BeerMeMapFragment extends LocationFragment implements
             }
         } catch (SQLiteException e) {
             // LOW: SQLiteDatabaseLockedException requires API 11
-            ErrLog.log(getActivity(), "BeerMeMapFragment.loadMarkers()", e,
-                    R.string.Database_is_busy);
+            ErrLog.log(getActivity(), "BeerMeMapFragment.loadMarkers()", e, R.string.Database_is_busy);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -401,9 +383,7 @@ public class BeerMeMapFragment extends LocationFragment implements
 
         int status = brewery.getStatus();
         if (!BreweryStatusFilterPreference.isOpen(status)) {
-            String statusString = getResources().getStringArray(
-                    R.array.status_value)[BreweryStatusFilterPreference
-                    .getIndex(status)];
+            String statusString = getResources().getStringArray(R.array.status_value)[BreweryStatusFilterPreference.getIndex(status)];
             title.append(" (").append(statusString).append(")");
         }
 
@@ -440,17 +420,15 @@ public class BeerMeMapFragment extends LocationFragment implements
                 if (mMap != null) {
                     LatLng latLng = (mLocation != null) ? mLocation : new LatLng(0, 0);
                     mMap.setMyLocationEnabled(true);
-                    mTrackLocation = true;
+//                    mTrackLocation = true;
                     mMap.setOnCameraChangeListener(self);
                     mMap.setClustering(new ClusteringSettings()
                             .clusterSize(DEFAULT_CLUSTER_SIZE)
-                            .clusterOptionsProvider(
-                                    new BeerMeClusterOptionsProvider(getResources()))
+                            .clusterOptionsProvider(new BeerMeClusterOptionsProvider(getResources()))
                             .addMarkersDynamically(true));
                     mMap.setInfoWindowAdapter(new BreweryInfoWindowAdapter(context, (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)));
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
-                            DEFAULT_ZOOM));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
                     mMap.setOnInfoWindowClickListener(self);
                     mMap.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
@@ -462,7 +440,7 @@ public class BeerMeMapFragment extends LocationFragment implements
                     });
 
                     mLocation = new LatLng(lat, lng);
-                    BeerMeMapFragment.this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, zoom));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, zoom));
                 }
             }
         });
@@ -488,8 +466,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see com.beerme.android.location.LocationFragment.LocationCallbacks#
-     * onLocationUpdated(android.location.Location)
+     * @see com.beerme.android.location.LocationFragment.LocationCallbacks#onLocationUpdated(android.location.Location)
      */
     @Override
     public void onLocationUpdated(Location location) {
@@ -498,11 +475,13 @@ public class BeerMeMapFragment extends LocationFragment implements
         if (location != null) {
             if (mTrackLocation && mMap != null) {
                 float zoom = mMap.getCameraPosition().zoom;
-                mLocation = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                        location.getLatitude(), location.getLongitude()), zoom));
+                mLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoom));
             }
         }
+    }
+
+    public void setTrackLocation(boolean track) {
+        this.mTrackLocation = track;
     }
 }

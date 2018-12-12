@@ -22,7 +22,7 @@ public class BeerMeMapActivity extends BeerMeActionBarActivity {
 		Intent intent = getIntent();
 		double lat = intent.getDoubleExtra(LAT_KEY, Double.MAX_VALUE);
 		double lng = intent.getDoubleExtra(LNG_KEY, Double.MAX_VALUE);
-		BeerMeMapFragment mapFrag = BeerMeMapFragment.getInstance(lat, lng);
+		BeerMeMapFragment mapFrag = BeerMeMapFragment.getInstance(lat, lng, false);
 
 		if (null != findViewById(R.id.mapActivityFrame)) {
 			FragmentManager mFragMgr = getSupportFragmentManager();

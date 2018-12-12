@@ -36,8 +36,7 @@ public class MapFactory {
 		return newIntent(activity, latLng.latitude, latLng.longitude);
 	}
 
-	private static Intent newIntent(Activity activity, double lat, double lng,
-			String appQuery, String urlQuery) {
+	private static Intent newIntent(Activity activity, double lat, double lng, String appQuery, String urlQuery) {
 		Intent intent = new Intent();
 		boolean servicesAvailable = Utils.checkPlayServices(activity);
 		int openGLVersion = Utils.checkOpenGLVersion(activity);
@@ -58,8 +57,7 @@ public class MapFactory {
 				if (intent.resolveActivity(activity.getPackageManager()) != null) {
 					return intent;
 				} else {
-					ErrLog.log(activity, "MapFactory.returnIntent()", null,
-							activity.getString(R.string.Cant_create_map));
+					ErrLog.log(activity, "MapFactory.returnIntent()", null, activity.getString(R.string.Cant_create_map));
 					return null;
 				}
 			}

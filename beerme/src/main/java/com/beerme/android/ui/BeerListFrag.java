@@ -28,7 +28,6 @@ import com.beerme.android.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Locale;
 
 public class BeerListFrag extends Fragment {
     private static final String TAG_ID = "id";
@@ -174,7 +173,7 @@ public class BeerListFrag extends Fragment {
 
                 if (abv > 0) {
                     TextView abvView = view.findViewById(R.id.beerlist_abv);
-                    abvView.setText(String.format(Locale.getDefault(), "%.2f", beer.getAbv()));
+                    abvView.setText(getString(R.string.pct_abv, beer.getAbv()));
                 }
 
                 TextView styleView = view.findViewById(R.id.beerlist_style);

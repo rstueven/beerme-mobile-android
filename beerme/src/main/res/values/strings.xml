@@ -216,6 +216,7 @@
     <string name="outOfTwenty">/20</string>
     <string name="Overall">Overall</string>
     <string name="Package">Package</string>
+    <string name="pct_abv">%03.2f%% abv</string>
     <string name="Phone">Phone: </string>
     <string name="Place">Place</string>
     <string name="Planned">Planned</string>

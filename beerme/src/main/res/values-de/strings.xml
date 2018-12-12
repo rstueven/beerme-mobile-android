@@ -216,7 +216,7 @@
     <string name="outOfTwenty">/20 Punkte</string>
     <string name="Overall">Gesamteindruck</string>
     <string name="Package">Verpackung</string>
-    <string name="pct_abv">% Vol. Alk.</string>
+    <string name="pct_abv">%03.2f%% Vol. Alk.</string>
     <string name="Phone">Tel: </string>
     <string name="Place">Ort</string>
     <string name="Planned">in Planung</string>

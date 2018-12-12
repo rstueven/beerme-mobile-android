@@ -78,10 +78,10 @@ public class BreweryActivity extends BeerMeActionBarActivity {
 
         breweryImageView = findViewById(R.id.brewery_image);
 
-        if (!mBrewery.getImage().equals("")) {
-            breweryImageView.setVisibility(View.VISIBLE);
-        } else {
+        if ("".equals(mBrewery.getImage())) {
             breweryImageView.setVisibility(View.GONE);
+        } else {
+            breweryImageView.setVisibility(View.VISIBLE);
         }
 
         if (savedInstanceState != null) {

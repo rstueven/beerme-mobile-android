@@ -10,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +51,7 @@ import java.util.List;
  * @author rstueven
  */
 public class BeerMeMapFragment extends LocationFragment implements
-        LocationFragment.LocationListener, UpdateMapAfterUserInteraction,
+        BeerMeActivity.LocationListener, UpdateMapAfterUserInteraction,
         OnCameraChangeListener, OnInfoWindowClickListener {
     /**
      * Tag for the LocationFragment, which keeps track of the user's location
@@ -176,41 +175,38 @@ public class BeerMeMapFragment extends LocationFragment implements
         super.onActivityCreated(savedInstanceState);
         Utils.trackFragment(this);
 
-		/*
-      {@link android.support.v4.app.FragmentManager}
-	 */
-        FragmentManager mFragMgr = getActivity().getSupportFragmentManager();
+        BeerMeActivity activity = (BeerMeActivity) getActivity();
 
-        mMapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+        if (activity != null) {
+            FragmentManager mFragMgr = activity.getSupportFragmentManager();
 
-        LocationFragment locationFragment = LocationFragment.getInstance();
-        locationFragment.registerLocationListener(this);
-        FragmentTransaction trans = mFragMgr.beginTransaction();
-        trans.add(locationFragment, LOCATION_FRAGMENT_TAG);
-        trans.commit();
+            mMapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
 
-        Bundle params;
-        Bundle args = getArguments();
+            activity.registerLocationListener(this);
 
-        if (savedInstanceState != null) {
-            params = savedInstanceState;
-            mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, true);
-        } else {
-            params = args;
+            Bundle params;
+            Bundle args = getArguments();
+
+            if (savedInstanceState != null) {
+                params = savedInstanceState;
+                mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, true);
+            } else {
+                params = args;
+            }
+
+            double lat = 0;
+            double lng = 0;
+            float zoom = DEFAULT_ZOOM;
+
+            if (params != null) {
+                lat = params.getDouble(SAVE_LAT_KEY, 0);
+                lng = params.getDouble(SAVE_LNG_KEY, 0);
+                zoom = params.getFloat(SAVE_ZOOM_KEY, DEFAULT_ZOOM);
+                mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, false);
+            }
+
+            setupMap(lat, lng, zoom);
         }
-
-        double lat = 0;
-        double lng = 0;
-        float zoom = DEFAULT_ZOOM;
-
-        if (params != null) {
-            lat = params.getDouble(SAVE_LAT_KEY, 0);
-            lng = params.getDouble(SAVE_LNG_KEY, 0);
-            zoom = params.getFloat(SAVE_ZOOM_KEY, DEFAULT_ZOOM);
-            mTrackLocation = params.getBoolean(SAVE_TRACKING_KEY, false);
-        }
-
-        setupMap(lat, lng, zoom);
     }
 
     /*
@@ -466,7 +462,7 @@ public class BeerMeMapFragment extends LocationFragment implements
     /*
      * (non-Javadoc)
      *
-     * @see com.beerme.android.location.LocationFragment.LocationCallbacks#onLocationUpdated(android.location.Location)
+     * @see something in BeerMeActivity
      */
     @Override
     public void onLocationUpdated(Location location) {

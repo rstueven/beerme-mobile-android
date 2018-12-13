@@ -4,21 +4,16 @@
 package com.beerme.android.ui;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.beerme.android.R;
 import com.beerme.android.database.DbOpenHelper;
 import com.beerme.android.prefs.Prefs;
-import com.beerme.android.prefs.SharedPreferenceSaver;
 import com.beerme.android.utils.DatabaseUpdateAlert;
 import com.beerme.android.utils.DatabaseUpdateAlert.DatabaseUpdateAlerter;
 import com.beerme.android.utils.ErrLog;
@@ -29,8 +24,7 @@ import java.lang.ref.WeakReference;
 /**
  * @author rstueven
  */
-public class Splash extends FragmentActivity implements
-        DbOpenHelper.OnDbOpenListener, DatabaseUpdateAlerter {
+public class Splash extends BeerMeActivity implements DbOpenHelper.OnDbOpenListener, DatabaseUpdateAlerter {
     private static final int DATABASE_CHECK = 2;
     private static final int DATABASE_DONE = 3;
     private static final int LICENSE_CHECK = 4;

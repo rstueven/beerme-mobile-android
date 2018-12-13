@@ -6,10 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.beerme.android.R;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.Utils;
 
-public class BeerMeMapActivity extends BeerMeActionBarActivity {
+public class BeerMeMapActivity extends BeerMeActivity {
 	public static final String LAT_KEY = "latitude";
 	public static final String LNG_KEY = "longitude";
 	private static final String TAG_MAP_FRAG = "mapFrag";

@@ -12,11 +12,10 @@ import android.support.v4.view.ViewPager;
 import com.beerme.android.R;
 import com.beerme.android.location.LocationFragment;
 import com.beerme.android.prefs.Prefs;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.ui.tripplanner.TripPlannerFrag;
 import com.beerme.android.utils.Utils;
 
-public class MainActivity extends BeerMeActionBarActivity {
+public class MainActivity extends BeerMeActivity {
     private MainPagerAdapter mAdapter;
     private int mOpenGLVersion;
     private boolean mServicesAvailable;

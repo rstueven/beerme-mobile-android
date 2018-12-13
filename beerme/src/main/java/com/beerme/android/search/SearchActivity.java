@@ -22,11 +22,11 @@ import com.beerme.android.ui.BeerActivity;
 import com.beerme.android.ui.BreweryActivity;
 import com.beerme.android.ui.BreweryListActivity;
 import com.beerme.android.ui.MapFactory;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
+import com.beerme.android.ui.BeerMeActivity;
 import com.beerme.android.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
-public class SearchActivity extends BeerMeActionBarActivity implements
+public class SearchActivity extends BeerMeActivity implements
 		LoaderCallbacks<Cursor> {
 	private ListView mListView;
 	private SimpleCursorAdapter mCursorAdapter;

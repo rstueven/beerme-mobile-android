@@ -19,13 +19,12 @@ import android.widget.TextView;
 import com.beerme.android.R;
 import com.beerme.android.database.BeerNote;
 import com.beerme.android.database.BeerNote.Source;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.DatePickerFragment;
 import com.beerme.android.utils.PkgPickerFragment;
 import com.beerme.android.utils.RatingPickerFragment;
 import com.beerme.android.utils.Utils;
 
-public class EditableBeerNote extends BeerMeActionBarActivity implements
+public class EditableBeerNote extends BeerMeActivity implements
 		DatePickerFragment.DateSetter, PkgPickerFragment.PkgSetter,
 		RatingPickerFragment.RatingListener {
 	private BeerNote mNote = null;

@@ -19,13 +19,12 @@ import android.widget.ImageView;
 
 import com.beerme.android.R;
 import com.beerme.android.database.Beer;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.DownloadImageTask;
 import com.beerme.android.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 
-public class BeerActivity extends BeerMeActionBarActivity {
+public class BeerActivity extends BeerMeActivity {
 	private final static String TAG_BEERDETAIL_FRAG = "beerdetailFrag";
 	private final static String TAG_BEERNOTES_FRAG = "beernotesFrag";
 	private final static String TAG_BEER_IMAGE = "beerImage";

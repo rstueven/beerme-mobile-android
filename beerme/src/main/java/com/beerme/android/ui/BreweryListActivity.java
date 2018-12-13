@@ -8,11 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.beerme.android.R;
 import com.beerme.android.location.LocationFragment;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
-public class BreweryListActivity extends BeerMeActionBarActivity implements LocationFragment.LocationListener {
+public class BreweryListActivity extends BeerMeActivity implements LocationFragment.LocationListener {
 	private static final String TAG_BREWERYLIST_FRAG = "brewerylistFrag";
 	public static final String LAT_KEY = "latitude";
 	public static final String LNG_KEY = "longitude";

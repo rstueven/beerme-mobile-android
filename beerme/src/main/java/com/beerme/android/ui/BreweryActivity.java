@@ -25,14 +25,13 @@ import android.widget.TextView;
 import com.beerme.android.R;
 import com.beerme.android.database.Brewery;
 import com.beerme.android.prefs.BreweryStatusFilterPreference;
-import com.beerme.android.ui.actionbar.BeerMeActionBarActivity;
 import com.beerme.android.utils.DownloadImageTask;
 import com.beerme.android.utils.SendUpdateDialog;
 import com.beerme.android.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 
-public class BreweryActivity extends BeerMeActionBarActivity {
+public class BreweryActivity extends BeerMeActivity {
     private final static String TAG_BREWERY_ID = "breweryId";
     private final static String TAG_BREWERY_IMAGE = "breweryImage";
     private long mBreweryId = -1;

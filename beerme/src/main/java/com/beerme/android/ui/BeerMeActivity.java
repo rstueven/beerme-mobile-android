@@ -95,7 +95,7 @@ public abstract class BeerMeActivity extends AppCompatActivity {
 
                 AdRequest.Builder builder = new AdRequest.Builder();
                 builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                builder.addTestDevice("E44C1FE48309C834798791087E2A29BE");
+                builder.addTestDevice("C8E6BE9575D0D42208B498EF58A9B3A8");
                 adView.loadAd(builder.build());
             }
         }

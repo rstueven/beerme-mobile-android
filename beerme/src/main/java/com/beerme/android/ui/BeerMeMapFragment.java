@@ -224,7 +224,9 @@ public class BeerMeMapFragment extends LocationFragment implements
 
         if (newFilter != mStatusFilter) {
             mStatusFilter = newFilter;
-            loadMarkers();
+            if (mMap != null) {
+                loadMarkers();
+            }
         }
     }
 

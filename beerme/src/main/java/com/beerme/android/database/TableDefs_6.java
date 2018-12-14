@@ -124,7 +124,7 @@ public class TableDefs_6 extends TableDefs {
         mDb = db;
 
         db.beginTransaction();
-        DbOpenHelper.setUpdating(mContext, true);
+        DbOpenHelper.setUpdating(true);
         try {
             // Deleting all the beer data and reloading it is more efficient
             // than saving the data and downloading just the ratings.
@@ -132,13 +132,13 @@ public class TableDefs_6 extends TableDefs {
             db.execSQL(createStatements.get(TABLE_BEER));
             db.setTransactionSuccessful();
 
-            resetLastUpdate(mContext);
+            resetLastUpdate();
         } catch (SQLException e) {
             ErrLog.log(mContext, "onUpgrade(5 to 6)", e,
                     R.string.Database_upgrade_failed);
         } finally {
             db.endTransaction();
-            DbOpenHelper.setUpdating(mContext, false);
+            DbOpenHelper.setUpdating(false);
         }
     }
 
@@ -148,24 +148,22 @@ public class TableDefs_6 extends TableDefs {
             mDb = db;
             mListener = listener;
 
-            String lastUpdate = getLastUpdate(mContext);
-            String now = DbOpenHelper.sqlDateFormat.format(Calendar.getInstance()
-                    .getTime());
+            String lastUpdate = getLastUpdate();
+            String now = DbOpenHelper.sqlDateFormat.format(Calendar.getInstance().getTime());
 
             if (now.compareTo(lastUpdate) > 0) {
                 HandlerThread uiThread = new HandlerThread("UIHandler");
                 uiThread.start();
-                UpdateHandler handler = new UpdateHandler(uiThread.getLooper(),
-                        this);
+                UpdateHandler handler = new UpdateHandler(uiThread.getLooper(), this);
                 handler.sendEmptyMessage(UpdateHandler.BREWERY_START);
             } else {
                 if (listener != null) {
                     listener.onDataUpdated();
                 }
             }
-        // } else {
+            // } else {
             // ErrLog.log(mContext, "TableDefs_6.updateData()", null, R.string
-                    // .Requires_network_access_to_update_database);
+            // .Requires_network_access_to_update_database);
         }
     }
 
@@ -198,39 +196,39 @@ public class TableDefs_6 extends TableDefs {
             switch (msg.what) {
                 case BREWERY_START:
                     doneBrewery = false;
-                    DbOpenHelper.setUpdating(mContext, true);
+                    DbOpenHelper.setUpdating(true);
                     updateDataByTable(mContext, mDb, Table.BREWERY, this);
                     break;
                 case BREWERY_END:
                     doneBrewery = true;
-                    DbOpenHelper.setUpdating(mContext, false);
+                    DbOpenHelper.setUpdating(false);
                     sendEmptyMessage(BEER_START);
                     break;
                 case BEER_START:
                     doneBeer = false;
-                    DbOpenHelper.setUpdating(mContext, true);
+                    DbOpenHelper.setUpdating(true);
                     updateDataByTable(mContext, mDb, Table.BEER, this);
                     break;
                 case BEER_END:
                     doneBeer = true;
-                    DbOpenHelper.setUpdating(mContext, false);
+                    DbOpenHelper.setUpdating(false);
                     sendEmptyMessage(STYLE_START);
                     break;
                 case STYLE_START:
-                    DbOpenHelper.setUpdating(mContext, true);
+                    DbOpenHelper.setUpdating(true);
                     doneStyle = false;
                     updateDataByTable(mContext, mDb, Table.STYLE, this);
                     break;
                 case STYLE_END:
                     doneStyle = true;
-                    DbOpenHelper.setUpdating(mContext, false);
+                    DbOpenHelper.setUpdating(false);
                     break;
                 default:
                     super.handleMessage(msg);
             }
 
             if (doneBrewery && doneBeer && doneStyle) {
-                setLastUpdate(mContext);
+                setLastUpdate();
                 if (mListener != null) {
                     mListener.onDataUpdated();
                 }
@@ -242,8 +240,7 @@ public class TableDefs_6 extends TableDefs {
     protected static final String URL_INIT_BEER_LIST = "beerList.php";
     protected static final String URL_INIT_STYLE_LIST = "styleList.php";
 
-    private static void updateDataByTable(Context context, SQLiteDatabase db,
-                                          Table table, UpdateHandler handler) {
+    private static void updateDataByTable(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
         int notification;
         String urlInit;
 
@@ -268,24 +265,19 @@ public class TableDefs_6 extends TableDefs {
         String tableName = table.getName();
         String lastUpdate = getLastUpdateByTable(db, tableName);
 
-        startDownloadProgress(context, String.format(
-                        context.getString(R.string.TABLE_data), tableName),
-                notification);
+        startDownloadProgress(context, String.format(context.getString(R.string.TABLE_data), tableName), notification);
 
         URL url;
 
         try {
             url = Utils.buildUrl(urlInit, new String[]{"t=" + lastUpdate});
-            UrlToFileDownloader.download(context, url,
-                    TableDataListener.getInstance(context, db, table, handler));
+            UrlToFileDownloader.download(context, url, TableDataListener.getInstance(context, db, table, handler));
         } catch (MalformedURLException e) {
-            ErrLog.log(context, "updateDataByTable(" + tableName + ")", e,
-                    "Malformed URL");
+            ErrLog.log(context, "updateDataByTable(" + tableName + ")", e, "Malformed URL");
         }
     }
 
-    private static abstract class TableDataListener implements
-            UrlToFileDownloadListener {
+    private static abstract class TableDataListener implements UrlToFileDownloadListener {
         private static final String INSERT_BREWERY = "INSERT OR REPLACE INTO brewery (_id, name, address, latitude, longitude, status, hours, phone, web, services, image, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static final String INSERT_BEER = "INSERT OR REPLACE INTO beer (_id, breweryid, name, style, abv, image, updated, beermerating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         private static final String INSERT_STYLE = "INSERT OR REPLACE INTO style (_id, name, updated) VALUES (?, ?, ?)";
@@ -301,15 +293,13 @@ public class TableDefs_6 extends TableDefs {
         private int mNotificationLoad = -1;
         private int mNextStep = -1;
 
-        public TableDataListener(Context context, SQLiteDatabase db,
-                                 Table table, UpdateHandler handler) {
+        public TableDataListener(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
             mContext = context;
             mDb = db;
             mTable = table;
             mHandler = handler;
 
-            mNotifyManager = (NotificationManager) mContext
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
             switch (table) {
                 case BREWERY:
@@ -331,26 +321,22 @@ public class TableDefs_6 extends TableDefs {
                     mNextStep = UpdateHandler.STYLE_END;
                     break;
                 default:
-                    throw new IllegalArgumentException("invalid table: "
-                            + table.getName());
+                    throw new IllegalArgumentException("invalid table: " + table.getName());
             }
 
             mName = mTable.getName();
         }
 
-        public static TableDataListener getInstance(Context context,
-                                                    SQLiteDatabase db, Table table, UpdateHandler handler) {
+        public static TableDataListener getInstance(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
             switch (table) {
                 case BREWERY:
-                    return new TableDataListener_Brewery(context, db, table,
-                            handler);
+                    return new TableDataListener_Brewery(context, db, table, handler);
                 case BEER:
                     return new TableDataListener_Beer(context, db, table, handler);
                 case STYLE:
                     return new TableDataListener_Style(context, db, table, handler);
                 default:
-                    throw new IllegalArgumentException("invalid table: "
-                            + table.getName());
+                    throw new IllegalArgumentException("invalid table: " + table.getName());
             }
         }
 
@@ -365,19 +351,11 @@ public class TableDefs_6 extends TableDefs {
                 }
 
                 Builder builder = new NotificationCompat.Builder(mContext)
-                        .setContentTitle(
-                                String.format(
-                                        mContext.getString(R.string.TABLE_data),
-                                        mName))
-                        .setContentText(
-                                String.format(
-                                        mContext.getString(R.string.Loading_TABLE_data),
-                                        mName))
+                        .setContentTitle(String.format(mContext.getString(R.string.TABLE_data), mName))
+                        .setContentText(String.format(mContext.getString(R.string.Loading_TABLE_data), mName))
                         .setSmallIcon(R.drawable.ic_home)
                         .setProgress(0, 0, true)
-                        .setContentIntent(
-                                PendingIntent.getActivity(mContext, 0,
-                                        new Intent(), 0));
+                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), 0));
 
                 File file = new File(fileName);
                 long start;
@@ -392,36 +370,25 @@ public class TableDefs_6 extends TableDefs {
                     parse(file, insertStatement, builder);
                     mDb.setTransactionSuccessful();
                 } catch (IllegalStateException e) {
-                    ErrLog.log(mContext,
-                        "onUrlToFileDownloaded(" + fileName + "): IllegalStateException: ",
-                        e,
-                        String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
+                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName + "): IllegalStateException: ", e, String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
                 } catch (FileNotFoundException e) {
-                    ErrLog.log(mContext,
-                            "onUrlToFileDownloaded(" + fileName + "): FileNotFoundException: ",
-                            e,
-                            String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
+                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName + "): FileNotFoundException: ", e, String.format(mContext.getString(R.string.Failed_to_update_TABLE_data), mName));
                 } catch (IOException e) {
-                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName + "): IOException: ",
-                            e,
-                            String.format(mContext
-                                    .getString(R.string.Failed_to_update_TABLE_data), mName));
+                    ErrLog.log(mContext, "onUrlToFileDownloaded(" + fileName + "): IOException: ", e, String.format(mContext
+                            .getString(R.string.Failed_to_update_TABLE_data), mName));
                 } finally {
                     if (mDb.inTransaction()) {
                         mDb.endTransaction();
                     }
                     file.delete();
-                    Log.i(Utils.APPTAG, "onUrlToFileDownloaded(" + mName
-                            + ") elapsed: "
-                            + (System.currentTimeMillis() - start) + " ms");
+                    Log.i(Utils.APPTAG, "onUrlToFileDownloaded(" + mName + ") elapsed: " + (System.currentTimeMillis() - start) + " ms");
                     mNotifyManager.cancel(mNotificationLoad);
                     mHandler.sendEmptyMessage(mNextStep);
                 }
             }
         }
 
-        public void parse(File file, SQLiteStatement insertStatement,
-                          Builder builder) throws IOException {
+        public void parse(File file, SQLiteStatement insertStatement, Builder builder) throws IOException {
             String[] fields;
             BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -442,8 +409,7 @@ public class TableDefs_6 extends TableDefs {
                     id = Integer.parseInt(fields[0]);
                     if (id % onePercent == 0) {
                         builder.setProgress(max, max - id, false);
-                        mNotifyManager.notify(mNotificationLoad,
-                                builder.build());
+                        mNotifyManager.notify(mNotificationLoad, builder.build());
                     }
 
                     parseFields(id, fields, insertStatement);
@@ -455,19 +421,16 @@ public class TableDefs_6 extends TableDefs {
             }
         }
 
-        public abstract void parseFields(int id, String[] fields,
-                                         SQLiteStatement insertStatement);
+        public abstract void parseFields(int id, String[] fields, SQLiteStatement insertStatement);
     }
 
     private static class TableDataListener_Brewery extends TableDataListener {
-        public TableDataListener_Brewery(Context context, SQLiteDatabase db,
-                                         Table table, UpdateHandler handler) {
+        public TableDataListener_Brewery(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
             super(context, db, table, handler);
         }
 
         @Override
-        public void parseFields(int id, String[] fields,
-                                SQLiteStatement insertStatement) {
+        public void parseFields(int id, String[] fields, SQLiteStatement insertStatement) {
             String name = fields[1];
             String address = fields[2];
             double latitude = Double.parseDouble(fields[3]);
@@ -496,14 +459,12 @@ public class TableDefs_6 extends TableDefs {
     }
 
     private static class TableDataListener_Beer extends TableDataListener {
-        public TableDataListener_Beer(Context context, SQLiteDatabase db,
-                                      Table table, UpdateHandler handler) {
+        public TableDataListener_Beer(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
             super(context, db, table, handler);
         }
 
         @Override
-        public void parseFields(int id, String[] fields,
-                                SQLiteStatement insertStatement) {
+        public void parseFields(int id, String[] fields, SQLiteStatement insertStatement) {
             int breweryid = Integer.parseInt(fields[1]);
             String name = fields[2];
 
@@ -555,14 +516,12 @@ public class TableDefs_6 extends TableDefs {
     }
 
     private static class TableDataListener_Style extends TableDataListener {
-        public TableDataListener_Style(Context context, SQLiteDatabase db,
-                                       Table table, UpdateHandler handler) {
+        public TableDataListener_Style(Context context, SQLiteDatabase db, Table table, UpdateHandler handler) {
             super(context, db, table, handler);
         }
 
         @Override
-        public void parseFields(int id, String[] fields,
-                                SQLiteStatement insertStatement) {
+        public void parseFields(int id, String[] fields, SQLiteStatement insertStatement) {
             String name = fields[1];
             String updated = fields[2];
 

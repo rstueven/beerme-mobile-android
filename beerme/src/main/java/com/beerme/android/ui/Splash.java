@@ -159,7 +159,7 @@ public class Splash extends BeerMeActivity implements DbOpenHelper.OnDbOpenListe
                     if (Utils.isOnline(instance)) {
                         mProgressDialog = ProgressDialog.show(instance, instance.getString(R.string.Database_update), "",
                                 true);
-                        if (DbOpenHelper.isUpdating(instance)) {
+                        if (DbOpenHelper.isUpdating()) {
                             if (Prefs.getSettings(instance).getBoolean(DatabaseUpdateAlert.SHOW_DB_UPDATE_ALERT_PREF, true)) {
                                 new DatabaseUpdateAlert().show(instance.getSupportFragmentManager(), "databaseUpdateAlert");
                             } else {

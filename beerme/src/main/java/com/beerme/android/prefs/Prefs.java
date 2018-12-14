@@ -10,8 +10,8 @@ import android.preference.PreferenceManager;
  */
 public class Prefs {
 	public static final String KEY_LICENSED = "licensed";
-	public static final String KEY_DB_UPDATING = "db_updating";
-	public static final String KEY_DB_LAST_UPDATE = "db_last_update";
+	//	public static final String KEY_DB_UPDATING = "db_updating";
+//	public static final String KEY_DB_LAST_UPDATE = "db_last_update";
 	public static final String KEY_DIST_UNIT = "dist_unit";
 	public static final String KEY_DEFAULT_LOCATION = "default_location";
 	public static final String KEY_DEFAULT_LATITUDE = "default_latitude";

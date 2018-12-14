@@ -302,7 +302,7 @@ public abstract class BeerMeActivity extends AppCompatActivity {
             case R.id.action_database_update:
                 dbHelper = DbOpenHelper.getInstance(this);
                 db = dbHelper.getWritableDatabase();
-                dbHelper.forceUpdate(this, db);
+                dbHelper.forceUpdate(db);
                 // db.close();
                 return true;
             case R.id.action_database_load:
@@ -313,7 +313,7 @@ public abstract class BeerMeActivity extends AppCompatActivity {
                 }
                 dbHelper = DbOpenHelper.getInstance(this);
                 db = dbHelper.getWritableDatabase();
-                dbHelper.forceReload(this, db);
+                dbHelper.forceReload(db);
                 // db.close();
                 return true;
             case R.id.action_database_export:

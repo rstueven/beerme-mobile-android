@@ -1,7 +1,5 @@
 package com.beerme.android.utils;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.beerme.android.R;
+
+import java.util.ArrayList;
 
 public class YesNoDialog extends DialogFragment {
 	private static final String TAG_KEY = "key";
@@ -24,8 +24,6 @@ public class YesNoDialog extends DialogFragment {
 	}
 
 	/**
-	 * @param frag
-	 *            invoking Fragment that should implement YesNoListener
 	 * @param key
 	 *            int used to differentiate calls to onYes(int key, long data)
 	 * @param title

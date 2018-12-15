@@ -45,19 +45,19 @@ public class TableDefs_3 extends TableDefs {
         DbOpenHelper.setUpdating(true);
         try {
             String[] columns = getColumns(db, TABLE_BREWERYNOTES);
-            db.execSQL("DROP TABLE IF EXISTS temp");
+            db.execSQL("DROP TABLE IF EXISTS 'temp'");
             db.execSQL("ALTER TABLE " + TABLE_BREWERYNOTES + " RENAME TO 'temp'");
             db.execSQL(createStatements.get(TABLE_BREWERYNOTES));
             String cols = Utils.stringify(columns, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s from temp", TABLE_BREWERYNOTES, cols, cols));
 
-            db.execSQL("DROP TABLE IF EXISTS temp");
+            db.execSQL("DROP TABLE IF EXISTS 'temp'");
             db.execSQL("ALTER TABLE " + TABLE_BEERNOTES + " RENAME TO 'temp'");
             db.execSQL(createStatements.get(TABLE_BEERNOTES));
 
             Cursor c = null;
 
-            c = db.rawQuery("SELECT pagenumber, beerid, package, score, sampled, place, appearance, aroma, mouthfeel, notes, breweryid FROM temp", null);
+            c = db.rawQuery("SELECT pagenumber, beerid, package, score, sampled, place, appearance, aroma, mouthfeel, notes, breweryid FROM 'temp'", null);
 
             if (c != null) {
                 String insertSql = "INSERT INTO "

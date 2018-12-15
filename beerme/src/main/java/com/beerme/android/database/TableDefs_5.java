@@ -131,26 +131,26 @@ public class TableDefs_5 extends TableDefs {
         db.beginTransaction();
         DbOpenHelper.setUpdating(true);
         try {
-            db.execSQL("DROP TABLE IF EXISTS temp");
+            db.execSQL("DROP TABLE IF EXISTS 'temp'");
             db.execSQL("ALTER TABLE " + TABLE_BREWERYNOTES + " RENAME TO 'temp'");
             db.execSQL(createStatements.get(TABLE_BREWERYNOTES));
             String breweryNotesSql = "INSERT INTO " + TABLE_BREWERYNOTES
                     + " (_id, breweryid, date, rating, notes) "
                     + "SELECT id, breweryid, date, rating, notes "
-                    + "FROM temp";
+                    + "FROM 'temp'";
             db.execSQL(breweryNotesSql);
             for (String indexStmt : indexStatements.get(TABLE_BREWERYNOTES)) {
                 db.execSQL(indexStmt);
             }
 
-            db.execSQL("DROP TABLE IF EXISTS temp");
+            db.execSQL("DROP TABLE IF EXISTS 'temp'");
             db.execSQL("ALTER TABLE " + TABLE_BEERNOTES + " RENAME TO 'temp'");
             db.execSQL(createStatements.get(TABLE_BEERNOTES));
             String beerNotesSql = "INSERT INTO "
                     + TABLE_BEERNOTES
                     + " (_id, beerid, package, sampled, place, appscore, appearance, aroscore, aroma, mouscore, mouthfeel, ovrscore, notes) "
                     + " SELECT pagenumber, beerid, package, sampled, place, appscore, appearance, aroscore, aroma, mouscore, mouthfeel, ovrscore, notes "
-                    + " FROM temp;";
+                    + " FROM 'temp';";
             db.execSQL(beerNotesSql);
             for (String indexStmt : indexStatements.get(TABLE_BEERNOTES)) {
                 db.execSQL(indexStmt);

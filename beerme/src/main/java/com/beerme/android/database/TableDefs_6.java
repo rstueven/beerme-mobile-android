@@ -258,8 +258,7 @@ public class TableDefs_6 extends TableDefs {
                 urlInit = URL_INIT_STYLE_LIST;
                 break;
             default:
-                throw new IllegalArgumentException("invalid table: "
-                        + table.getName());
+                throw new IllegalArgumentException("invalid table: " + table.getName());
         }
 
         String tableName = table.getName();

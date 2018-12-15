@@ -3,6 +3,11 @@
  */
 package com.beerme.android.utils;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.beerme.android.R;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,11 +18,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import android.content.Context;
-import android.util.Log;
-
-import com.beerme.android.R;
 
 /**
  * @author rstueven
@@ -120,8 +120,7 @@ public class UrlToFileDownloader implements Runnable {
 					// Ignore
 				}
 
-				listener.onUrlToFileDownloaded((file != null) ? file
-						.getAbsolutePath() : null);
+				listener.onUrlToFileDownloaded((file != null) ? file.getAbsolutePath() : null);
 			}
 		}
 	}

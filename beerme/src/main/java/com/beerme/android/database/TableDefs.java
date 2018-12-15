@@ -165,7 +165,16 @@ public abstract class TableDefs extends Fragment {
         }
         cursor.close();
 
-        return (newest == null) ? Utils.DISTANT_PAST : newest;
+        if (newest == null) {
+            return Utils.DISTANT_PAST;
+        } else {
+            String lastUpdate = SharedPref.read(KEY_DB_LAST_UPDATE, Utils.DISTANT_PAST);
+            if (lastUpdate.compareTo(newest) < 0) {
+                return lastUpdate;
+            } else {
+                return newest;
+            }
+        }
     }
 
     protected static void startDownloadProgress(Context context, int title, int id) {

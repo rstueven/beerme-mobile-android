@@ -10,7 +10,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -54,6 +56,9 @@ import ar.com.daidalos.afiledialog.FileChooserDialog;
 public abstract class BeerMeActivity extends AppCompatActivity {
     private static final String PERMISSIONS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int REQUEST_FINE_LOCATION = 1;
+    private static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
     private static final String IS_REQUESTING_LOCATION_UPDATES = "isRequestingLocationUpdates";
 
     public interface LocationListener {
@@ -125,10 +130,22 @@ public abstract class BeerMeActivity extends AppCompatActivity {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_FINE_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setupLocationClient();
-            }
+        switch (requestCode) {
+            case REQUEST_FINE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setupLocationClient();
+                }
+                break;
+            case REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setupExportDialog(this);
+                }
+                break;
+            case REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setupImportDialog(this);
+                }
+                break;
         }
     }
 
@@ -317,54 +334,10 @@ public abstract class BeerMeActivity extends AppCompatActivity {
                 // db.close();
                 return true;
             case R.id.action_database_export:
-                FileChooserDialog exportDialog = new FileChooserDialog(this);
-                exportDialog.setCanCreateFiles(true);
-                exportDialog
-                        .addListener(new FileChooserDialog.OnFileSelectedListener() {
-                            @Override
-                            public void onFileSelected(Dialog source, File file) {
-                                try {
-                                    FileUtils.copyFile(DbOpenHelper.DB_FILEPATH, file.getAbsolutePath());
-                                } catch (IOException e) {
-                                    Log.e("beerme", e.getLocalizedMessage());
-                                } finally {
-                                    Toast.makeText(context, "Done copying", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFileSelected(Dialog source, File folder, String name) {
-                                try {
-                                    FileUtils.copyFile(DbOpenHelper.DB_FILEPATH, folder.getAbsolutePath() + "/" + name);
-                                } catch (IOException e) {
-                                    Log.e("beerme", e.getLocalizedMessage());
-                                } finally {
-                                    Toast.makeText(context, "Done copying", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                exportDialog.show();
+                checkStoragePermission("export");
                 return true;
             case R.id.action_database_import:
-                FileChooserDialog importDialog = new FileChooserDialog(this);
-                importDialog.setCanCreateFiles(false);
-                importDialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
-                    @Override
-                    public void onFileSelected(Dialog source, File file) {
-                        try {
-                            FileUtils.copyFile(file.getAbsolutePath(), DbOpenHelper.DB_FILEPATH);
-                        } catch (IOException e) {
-                            Log.e("beerme", e.getLocalizedMessage());
-                        } finally {
-                            Toast.makeText(context, "Done copying", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFileSelected(Dialog source, File folder, String name) {
-                    }
-                });
-                importDialog.show();
+                checkStoragePermission("import");
                 return true;
             case R.id.action_about:
                 newFragment = new AboutFrag();
@@ -375,6 +348,127 @@ public abstract class BeerMeActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    private void checkStoragePermission(final String mode) {
+        final BeerMeActivity self = this;
+        final int permission;
+        switch (mode) {
+            case "export":
+                permission = REQUEST_WRITE_EXTERNAL_STORAGE;
+                break;
+            case "import":
+                permission = REQUEST_READ_EXTERNAL_STORAGE;
+                break;
+            default:
+                throw new IllegalArgumentException("BeerMeActivity.checkStoragePermission(" + mode + "): unknown mode");
+        }
+
+        if (ContextCompat.checkSelfPermission(self, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(self, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                new AlertDialog.Builder(self)
+                        .setTitle(R.string.title_location_permission)
+                        .setMessage(R.string.text_location_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(self, new String[] {WRITE_EXTERNAL_STORAGE}, permission);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(self, new String[] {WRITE_EXTERNAL_STORAGE}, permission);
+            }
+        } else {
+            switch (mode) {
+                case "export":
+                    setupExportDialog(self);
+                    break;
+                case "import":
+                    setupImportDialog(self);
+                    break;
+            }
+        }
+    }
+    
+    private void setupExportDialog(final Context context) {
+        final FileChooserDialog exportDialog;
+
+        if (Utils.isExternalStorageWritable()) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                exportDialog = new FileChooserDialog(context, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath());
+            } else {
+                exportDialog = new FileChooserDialog(context, Environment.getExternalStorageDirectory().getPath());
+            }
+
+            exportDialog.setCanCreateFiles(true);
+            exportDialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
+                @Override
+                public void onFileSelected(Dialog source, File file) {
+                    try {
+                        FileUtils.copyFile(DbOpenHelper.DB_FILEPATH, file.getAbsolutePath());
+                        Toast.makeText(context, "Done exporting", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.e("beerme", e.getLocalizedMessage());
+                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show();
+                    } finally {
+                        exportDialog.cancel();
+                    }
+                }
+
+                @Override
+                public void onFileSelected(Dialog source, File folder, String name) {
+                    try {
+                        FileUtils.copyFile(DbOpenHelper.DB_FILEPATH, folder.getAbsolutePath() + "/" + name);
+                        Toast.makeText(context, "Done copying", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.e("beerme", e.getLocalizedMessage());
+                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show();
+                    } finally {
+                        exportDialog.cancel();
+                    }
+                }
+            });
+            exportDialog.show();
+        } else {
+            Log.e("beerme", "Storage is not readable");
+            Toast.makeText(context, "Storage is not writable", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupImportDialog(final Context context) {
+        final FileChooserDialog importDialog;
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            importDialog = new FileChooserDialog(context, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath());
+        } else {
+            importDialog = new FileChooserDialog(context, Environment.getExternalStorageDirectory().getPath());
+        }
+        if (Utils.isExternalStorageReadable()) {
+            importDialog.setCanCreateFiles(false);
+            importDialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
+                @Override
+                public void onFileSelected(Dialog source, File file) {
+                    try {
+                        FileUtils.copyFile(file.getAbsolutePath(), DbOpenHelper.DB_FILEPATH);
+                        Toast.makeText(context, "Done importing", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.e("beerme", e.getLocalizedMessage());
+                        Toast.makeText(context, "Failed to import", Toast.LENGTH_LONG).show();
+                    } finally {
+                        importDialog.cancel();
+                    }
+                }
+
+                @Override
+                public void onFileSelected(Dialog source, File folder, String name) {
+                }
+            });
+            importDialog.show();
+        } else {
+            Log.e("beerme", "Storage is not readable");
+            Toast.makeText(this, "Storage is not readable", Toast.LENGTH_LONG).show();
         }
     }
 }

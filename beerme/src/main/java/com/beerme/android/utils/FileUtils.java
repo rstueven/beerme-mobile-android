@@ -44,8 +44,7 @@ public class FileUtils {
         }
     }
 
-    public static void copyFile(String fromFile, String toFile)
-            throws IOException {
+    public static void copyFile(String fromFile, String toFile) throws IOException {
         FileInputStream fIn = new FileInputStream(fromFile);
         FileOutputStream fOut = new FileOutputStream(toFile);
         copyFile(fIn, fOut);

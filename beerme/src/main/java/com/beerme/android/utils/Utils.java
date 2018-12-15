@@ -154,6 +154,12 @@ public class Utils {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state));
+    }
+
     // http://stackoverflow.com/questions/6450709/detect-if-opengl-es-2-0-is-available-or-not
     public static int checkOpenGLVersion(Context context) {
         PackageManager packageManager = context.getPackageManager();

@@ -184,14 +184,14 @@ public class Splash extends BeerMeActivity implements DbOpenHelper.OnDbOpenListe
                         mDb.close();
                     }
 
-                    try {
-                        Thread.sleep(1250);
-                    } catch (InterruptedException e) {
-                        // Ignore
-                    } finally {
+//                    try {
+//                        Thread.sleep(1250);
+//                    } catch (InterruptedException e) {
+//                        // Ignore
+//                    } finally {
                         instance.startActivity(new Intent(instance, MainActivity.class));
                         instance.finish();
-                    }
+//                    }
                     break;
             }
         }

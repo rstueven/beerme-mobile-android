@@ -105,8 +105,8 @@
             android:name="android.app.default_searchable"
             android:value="com.beerme.android.search.SearchActivity" />
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAP1xkScQIIlk7Z4y6BXDugrO8TrusaZso" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCIhXRvGugpqnD60_GQF8Iw3uRY6YY20KI" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

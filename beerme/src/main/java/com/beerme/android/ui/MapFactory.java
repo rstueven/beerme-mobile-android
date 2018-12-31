@@ -42,9 +42,10 @@ public class MapFactory {
 		int openGLVersion = Utils.checkOpenGLVersion(activity);
 
 		if (servicesAvailable && (openGLVersion >= 2)) {
-			intent.setClass(activity, BeerMeMapActivity.class);
-			intent.putExtra(BeerMeMapActivity.LAT_KEY, lat);
-			intent.putExtra(BeerMeMapActivity.LNG_KEY, lng);
+//			intent.setClass(activity, BeerMeMapActivity.class);
+			intent.setClass(activity, MainActivity.class);
+			intent.putExtra(MainActivity.LAT_KEY, lat);
+			intent.putExtra(MainActivity.LNG_KEY, lng);
 			return intent;
 		} else {
 			intent.setAction(Intent.ACTION_VIEW);

@@ -105,6 +105,17 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
         return frag;
     }
 
+    public static BreweryListFrag getInstance(LatLng latLng, boolean trackLocation) {
+        BreweryListFrag frag = new BreweryListFrag();
+        Bundle args = new Bundle();
+        args.putDouble(SAVE_LAT_KEY, latLng.latitude);
+        args.putDouble(SAVE_LNG_KEY, latLng.longitude);
+        args.putBoolean(SAVE_TRACKING_KEY, trackLocation);
+        frag.setArguments(args);
+
+        return frag;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -119,6 +130,7 @@ public class BreweryListFrag extends Fragment implements LocationFragment.Locati
         if (args != null) {
             double lat = args.getDouble(SAVE_LAT_KEY, Double.MAX_VALUE);
             double lng = args.getDouble(SAVE_LNG_KEY, Double.MAX_VALUE);
+            mTrackLocation = args.getBoolean(SAVE_TRACKING_KEY);
             mLocation = new LatLng(lat, lng);
         }
 

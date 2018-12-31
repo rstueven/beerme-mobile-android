@@ -139,6 +139,19 @@ public class BeerMeMapFragment extends LocationFragment implements
         return frag;
     }
 
+    /**
+     * @return A new instance of the Fragment
+     */
+    public static BeerMeMapFragment getInstance(LatLng latLng, boolean trackLocation) {
+        final BeerMeMapFragment frag = new BeerMeMapFragment();
+        Bundle args = new Bundle();
+        args.putDouble(SAVE_LAT_KEY, latLng.latitude);
+        args.putDouble(SAVE_LNG_KEY, latLng.longitude);
+        args.putBoolean(SAVE_TRACKING_KEY, trackLocation);
+        frag.setArguments(args);
+        return frag;
+    }
+
     /*
      * (non-Javadoc)
      *

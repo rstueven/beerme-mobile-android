@@ -1,6 +1,7 @@
 package com.beerme.android.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,8 +15,12 @@ import com.beerme.android.location.LocationFragment;
 import com.beerme.android.prefs.Prefs;
 import com.beerme.android.ui.tripplanner.TripPlannerFrag;
 import com.beerme.android.utils.Utils;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends BeerMeActivity {
+    public static final String LAT_KEY = "latitude";
+    public static final String LNG_KEY = "longitude";
+    private LatLng latlng = null;
     private MainPagerAdapter mAdapter;
     private int mOpenGLVersion;
     private boolean mServicesAvailable;
@@ -27,6 +32,16 @@ public class MainActivity extends BeerMeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        Intent intent = getIntent();
+        Bundle args = intent.getExtras();
+        if (args != null) {
+            double lat = args.getDouble(LAT_KEY);
+            double lng = args.getDouble(LNG_KEY);
+            if (lat != 0.0 && lng != 0.0) {
+                latlng = new LatLng(lat, lng);
+            }
+        }
 
         mOpenGLVersion = Utils.checkOpenGLVersion(this);
         mServicesAvailable = Utils.checkPlayServices(this);
@@ -59,8 +74,7 @@ public class MainActivity extends BeerMeActivity {
         super.onResume();
 
         if (!mStarting) {
-            String newNearbyPref = mPrefs.getString(Prefs.KEY_NEARBY_DISPLAY,
-                    Prefs.KEY_NEARBY_DISPLAY_LIST);
+            String newNearbyPref = mPrefs.getString(Prefs.KEY_NEARBY_DISPLAY, Prefs.KEY_NEARBY_DISPLAY_LIST);
 
             if (!mNearbyPref.equals(newNearbyPref)) {
                 mNearbyPref = newNearbyPref;
@@ -94,13 +108,22 @@ public class MainActivity extends BeerMeActivity {
             if (Utils.isOnline(mContext)
                     && mServicesAvailable && (mOpenGLVersion >= 2)
                     && (mapPref != null && mapPref.equals(Prefs.KEY_NEARBY_DISPLAY_MAP))) {
-                mMapFrag = BeerMeMapFragment.getInstance();
+                if (latlng == null) {
+                    mMapFrag = BeerMeMapFragment.getInstance();
+                } else {
+                    mMapFrag = BeerMeMapFragment.getInstance(latlng, false);
+                }
                 frag = mMapFrag;
             } else {
                 // Editor editor = Prefs.getSettingsEditor(mContext);
                 // editor.putString(Prefs.KEY_NEARBY_DISPLAY,  Prefs.KEY_NEARBY_DISPLAY_LIST);
                 // Prefs.getSettingsSaver(mContext).savePreferences(editor, false);
                 mBreweryListFrag = BreweryListFrag.getInstance();
+                if (latlng == null) {
+                    mBreweryListFrag = BreweryListFrag.getInstance();
+                } else {
+                    mBreweryListFrag = BreweryListFrag.getInstance(latlng, false);
+                }
                 frag = mBreweryListFrag;
             }
 

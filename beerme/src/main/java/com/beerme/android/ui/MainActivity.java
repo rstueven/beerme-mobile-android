@@ -118,7 +118,7 @@ public class MainActivity extends BeerMeActivity {
                 // Editor editor = Prefs.getSettingsEditor(mContext);
                 // editor.putString(Prefs.KEY_NEARBY_DISPLAY,  Prefs.KEY_NEARBY_DISPLAY_LIST);
                 // Prefs.getSettingsSaver(mContext).savePreferences(editor, false);
-                mBreweryListFrag = BreweryListFrag.getInstance();
+//                mBreweryListFrag = BreweryListFrag.getInstance();
                 if (latlng == null) {
                     mBreweryListFrag = BreweryListFrag.getInstance();
                 } else {

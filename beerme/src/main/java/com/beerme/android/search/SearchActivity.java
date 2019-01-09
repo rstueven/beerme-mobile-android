@@ -116,11 +116,11 @@ public class SearchActivity extends BeerMeActivity implements LoaderCallbacks<Cu
         Intent mapIntent = MapFactory.newIntent(this, latLng);
 
         String className = mapIntent.getComponent().getClassName();
-        if (!className.equals("com.beerme.android.ui.BeerMeMapActivity")) {
-            mapIntent = new Intent(this, BreweryListActivity.class);
+//        if (!className.equals("com.beerme.android.ui.BeerMeMapActivity")) {
+//            mapIntent = new Intent(this, BreweryListActivity.class);
             mapIntent.putExtra(BreweryListActivity.LAT_KEY, latLng.latitude);
             mapIntent.putExtra(BreweryListActivity.LNG_KEY, latLng.longitude);
-        }
+//        }
 
         startActivity(mapIntent);
         finish();

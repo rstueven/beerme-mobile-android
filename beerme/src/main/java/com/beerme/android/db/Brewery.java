@@ -51,7 +51,7 @@ public class Brewery {
         CLOSED  (8),
         DELETED (16);
 
-        private final int code;
+        public final int code;
 
         Status(int code) {
             this.code = code;

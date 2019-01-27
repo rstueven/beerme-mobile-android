@@ -24,6 +24,9 @@ public abstract class BreweryDao {
     @Query("SELECT * FROM brewery ORDER BY name")
     abstract LiveData<List<Brewery>> getAllBreweries();
 
+    @Query("SELECT * FROM brewery WHERE status IN (:statuses) ORDER BY name")
+    abstract LiveData<List<Brewery>> getAllBreweriesByStatus(int[] statuses);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insert(Brewery brewery);
 

@@ -159,7 +159,8 @@ public class Brewery {
         if (s == null || s == Status.OPEN) {
             return "";
         } else {
-            String t = s.name();
+            String t = s.name().replace("_", " ");
+
             return "(" + t.substring(0, 1).toUpperCase() + t.substring(1).toLowerCase() + ")";
         }
     }

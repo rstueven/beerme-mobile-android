@@ -18,7 +18,7 @@ public class BreweryListViewModel extends AndroidViewModel {
 
         BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
 
-        breweryList = db.breweryDao().getAllBreweriesByStatus(SharedPref.read(SharedPref.Pref.STATUS_FILTER));
+        breweryList = db.breweryDao().getAllBreweriesByStatus(SharedPref.readIntArray(SharedPref.Pref.STATUS_FILTER));
     }
 
     public LiveData<List<Brewery>> getBreweryList() {

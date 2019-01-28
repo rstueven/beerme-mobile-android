@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -76,7 +78,7 @@ public class SharedPref {
         prefsEditor.apply();
     }
 
-    public static int[] read(@NonNull Pref key) {
+    public static int[] readIntArray(@NonNull Pref key) {
         int intArray[] = new int[0];
         Set<String> set = mInstance.getStringSet(key.key(), new ArraySet<String>());
         if (set != null) {
@@ -96,7 +98,7 @@ public class SharedPref {
         return intArray;
     }
 
-    public static void write(@NonNull Pref key, int[] value) {
+    public static void writeIntArray(@NonNull Pref key, int[] value) {
         SharedPreferences.Editor prefsEditor = mInstance.edit();
         String stringArray[] = new String[value.length];
         for (int i = 0; i < value.length; i++) {
@@ -107,5 +109,45 @@ public class SharedPref {
 
         prefsEditor.putStringSet(key.key(), set);
         prefsEditor.apply();
+    }
+
+    public static void write(@NonNull Pref key, int[] value) {
+        writeIntArray(key, value);
+    }
+
+    public static List<Integer> readIntList(@NonNull Pref key) {
+        List<Integer> intList = new ArrayList<>();
+        Set<String> set = mInstance.getStringSet(key.key(), new ArraySet<String>());
+        if (set != null) {
+            String stringArray[] = new String[set.size()];
+            stringArray = set.toArray(stringArray);
+            for (int i = 0; i < stringArray.length; i++) {
+                try {
+                    intList.add(Integer.parseInt(stringArray[i]));
+                } catch (NumberFormatException e) {
+                    Log.w("beerme", "SharedPref.read(" + key + "): " + e.getLocalizedMessage());
+                    intList.add(0);
+                }
+            }
+        }
+
+        return intList;
+    }
+
+    public static void writeIntList(@NonNull Pref key, List<Integer> value) {
+        SharedPreferences.Editor prefsEditor = mInstance.edit();
+        String stringArray[] = new String[value.size()];
+        for (int i = 0; i < value.size(); i++) {
+            stringArray[i] = Integer.toString(value.get(i));
+        }
+
+        Set<String> set = new ArraySet<>(Arrays.asList(stringArray));
+
+        prefsEditor.putStringSet(key.key(), set);
+        prefsEditor.apply();
+    }
+
+    public static void write(@NonNull Pref key, List<Integer> value) {
+        writeIntList(key, value);
     }
 }

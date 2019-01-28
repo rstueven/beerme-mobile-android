@@ -16,7 +16,7 @@ public class BeerMeApplication extends Application {
 
         // SharedPreferences singleton
         SharedPref.init(getApplicationContext());
-        int statusFilter[] = SharedPref.read(SharedPref.Pref.STATUS_FILTER);
+        int statusFilter[] = SharedPref.readIntArray(SharedPref.Pref.STATUS_FILTER);
         if (statusFilter.length == 0) {
             SharedPref.write(SharedPref.Pref.STATUS_FILTER, new int[]{Brewery.Status.OPEN.code, Brewery.Status.PLANNED.code});
         }

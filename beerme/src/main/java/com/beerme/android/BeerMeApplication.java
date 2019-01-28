@@ -22,6 +22,8 @@ public class BeerMeApplication extends Application {
         }
 
         // Change this whenever a new database file is installed.
+        // OR
+        // Get the last update date from the database itself.
         long updated = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
         if (updated <= 0L) {
             Calendar cal = Calendar.getInstance();

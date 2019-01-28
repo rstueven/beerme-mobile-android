@@ -3,11 +3,15 @@ package com.beerme.android.ui;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
 import com.beerme.android.db.BreweryListViewModel;
 import com.beerme.android.util.LocationActivity;
+import com.beerme.android.util.ToolbarIconTinter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +51,29 @@ public class MainActivity extends LocationActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.brewerylist_menu, menu);
+
+        ToolbarIconTinter.tintIcons(this, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.status_filter:
+                Log.d("beerme", "STATUS FILTER");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onLocationUpdated(Location location) {
-//        Log.d("beerme", "MainActivity.onLocationUpdated()");
         if (location != null && breweryList != null) {
-//            Log.d("beerme", "MainActivity.onLocationUpdated(" + location.toString() + ")");
             breweryListViewAdapter.addItems(breweryList);
         } else {
             Log.w("beerme", "MainActivity.onLocationUpdated(): null location or breweryList");

@@ -66,6 +66,22 @@ public class Brewery {
 
             return null;
         }
+
+        public static final int size = Status.values().length;
+
+        public static String[] names() {
+            String[] arr = new String[size];
+            String name;
+
+            int i = 0;
+            for (Status s : values()) {
+                name = s.name().replace("_", " ");
+                arr[i] = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                i++;
+            }
+
+            return arr;
+        }
     }
 
     public enum Service {

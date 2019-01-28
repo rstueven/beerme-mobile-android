@@ -65,6 +65,7 @@ public class MainActivity extends LocationActivity {
         switch (item.getItemId()) {
             case R.id.status_filter:
                 Log.d("beerme", "STATUS FILTER");
+                new StatusFilterDialog(this).build().show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

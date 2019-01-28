@@ -16,13 +16,14 @@ import com.beerme.android.util.ToolbarIconTinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends LocationActivity {
+public class MainActivity extends LocationActivity implements StatusFilterDialog.StatusFilterListener {
     private BreweryListViewAdapter breweryListViewAdapter;
     private List<Brewery> breweryList;
 
@@ -41,7 +42,7 @@ public class MainActivity extends LocationActivity {
 
         BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
 
-        breweryListViewModel.getBreweryList().observe(MainActivity.this, new Observer<List<Brewery>>() {
+        breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
             @Override
             public void onChanged(List<Brewery> breweries) {
                 breweryList = breweries;
@@ -51,12 +52,20 @@ public class MainActivity extends LocationActivity {
     }
 
     @Override
+    public void onStatusFilterChanged(@NonNull List<Integer> statusFilter) {
+        Log.d("beerme", "MainActivity.onStatusFilterChanged()");
+        if (breweryList != null) {
+            breweryListViewAdapter.addItems(breweryList);
+        } else {
+            Log.w("beerme", "MainActivity.onStatusFilterChanged(): null breweryList");
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.brewerylist_menu, menu);
-
         ToolbarIconTinter.tintIcons(this, menu);
-
         return true;
     }
 

@@ -1,8 +1,8 @@
 package com.beerme.android.ui;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
@@ -18,14 +18,19 @@ public class StatusFilterDialog extends AlertDialog {
     private final int itemCount = Brewery.Status.size;
     private final String[] itemList = Brewery.Status.names();
     private final boolean[] checkedItems = getCheckedItems(itemCount);
+    private final Activity mActivity;
 
-    protected StatusFilterDialog(Context context) {
-        super(context);
+    public interface StatusFilterListener {
+        void onStatusFilterChanged(List<Integer> statusFilter);
+    }
+
+    protected StatusFilterDialog(Activity activity) {
+        super(activity);
+        this.mActivity = activity;
     }
 
     public AlertDialog build() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setCancelable(false);
 
         builder.setTitle("Status Filter");
@@ -51,6 +56,10 @@ public class StatusFilterDialog extends AlertDialog {
                 }
 
                 SharedPref.writeIntList(SharedPref.Pref.STATUS_FILTER, statusFilterList);
+
+                if (mActivity instanceof StatusFilterListener) {
+                    ((StatusFilterListener) mActivity).onStatusFilterChanged(statusFilterList);
+                }
             }
         });
 

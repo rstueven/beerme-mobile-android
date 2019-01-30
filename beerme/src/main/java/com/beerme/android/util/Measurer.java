@@ -8,24 +8,55 @@ import androidx.annotation.NonNull;
 
 public class Measurer {
     public enum DistanceUnit {
-        METERS(1),
-        KM(0.001),
-        FEET(3.28084),
-        YARDS(0.9144),
-        MILES(0.000621371);
+        MILES(0, 0.000621371),
+        KILOMETERS(1, 0.001),
+        METERS(2, 1),
+        YARDS(3, 1.09361),
+        FEET(4, 3.28084);
 
+        public static final int DEFAULT = MILES.code;
+
+        // TODO: code shouldn't actually be necessary
+        private final int code;
         private final double scale;
 
-        DistanceUnit(double scale) {
+        DistanceUnit(int code, double scale) {
+            this.code = code;
             this.scale = scale;
+        }
+
+        public static DistanceUnit byCode(int code) {
+            for (DistanceUnit s : values()) {
+                if (s.code == code) {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
+        public static final int size = DistanceUnit.values().length;
+
+        public static String[] names() {
+            String[] arr = new String[size];
+            String name;
+
+            int i = 0;
+            for (DistanceUnit s : values()) {
+                name = s.name().replace("_", " ");
+                arr[i] = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                i++;
+            }
+
+            return arr;
         }
     }
 
     public static String distanceToUnit(float distance, @NonNull DistanceUnit unit) {
         double scaled = distance * unit.scale;
         int places = scaled >= 10 ? 0 : 1;
-
-        String format = String.format(Locale.getDefault(), "%%.%df %s", places, unit.name().toLowerCase(Locale.getDefault()));
+        String unitName = unit == DistanceUnit.KILOMETERS ? "km" : unit.name().toLowerCase(Locale.getDefault());
+        String format = String.format(Locale.getDefault(), "%%.%df %s", places, unitName);
         return String.format(Locale.getDefault(), format, scaled);
     }
 

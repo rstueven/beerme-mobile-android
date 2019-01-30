@@ -17,6 +17,7 @@ public class SharedPref {
     public enum Pref {
         DB_LAST_UPDATE("dbLastUpdate"),
         STATUS_FILTER("statusFilter"),
+        DISTANCE_UNIT("distanceUnit"),
         IS_REQUESTING_LOCATION_UPDATES("isRequestingLocationUpdates");
 
         private final String key;
@@ -44,6 +45,11 @@ public class SharedPref {
         int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
         if (statusFilter == 0) {
             SharedPref.write(SharedPref.Pref.STATUS_FILTER, Brewery.Status.DEFAULT);
+        }
+
+        int distanceUnit = SharedPref.read(Pref.DISTANCE_UNIT, 0);
+        if (distanceUnit == 0) {
+            SharedPref.write(Pref.DISTANCE_UNIT, Measurer.DistanceUnit.DEFAULT);
         }
     }
 

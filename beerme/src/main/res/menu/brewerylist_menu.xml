@@ -6,5 +6,11 @@
         android:id="@+id/status_filter"
         android:icon="@drawable/ic_filter_list_black_24dp"
         android:title="@string/status_filter"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/distance_unit"
+        android:icon="@drawable/distance_unit"
+        android:title="@string/distance_unit"
+        app:showAsAction="never" />
 </menu>

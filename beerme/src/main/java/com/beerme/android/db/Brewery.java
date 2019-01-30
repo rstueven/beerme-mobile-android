@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.beerme.android.R;
 import com.beerme.android.util.Measurer;
+import com.beerme.android.util.SharedPref;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -148,7 +149,8 @@ public class Brewery {
         } else {
             float[] results = new float[2];
             Location.distanceBetween(location.getLatitude(), location.getLongitude(), latitude, longitude, results);
-            String distance = Measurer.distanceToUnit(results[0], Measurer.DistanceUnit.MILES);
+            Measurer.DistanceUnit distanceUnit = Measurer.DistanceUnit.byCode(SharedPref.read(SharedPref.Pref.DISTANCE_UNIT, Measurer.DistanceUnit.DEFAULT));
+            String distance = Measurer.distanceToUnit(results[0], distanceUnit);
             float bearing = results[1];
 
             return String.format(Locale.getDefault(), "%s %s", distance, Measurer.bearingToDirection(bearing));

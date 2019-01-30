@@ -22,7 +22,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends LocationActivity implements StatusFilterDialog.StatusFilterListener {
+public class MainActivity extends LocationActivity
+        implements StatusFilterDialog.StatusFilterListener, DistanceUnitDialog.DistanceUnitListener {
     private BreweryListViewAdapter breweryListViewAdapter;
     private List<Brewery> breweryList;
 
@@ -64,6 +65,9 @@ public class MainActivity extends LocationActivity implements StatusFilterDialog
             case R.id.status_filter:
                 new StatusFilterDialog(this).build().show();
                 return true;
+            case R.id.distance_unit:
+                new DistanceUnitDialog(this).build().show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -85,6 +89,15 @@ public class MainActivity extends LocationActivity implements StatusFilterDialog
             breweryListViewAdapter.addItems(breweryList);
         } else {
             Log.w("beerme", "MainActivity.onStatusFilterChanged(): null breweryList");
+        }
+    }
+
+    @Override
+    public void onDistanceUnitChanged(int distanceUnit) {
+        if (breweryList != null) {
+            breweryListViewAdapter.addItems(breweryList);
+        } else {
+            Log.w("beerme", "MainActivity.onDistanceUnitChanged(): null breweryList");
         }
     }
 }

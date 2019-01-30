@@ -2,6 +2,7 @@ package com.beerme.android.ui;
 
 import android.location.Location;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,12 @@ import android.widget.TextView;
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
 import com.beerme.android.util.LocationActivity;
+import com.beerme.android.util.SharedPref;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import androidx.annotation.NonNull;
@@ -92,30 +94,31 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
         }
     }
 
-    private List<Brewery> orderListByDistance(@NonNull final List<Brewery> list, Location location) {
-        List<Brewery> sortedList = new ArrayList<>();
-        TreeMap<Float, Brewery> tm = new TreeMap<>();
+    private List<Brewery> orderListByDistance(@NonNull final List<Brewery> breweryList, Location location) {
+        Log.d("beerme", "BreweryListViewAdapter.orderListByDistance()");
+        int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
+        // TODO: Alert if statusFilter == 0
+
+        if (location == null || breweryList.size() == 0) {
+            return breweryList;
+        }
+
+        SortedMap<Double, Brewery> sortedMap = Collections.synchronizedSortedMap(new TreeMap<Double, Brewery>());
+        double distance;
         Location breweryLocation;
-        float distance;
 
-        for (Brewery brewery : list) {
-            distance = 0;
+        for (Brewery brewery : breweryList) {
+            distance = 0.0;
 
-            if (location != null) {
+            if ((brewery.status & statusFilter) != 0) {
                 breweryLocation = new Location("");
                 breweryLocation.setLatitude(brewery.latitude);
                 breweryLocation.setLongitude(brewery.longitude);
                 distance = breweryLocation.distanceTo(location);
+                sortedMap.put(distance, brewery);
             }
-
-            tm.put(distance, brewery);
         }
 
-        Set<Map.Entry<Float, Brewery>> set = tm.entrySet();
-        for (Map.Entry<Float, Brewery> entry : set) {
-            sortedList.add(entry.getValue());
-        }
-
-        return sortedList;
+        return new ArrayList<>(sortedMap.values());
     }
 }

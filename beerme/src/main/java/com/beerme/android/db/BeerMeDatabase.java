@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -49,6 +50,16 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
     public static void init(Context context) {
         Log.d("beerme", "BeerMeDatabase.init()");
+        // Change this whenever a new database file is installed.
+        // OR BETTER YET
+        // Get the last update date from the database itself.
+        long updated = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
+        if (updated == 0L) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(2019, 0, 21);
+            SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, cal.getTimeInMillis());
+        }
+
         final String DB_PATH = context.getDatabasePath(DB_NAME).getPath();
 
         if (!new File(DB_PATH).exists()) {

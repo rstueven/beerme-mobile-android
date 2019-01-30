@@ -16,7 +16,6 @@ import com.beerme.android.util.ToolbarIconTinter;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -52,16 +51,6 @@ public class MainActivity extends LocationActivity implements StatusFilterDialog
     }
 
     @Override
-    public void onStatusFilterChanged(@NonNull List<Integer> statusFilter) {
-        Log.d("beerme", "MainActivity.onStatusFilterChanged()");
-        if (breweryList != null) {
-            breweryListViewAdapter.addItems(breweryList);
-        } else {
-            Log.w("beerme", "MainActivity.onStatusFilterChanged(): null breweryList");
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.brewerylist_menu, menu);
@@ -73,7 +62,6 @@ public class MainActivity extends LocationActivity implements StatusFilterDialog
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.status_filter:
-                Log.d("beerme", "STATUS FILTER");
                 new StatusFilterDialog(this).build().show();
                 return true;
             default:
@@ -87,6 +75,16 @@ public class MainActivity extends LocationActivity implements StatusFilterDialog
             breweryListViewAdapter.addItems(breweryList);
         } else {
             Log.w("beerme", "MainActivity.onLocationUpdated(): null location or breweryList");
+        }
+    }
+
+    @Override
+    public void onStatusFilterChanged(int statusFilter) {
+        Log.d("beerme", "MainActivity.onStatusFilterChanged(" + statusFilter + ")");
+        if (breweryList != null) {
+            breweryListViewAdapter.addItems(breweryList);
+        } else {
+            Log.w("beerme", "MainActivity.onStatusFilterChanged(): null breweryList");
         }
     }
 }

@@ -2,8 +2,6 @@ package com.beerme.android.db;
 
 import android.app.Application;
 
-import com.beerme.android.util.SharedPref;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -18,7 +16,7 @@ public class BreweryListViewModel extends AndroidViewModel {
 
         BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
 
-        breweryList = db.breweryDao().getAllBreweriesByStatus(SharedPref.readIntArray(SharedPref.Pref.STATUS_FILTER));
+        breweryList = db.breweryDao().getAllBreweries();
     }
 
     public LiveData<List<Brewery>> getBreweryList() {

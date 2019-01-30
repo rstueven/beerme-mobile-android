@@ -53,6 +53,8 @@ public class Brewery {
 
         public final int code;
 
+        public final static int DEFAULT = OPEN.code | PLANNED.code;
+
         Status(int code) {
             this.code = code;
         }
@@ -176,5 +178,23 @@ public class Brewery {
                 servicesView.addView(icon);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Brewery{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", status=" + status +
+                ", hours='" + hours + '\'' +
+                ", phone='" + phone + '\'' +
+                ", web='" + web + '\'' +
+                ", services=" + services +
+                ", image='" + image + '\'' +
+                ", updated='" + updated + '\'' +
+                '}';
     }
 }

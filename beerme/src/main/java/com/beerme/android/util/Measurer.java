@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 
 public class Measurer {
     public enum DistanceUnit {
-        METERS  (1),
-        KM      (0.001),
-        FEET    (3.28084),
-        YARDS   (0.9144),
-        MILES   (0.000621371);
+        METERS(1),
+        KM(0.001),
+        FEET(3.28084),
+        YARDS(0.9144),
+        MILES(0.000621371);
 
         private final double scale;
 

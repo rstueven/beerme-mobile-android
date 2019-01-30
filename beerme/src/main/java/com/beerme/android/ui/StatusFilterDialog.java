@@ -9,7 +9,7 @@ import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
 import com.beerme.android.util.SharedPref;
 
-public class StatusFilterDialog extends AlertDialog {
+class StatusFilterDialog extends AlertDialog {
     private final int itemCount = Brewery.Status.size;
     private final String[] itemList = Brewery.Status.names();
     private final boolean[] checkedItems = getCheckedItems(itemCount);
@@ -19,7 +19,7 @@ public class StatusFilterDialog extends AlertDialog {
         void onStatusFilterChanged(int statusFilter);
     }
 
-    protected StatusFilterDialog(Activity activity) {
+    StatusFilterDialog(Activity activity) {
         super(activity);
         this.mActivity = activity;
     }

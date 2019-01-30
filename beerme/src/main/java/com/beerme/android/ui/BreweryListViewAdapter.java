@@ -108,8 +108,6 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
         Location breweryLocation;
 
         for (Brewery brewery : breweryList) {
-            distance = 0.0;
-
             if ((brewery.status & statusFilter) != 0) {
                 breweryLocation = new Location("");
                 breweryLocation.setLatitude(brewery.latitude);

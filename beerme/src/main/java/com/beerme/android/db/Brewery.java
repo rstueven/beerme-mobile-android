@@ -45,11 +45,11 @@ public class Brewery {
     public String updated;
 
     public enum Status {
-        OPEN    (1),
-        PLANNED (2),
-        NO_LONGER_BREWING   (4),
-        CLOSED  (8),
-        DELETED (16);
+        OPEN(1),
+        PLANNED(2),
+        NO_LONGER_BREWING(4),
+        CLOSED(8),
+        DELETED(16);
 
         public final int code;
 
@@ -87,15 +87,15 @@ public class Brewery {
     }
 
     public enum Service {
-        OPEN (0x0001, 0),
-        BAR (0x0002, R.drawable.bar),
-        BEERGARDEN (0x0004, R.drawable.beergarden),
-        FOOD (0x0008, R.drawable.food),
-        GIFTSHOP (0x0010, R.drawable.giftshop),
-        HOTEL (0x0020, R.drawable.hotel),
-        INTERNET (0x0040, R.drawable.wifi),
-        RETAIL (0x0080, R.drawable.retail),
-        TOURS (0x0100, R.drawable.tours);
+        OPEN(0x0001, 0),
+        BAR(0x0002, R.drawable.bar),
+        BEERGARDEN(0x0004, R.drawable.beergarden),
+        FOOD(0x0008, R.drawable.food),
+        GIFTSHOP(0x0010, R.drawable.giftshop),
+        HOTEL(0x0020, R.drawable.hotel),
+        INTERNET(0x0040, R.drawable.wifi),
+        RETAIL(0x0080, R.drawable.retail),
+        TOURS(0x0100, R.drawable.tours);
 
         private final int code;
         private final int iconRes;
@@ -180,6 +180,7 @@ public class Brewery {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Brewery{" +

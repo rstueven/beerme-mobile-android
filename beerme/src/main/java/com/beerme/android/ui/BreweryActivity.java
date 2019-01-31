@@ -6,8 +6,10 @@ import android.widget.TextView;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class BreweryActivity extends AppCompatActivity {
 
@@ -44,10 +46,19 @@ public class BreweryActivity extends AppCompatActivity {
 
         TextView nameView = findViewById(R.id.name_view);
         TextView addressView = findViewById(R.id.address_view);
-        TextView hoursView = findViewById(R.id.hours_view);
 
         nameView.setText(brewery.name);
         addressView.setText(brewery.address);
-        hoursView.setText(brewery.hours);
+
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager viewPager = findViewById(R.id.tab_pager);
+        tabLayout.setupWithViewPager(viewPager);
+
+        // https://c1ctech.com/android-sliding-views-using-viewpager-with-pageradapterfragmentpageradapter/
+        BreweryTabAdapter tabAdapter = new BreweryTabAdapter(getSupportFragmentManager());
+        tabAdapter.addFragment(BreweryInfoFragment.getInstance(brewery), "Info");
+        tabAdapter.addFragment(new BeerListFragment(), "Beer List");
+        tabAdapter.addFragment(new BreweryNotesFragment(), "Notes");
+        viewPager.setAdapter(tabAdapter);
     }
 }

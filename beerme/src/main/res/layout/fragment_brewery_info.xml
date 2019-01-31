@@ -9,19 +9,19 @@
     tools:showIn="@layout/activity_brewery">
 
     <TextView
-        android:id="@+id/name_view"
+        android:id="@+id/hours_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:textStyle="bold"
+        android:maxLines="7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/address_view"
+    <TableLayout
+        android:id="@+id/services_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -29,20 +29,35 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_view" />
+        app:layout_constraintTop_toBottomOf="@+id/hours_view">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/tab_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address_view">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </androidx.viewpager.widget.ViewPager>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </TableLayout>
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/picture_of_the_brewery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/services_table" />
 </androidx.constraintlayout.widget.ConstraintLayout>

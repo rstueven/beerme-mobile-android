@@ -13,6 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
+        <activity
+            android:name=".ui.BreweryActivity"
+            android:label="@string/title_activity_brewery"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.Launcher.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.beerme.android.ui.MainActivity" />
+        </activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

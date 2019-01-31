@@ -8,6 +8,6 @@
     <color name="colorAccent">#885555</color>
     <color name="windowBackground">#f3efb9</color>
     <color name="textColorPrimary">#663333</color>
-    <color name="textColorPrimaryInverse">#f3efb9</color>
+    <color name="textColorPrimaryInverse">#F3EFB9</color>
     <!--<color name="navigationBarColor">#a0663333</color>-->
 </resources>

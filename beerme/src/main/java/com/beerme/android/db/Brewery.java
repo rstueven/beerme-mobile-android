@@ -14,6 +14,7 @@ import com.beerme.android.util.SharedPref;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -25,7 +26,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(indices = {@Index("name"), @Index("latitude"), @Index("longitude"), @Index("status"), @Index("updated")})
-public class Brewery {
+public class Brewery implements Serializable {
     @PrimaryKey
     @ColumnInfo(name = "_id")
     public long id;

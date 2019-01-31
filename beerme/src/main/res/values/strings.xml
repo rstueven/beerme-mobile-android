@@ -6,4 +6,9 @@
     <string name="status_filter">Status Filter</string>
     <string name="cancel">Cancel</string>
     <string name="distance_unit">Distance Unit</string>
+    <string name="title_activity_brewery">BreweryActivity</string>
+    <string name="information">Information</string>
+    <string name="beer_list">Beer List</string>
+    <string name="notes">Notes</string>
+    <string name="picture_of_the_brewery">Picture of the brewery</string>
 </resources>

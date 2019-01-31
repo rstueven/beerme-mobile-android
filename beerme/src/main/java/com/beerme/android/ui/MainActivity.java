@@ -1,5 +1,6 @@
 package com.beerme.android.ui;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.beerme.android.util.ToolbarIconTinter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -103,7 +105,11 @@ public class MainActivity extends LocationActivity
     }
 
     @Override
-    public void onItemClick(Brewery brewery) {
+    public void onItemClick(@NonNull Brewery brewery) {
         Log.d("beerme", "onItemClick(" + brewery.id + ")");
+
+        Intent intent = new Intent(this, BreweryActivity.class);
+        intent.putExtra("brewery", brewery);
+        startActivity(intent);
     }
 }

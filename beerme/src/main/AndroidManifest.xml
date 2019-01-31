@@ -16,8 +16,7 @@
         <activity
             android:name=".ui.BreweryActivity"
             android:label="@string/title_activity_brewery"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.Launcher.NoActionBar">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.beerme.android.ui.MainActivity" />

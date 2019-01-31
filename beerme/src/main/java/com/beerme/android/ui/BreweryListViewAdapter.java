@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListViewAdapter.BreweryListViewHolder> {
     // http://antonioleiva.com/recyclerview-listener/
     public interface OnItemClickListener {
-        void onItemClick(Brewery brewery);
+        void onItemClick(@NonNull Brewery brewery);
     }
 
     private final LocationActivity mActivity;
@@ -105,7 +105,7 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
             statusView = view.findViewById(R.id.statusView);
         }
 
-        public void bind(final Brewery brewery, final OnItemClickListener listener) {
+        public void bind(@NonNull final Brewery brewery, @NonNull final OnItemClickListener listener) {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

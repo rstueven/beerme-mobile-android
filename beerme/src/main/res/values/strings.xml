@@ -11,4 +11,5 @@
     <string name="beer_list">Beer List</string>
     <string name="notes">Notes</string>
     <string name="picture_of_the_brewery">Picture of the brewery</string>
+    <string name="info">Info</string>
 </resources>

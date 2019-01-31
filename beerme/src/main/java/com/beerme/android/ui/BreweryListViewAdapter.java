@@ -24,11 +24,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListViewAdapter.BreweryListViewHolder> {
+    // http://antonioleiva.com/recyclerview-listener/
+    public interface OnItemClickListener {
+        void onItemClick(Brewery brewery);
+    }
+
     private final LocationActivity mActivity;
+    private OnItemClickListener mListener;
     private List<Brewery> mBreweryList;
 
     public BreweryListViewAdapter(@NonNull LocationActivity activity, @NonNull List<Brewery> breweryList) {
         this.mActivity = activity;
+        this.mListener = (OnItemClickListener) activity;
         this.mBreweryList = breweryList;
     }
 
@@ -41,6 +48,9 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
     @Override
     public void onBindViewHolder(@NonNull final BreweryListViewHolder holder, int position) {
         Brewery brewery = mBreweryList.get(position);
+
+        holder.bind(brewery, mListener);
+
         holder.nameView.setText(brewery.name);
         holder.addressView.setText(brewery.address);
         holder.distanceView.setText(brewery.getDistanceText(mActivity.getLocation()));
@@ -75,6 +85,7 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
     }
 
     static class BreweryListViewHolder extends RecyclerView.ViewHolder {
+        private final View mView;
         private final TextView nameView;
         private final TextView addressView;
         private final TextView phoneView;
@@ -85,12 +96,22 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
         BreweryListViewHolder(View view) {
             super(view);
 
+            mView = view;
             nameView = view.findViewById(R.id.nameView);
             addressView = view.findViewById(R.id.addressView);
             phoneView = view.findViewById(R.id.phoneView);
             distanceView = view.findViewById(R.id.distanceView);
             servicesView = view.findViewById(R.id.servicesView);
             statusView = view.findViewById(R.id.statusView);
+        }
+
+        public void bind(final Brewery brewery, final OnItemClickListener listener) {
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(brewery);
+                }
+            });
         }
     }
 

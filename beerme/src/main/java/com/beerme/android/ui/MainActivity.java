@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends LocationActivity
-        implements StatusFilterDialog.StatusFilterListener, DistanceUnitDialog.DistanceUnitListener {
+        implements StatusFilterDialog.StatusFilterListener, DistanceUnitDialog.DistanceUnitListener,
+        BreweryListViewAdapter.OnItemClickListener {
     private BreweryListViewAdapter breweryListViewAdapter;
     private List<Brewery> breweryList;
 
@@ -99,5 +100,10 @@ public class MainActivity extends LocationActivity
         } else {
             Log.w("beerme", "MainActivity.onDistanceUnitChanged(): null breweryList");
         }
+    }
+
+    @Override
+    public void onItemClick(Brewery brewery) {
+        Log.d("beerme", "onItemClick(" + brewery.id + ")");
     }
 }

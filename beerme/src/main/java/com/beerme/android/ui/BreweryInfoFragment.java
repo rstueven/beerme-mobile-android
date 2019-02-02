@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beerme.android.R;
@@ -47,9 +48,12 @@ public class BreweryInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_brewery_info, container, false);
 
         TextView hoursView = view.findViewById(R.id.hours_view);
+        LinearLayout servicesLayout = view.findViewById(R.id.services_layout);
 
         Log.d("beerme", brewery.toString());
         hoursView.setText(brewery.hours);
+
+        brewery.showServicesByName(getActivity(), servicesLayout);
 
         return view;
     }

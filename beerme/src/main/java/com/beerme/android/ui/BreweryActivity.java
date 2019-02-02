@@ -52,7 +52,14 @@ public class BreweryActivity extends AppCompatActivity {
         TextView webView = findViewById(R.id.web_view);
 
         nameView.setText(brewery.name);
+
         addressView.setText(brewery.address);
+        addressView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Go to brewery map.
+            }
+        });
         
         phoneView.setText(brewery.phone);
         phoneView.setOnClickListener(new View.OnClickListener() {

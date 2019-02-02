@@ -6,6 +6,7 @@ import android.location.Location;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.beerme.android.R;
 import com.beerme.android.util.Measurer;
@@ -89,22 +90,24 @@ public class Brewery implements Serializable {
     }
 
     public enum Service {
-        OPEN(0x0001, 0),
-        BAR(0x0002, R.drawable.bar),
-        BEERGARDEN(0x0004, R.drawable.beergarden),
-        FOOD(0x0008, R.drawable.food),
-        GIFTSHOP(0x0010, R.drawable.giftshop),
-        HOTEL(0x0020, R.drawable.hotel),
-        INTERNET(0x0040, R.drawable.wifi),
-        RETAIL(0x0080, R.drawable.retail),
-        TOURS(0x0100, R.drawable.tours);
+        OPEN(0x0001, 0, null),
+        BAR(0x0002, R.drawable.bar, "Bar / Tasting Room"),
+        BEERGARDEN(0x0004, R.drawable.beergarden, "Beer Garden / Outdoor Seating"),
+        FOOD(0x0008, R.drawable.food, "Food"),
+        GIFTSHOP(0x0010, R.drawable.giftshop, "Retail Items (Shirts, hats, glassware, etc)"),
+        HOTEL(0x0020, R.drawable.hotel, "Hotel Rooms"),
+        INTERNET(0x0040, R.drawable.wifi, "Internet Access"),
+        RETAIL(0x0080, R.drawable.retail, "Beer to Go / Off-License Sales"),
+        TOURS(0x0100, R.drawable.tours, "Tours");
 
         private final int code;
         private final int iconRes;
+        private final String description;
 
-        Service(int code, int iconRes) {
+        Service(int code, int iconRes, String description) {
             this.code = code;
             this.iconRes = iconRes;
+            this.description = description;
         }
     }
 
@@ -179,6 +182,19 @@ public class Brewery implements Serializable {
                 icon.setImageResource(svc.iconRes);
                 ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.colorPrimary)));
                 servicesView.addView(icon);
+            }
+        }
+    }
+
+    public void showServicesByName(@NonNull Activity activity, @NonNull LinearLayout servicesView) {
+        servicesView.removeAllViews();
+
+        for (Service svc : Service.values()) {
+            if ((services & svc.code) != 0) {
+                TextView row = new TextView(activity);
+                row.setCompoundDrawablesWithIntrinsicBounds(svc.iconRes, 0, 0, 0);
+                row.setText(svc.description);
+                servicesView.addView(row);
             }
         }
     }

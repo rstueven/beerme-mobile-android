@@ -15,39 +15,24 @@
         android:layout_margin="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:drawableLeft="@drawable/hours"
         android:drawableStart="@drawable/hours"
         android:maxLines="7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TableLayout
-        android:id="@+id/services_table"
+    <LinearLayout
+        android:id="@+id/services_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_margin="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hours_view">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </TableLayout>
+        app:layout_constraintTop_toBottomOf="@+id/hours_view" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -60,5 +45,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/services_table" />
+        app:layout_constraintTop_toBottomOf="@+id/services_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

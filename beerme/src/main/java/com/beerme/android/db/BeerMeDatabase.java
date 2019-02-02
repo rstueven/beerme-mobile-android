@@ -62,6 +62,11 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
         final String DB_PATH = context.getDatabasePath(DB_NAME).getPath();
 
+        // TODO: On first run after installation:
+        //      Back up the existing database
+        //      Copy the asset db in
+        //      Restore brewerynotes and beernotes from the backup
+        //      Delete the backup
         if (!new File(DB_PATH).exists()) {
             copyInitialDatabase(context, DB_PATH);
         }

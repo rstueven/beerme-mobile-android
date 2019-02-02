@@ -40,7 +40,7 @@ public abstract class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("beerme", "LocationActivity(" + this.getLocalClassName() + ")");
+//        Log.d("beerme", "LocationActivity(" + this.getLocalClassName() + ")");
         super.onCreate(savedInstanceState);
 
         updateValuesFromBundle(savedInstanceState);
@@ -50,7 +50,7 @@ public abstract class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.d("beerme", "LocationActivity.onPause()");
+//        Log.d("beerme", "LocationActivity.onPause()");
         stopLocationUpdates();
 
         super.onPause();
@@ -58,7 +58,7 @@ public abstract class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("beerme", "LocationActivity.onSaveInstanceState()");
+//        Log.d("beerme", "LocationActivity.onSaveInstanceState()");
         outState.putParcelable(CURRENT_LOCATION, mCurrentLocation);
 
         super.onSaveInstanceState(outState);
@@ -66,7 +66,7 @@ public abstract class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.d("beerme", "LocationActivity.onResume()");
+//        Log.d("beerme", "LocationActivity.onResume()");
         super.onResume();
 
         if (SharedPref.read(SharedPref.Pref.IS_REQUESTING_LOCATION_UPDATES, false)) {
@@ -75,7 +75,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void updateValuesFromBundle(Bundle savedInstanceState) {
-        Log.d("beerme", "LocationActivity.updateValuesFromBundle()");
+//        Log.d("beerme", "LocationActivity.updateValuesFromBundle()");
         if (savedInstanceState != null) {
             if (savedInstanceState.keySet().contains(CURRENT_LOCATION)) {
                 mCurrentLocation = savedInstanceState.getParcelable(CURRENT_LOCATION);
@@ -84,7 +84,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void checkLocationPermission() {
-        Log.d("beerme", "LocationActivity.checkLocationPermission(" + this.getLocalClassName() + ")");
+//        Log.d("beerme", "LocationActivity.checkLocationPermission(" + this.getLocalClassName() + ")");
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             setupLocationActivity();
         } else {
@@ -112,7 +112,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.d("beerme", "LocationActivity.onRequestPermissionsResult(" + requestCode + ")");
+//        Log.d("beerme", "LocationActivity.onRequestPermissionsResult(" + requestCode + ")");
         if (requestCode == REQUEST_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
                 setupLocationActivity();
@@ -121,7 +121,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void setupLocationActivity() {
-        Log.d("beerme", "LocationActivity.setupLocationActivity()");
+//        Log.d("beerme", "LocationActivity.setupLocationActivity()");
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             if (mFusedLocationActivity == null) {
                 mFusedLocationActivity = LocationServices.getFusedLocationProviderClient(this);
@@ -153,7 +153,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void checkCurrentLocation() {
-        Log.d("beerme", "LocationActivity.checkCurrentLocation()");
+//        Log.d("beerme", "LocationActivity.checkCurrentLocation()");
         if (mCurrentLocation == null) {
             if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
                 loadCurrentLocation();
@@ -162,7 +162,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void loadCurrentLocation() {
-        Log.d("beerme", "LocationActivity.loadCurrentLocation()");
+//        Log.d("beerme", "LocationActivity.loadCurrentLocation()");
         if (mFusedLocationActivity != null && ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             mFusedLocationActivity.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
@@ -175,7 +175,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void startLocationUpdates() {
-        Log.d("beerme", "LocationActivity.startLocationUpdates()");
+//        Log.d("beerme", "LocationActivity.startLocationUpdates()");
         if (mFusedLocationActivity != null) {
             if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
                 mFusedLocationActivity.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
@@ -186,7 +186,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     private void stopLocationUpdates() {
-        Log.d("beerme", "LocationActivity.stopLocationUpdates()");
+//        Log.d("beerme", "LocationActivity.stopLocationUpdates()");
         if (mFusedLocationActivity != null) {
             mFusedLocationActivity.removeLocationUpdates(mLocationCallback);
         }

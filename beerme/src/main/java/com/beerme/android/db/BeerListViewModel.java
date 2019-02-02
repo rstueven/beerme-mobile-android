@@ -8,17 +8,22 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-class BeerListViewModel extends AndroidViewModel {
-    private final LiveData<List<Beer>> beerList;
+public class BeerListViewModel extends AndroidViewModel {
+    private LiveData<List<Beer>> beerList;
 
     public BeerListViewModel(@NonNull Application application) {
         super(application);
-
-        BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
-        beerList = db.beerDao().getAllBeers();
     }
 
     public LiveData<List<Beer>> getBeerList() {
+        BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
+        beerList = db.beerDao().getAllBeers();
+        return beerList;
+    }
+
+    public LiveData<List<Beer>> getBeerListByBreweryId(final long breweryId) {
+        BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
+        beerList = db.beerDao().getBeersByBreweryId(breweryId);
         return beerList;
     }
 }

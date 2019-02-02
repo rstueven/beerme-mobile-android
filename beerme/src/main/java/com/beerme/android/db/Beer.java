@@ -54,4 +54,18 @@ public class Beer {
         this.updated = updated;
         this.beermerating = beermerating;
     }
+
+    @Override
+    public String toString() {
+        return "Beer{" +
+                "id=" + id +
+                ", breweryid=" + breweryid +
+                ", name='" + name + '\'' +
+                ", style=" + style +
+                ", abv=" + abv +
+                ", image='" + image + '\'' +
+                ", updated='" + updated + '\'' +
+                ", beermerating=" + beermerating +
+                '}';
+    }
 }

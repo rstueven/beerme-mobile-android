@@ -49,7 +49,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
     }
 
     public static void init(Context context) {
-        Log.d("beerme", "BeerMeDatabase.init()");
+//        Log.d("beerme", "BeerMeDatabase.init()");
         // Change this whenever a new database file is installed.
         // OR BETTER YET
         // Get the last update date from the database itself.
@@ -94,7 +94,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
     abstract public StyleDao styleDao();
 
     private static void copyInitialDatabase(@NonNull final Context context, @NonNull final String path) {
-        Log.d("beerme", "copyInitialDatabase(" + path + ")");
+//        Log.d("beerme", "copyInitialDatabase(" + path + ")");
         long now = System.currentTimeMillis();
         ZipInputStream zin = null;
         OutputStream out = null;
@@ -134,7 +134,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                 // IGNORE
             }
         }
-        Log.d("beerme", "Database copied in " + (System.currentTimeMillis() - now) + " ms");
+        Log.i("beerme", "Database copied in " + (System.currentTimeMillis() - now) + " ms");
         // TODO: Get the oldest newest-record date and stash it in SharedPrefs. Otherwise the whole database will get downloaded in the first update.
 //        SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
     }
@@ -147,18 +147,18 @@ public abstract class BeerMeDatabase extends RoomDatabase {
         }
 
         public void onCreate(@NonNull final SupportSQLiteDatabase db) {
-            Log.d("beerme", "onCreate()");
+//            Log.d("beerme", "onCreate()");
         }
 
         public void onOpen(@NonNull final SupportSQLiteDatabase db) {
-            Log.d("beerme", "onOpen()");
+//            Log.d("beerme", "onOpen()");
             // TODO: This should actually come from the database.
             final long lastUpdate = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
-            Log.d("beerme", "Last Update: " + lastUpdate);
+//            Log.d("beerme", "Last Update: " + lastUpdate);
             Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("beerme", "onOpen.execute.run()");
+//                    Log.d("beerme", "onOpen.execute.run()");
                     final long now = System.currentTimeMillis();
 
                     // Hack for loading a JSON file.
@@ -222,14 +222,14 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                     RequestQueue queue = NetworkRequestQueue.getRequestQueue();
                     String dt = dateFormat.format(new Date(lastUpdate));
                     String url = "https://beerme.com/mobile/v3/dbUpdate.php?t=" + dt;
-                    Log.d("beerme", "Update URL: " + url);
+//                    Log.d("beerme", "Update URL: " + url);
                     // TODO: This can timeout if there's a lot of data.
                     StringRequest request = new StringRequest(Request.Method.GET, url,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    Log.d("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
-                                    Log.d("beerme", "onResponse(" + response.length() + ")");
+                                    Log.i("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
+                                    Log.i("beerme", "onResponse(" + response.length() + ")");
 //                                    Log.d("beerme", response);
 
                                     // TODO: Gson is probably more appropriate. Might require model changes.
@@ -275,12 +275,12 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                                                 mInstance.styleDao().insertAll(styles.toArray(new Style[]{}));
 
                                                 SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
-                                                Log.d("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
+                                                Log.i("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
                                             }
                                         });
                                     } catch (JSONException e) {
-                                        Log.d("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
-                                        Log.d("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+                                        Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
+                                        Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
                                     }
 
                                 }
@@ -288,16 +288,14 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Log.e("beerme", "onErrorResponse()");
-//                                    Log.e("beerme", error.getLocalizedMessage());
-                                    Log.e("beerme", error.toString());
-
-                                    Log.d("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+//                                    Log.e("beerme", "onErrorResponse()");
+                                    Log.e("beerme", error.getLocalizedMessage());
+                                    Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
                                 }
                             }
                     );
 
-                    Log.d("beerme", "Sending request");
+//                    Log.d("beerme", "Sending request");
                     queue.add(request);
 
 
@@ -369,7 +367,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
             database.execSQL("COMMIT;");
             database.execSQL("PRAGMA foreign_keys=on;");
 
-            Log.d("beerme", "MIGRATION_6_7 completed in " + (System.currentTimeMillis() - now) + " ms");
+            Log.i("beerme", "MIGRATION_6_7 completed in " + (System.currentTimeMillis() - now) + " ms");
         }
     };
 }

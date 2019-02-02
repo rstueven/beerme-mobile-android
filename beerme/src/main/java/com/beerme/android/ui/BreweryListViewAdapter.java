@@ -2,7 +2,6 @@ package com.beerme.android.ui;
 
 import android.location.Location;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,10 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
     private OnItemClickListener mListener;
     private List<Brewery> mBreweryList;
 
-    public BreweryListViewAdapter(@NonNull LocationActivity activity, @NonNull List<Brewery> breweryList) {
+    public BreweryListViewAdapter(@NonNull LocationActivity activity, @NonNull List<Brewery> list) {
         this.mActivity = activity;
         this.mListener = (OnItemClickListener) activity;
-        this.mBreweryList = breweryList;
+        this.mBreweryList = list;
     }
 
     @Override
@@ -116,7 +115,7 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
     }
 
     private List<Brewery> orderListByDistance(@NonNull final List<Brewery> breweryList, Location location) {
-        Log.d("beerme", "BreweryListViewAdapter.orderListByDistance()");
+//        Log.d("beerme", "BreweryListViewAdapter.orderListByDistance()");
         int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
         // TODO: Alert if statusFilter == 0
 

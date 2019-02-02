@@ -4,7 +4,6 @@ package com.beerme.android.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.beerme.android.db.Brewery;
 
@@ -37,7 +36,7 @@ public class SharedPref {
     }
 
     public static void init(Context context) {
-        Log.d("beerme", "SharedPref.init()");
+//        Log.d("beerme", "SharedPref.init()");
         if (mInstance == null) {
             mInstance = context.getSharedPreferences("CurrentUser", MODE_PRIVATE);
         }

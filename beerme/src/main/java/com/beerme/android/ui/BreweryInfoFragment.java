@@ -3,7 +3,6 @@ package com.beerme.android.ui;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class BreweryInfoFragment extends Fragment {
             LinearLayout servicesLayout = view.findViewById(R.id.services_layout);
             ImageView imageView = view.findViewById(R.id.image_view);
 
-            Log.d("beerme", brewery.toString());
             hoursView.setText(brewery.hours);
             brewery.showServicesByName(activity, servicesLayout);
 

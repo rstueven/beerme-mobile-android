@@ -3,17 +3,20 @@ package com.beerme.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.beerme.android.R;
+import com.beerme.android.db.Beer;
 import com.beerme.android.db.Brewery;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-public class BreweryActivity extends AppCompatActivity {
+public class BreweryActivity extends AppCompatActivity implements BeerListViewAdapter.OnItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +93,14 @@ public class BreweryActivity extends AppCompatActivity {
         // https://c1ctech.com/android-sliding-views-using-viewpager-with-pageradapterfragmentpageradapter/
         BreweryTabAdapter tabAdapter = new BreweryTabAdapter(getSupportFragmentManager());
         tabAdapter.addFragment(BreweryInfoFragment.getInstance(brewery), "Info");
-        tabAdapter.addFragment(new BeerListFragment(), "Beer List");
+        tabAdapter.addFragment(BeerListFragment.getInstance(brewery.id), "Beer List");
         tabAdapter.addFragment(new BreweryNotesFragment(), "Notes");
         viewPager.setAdapter(tabAdapter);
+    }
+
+    @Override
+    public void onItemClick(@NonNull Beer beer) {
+        Log.d("beerme", "BreweryActivity.onItemClick()");
+        Log.d("beerme", beer.toString());
     }
 }

@@ -49,9 +49,11 @@ public class BreweryActivity extends AppCompatActivity {
         TextView nameView = findViewById(R.id.name_view);
         TextView addressView = findViewById(R.id.address_view);
         TextView phoneView = findViewById(R.id.phone_view);
+        TextView webView = findViewById(R.id.web_view);
 
         nameView.setText(brewery.name);
         addressView.setText(brewery.address);
+        
         phoneView.setText(brewery.phone);
         phoneView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,17 @@ public class BreweryActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + ((TextView)v).getText()));
+                BreweryActivity.this.startActivity(intent);
+            }
+        });
+        
+        webView.setText(brewery.web);
+        webView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(((TextView)v).getText().toString()));
                 BreweryActivity.this.startActivity(intent);
             }
         });

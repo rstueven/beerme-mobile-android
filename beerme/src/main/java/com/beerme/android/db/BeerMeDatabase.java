@@ -156,6 +156,63 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                     Log.d("beerme", "onOpen.execute.run()");
                     final long now = System.currentTimeMillis();
 
+                    // Hack for loading a JSON file.
+//                    String response;
+//                    try {
+//                        int length;
+//                        byte[] buf = new byte[16*1024*1024];
+//                        InputStream in = context.getAssets().open("dbUpdate.json");
+//                        while ((length = in.read(buf)) > 0) {
+//                            ;
+//                        }
+//                        in.close();
+//                        response = new String(buf, "UTF-8");
+//                        Log.d("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
+//                        Log.d("beerme", "onResponse(" + response.length() + ")");
+//
+//                        // TODO: Gson is probably more appropriate. Might require model changes.
+//                        // Although this is working well enough.
+//                            JSONObject obj = new JSONObject(response);
+//
+//                            JSONArray breweryArr = obj.getJSONArray("brewery");
+//                            final List<Brewery> breweries = new ArrayList<>();
+//
+//                            for (int i = 0; i < breweryArr.length(); i++) {
+//                                breweries.add(new Brewery(breweryArr.getJSONObject(i)));
+//                            }
+//
+//                            JSONArray beerArr = obj.getJSONArray("beer");
+//                            final List<Beer> beers = new ArrayList<>();
+//
+//                            for (int i = 0; i < beerArr.length(); i++) {
+//                                beers.add(new Beer(beerArr.getJSONObject(i)));
+//                            }
+//
+//                            JSONArray styleArr = obj.getJSONArray("style");
+//                            final List<Style> styles = new ArrayList<>();
+//
+//                            for (int i = 0; i < styleArr.length(); i++) {
+//                                styles.add(new Style(styleArr.getJSONObject(i)));
+//                            }
+//
+//                            AsyncTask.execute(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    mInstance.breweryDao().insertAll(breweries.toArray(new Brewery[]{}));
+//                                    mInstance.beerDao().insertAll(beers.toArray(new Beer[]{}));
+//                                    mInstance.styleDao().insertAll(styles.toArray(new Style[]{}));
+//
+//                                    SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
+//                                    Log.d("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
+//                                }
+//                            });
+//                    } catch (Exception e) {
+//                        Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
+//                        Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+//                    }
+
+
+
                     // Download database updates
                     RequestQueue queue = NetworkRequestQueue.getRequestQueue();
                     String dt = dateFormat.format(new Date(lastUpdate));

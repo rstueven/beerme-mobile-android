@@ -1,7 +1,9 @@
 package com.beerme.android.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.beerme.android.R;
@@ -46,9 +48,20 @@ public class BreweryActivity extends AppCompatActivity {
 
         TextView nameView = findViewById(R.id.name_view);
         TextView addressView = findViewById(R.id.address_view);
+        TextView phoneView = findViewById(R.id.phone_view);
 
         nameView.setText(brewery.name);
         addressView.setText(brewery.address);
+        phoneView.setText(brewery.phone);
+        phoneView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + ((TextView)v).getText()));
+                BreweryActivity.this.startActivity(intent);
+            }
+        });
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.tab_pager);

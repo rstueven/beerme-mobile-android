@@ -1,0 +1,438 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "eaaac3f879cd9489e1c8df47962965df",
+    "entities": [
+      {
+        "tableName": "Brewery",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `status` INTEGER NOT NULL, `hours` TEXT, `phone` TEXT, `web` TEXT, `services` INTEGER NOT NULL, `image` TEXT, `updated` TEXT NOT NULL, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hours",
+            "columnName": "hours",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "web",
+            "columnName": "web",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "services",
+            "columnName": "services",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Brewery_name",
+            "unique": false,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE  INDEX `index_Brewery_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_Brewery_latitude",
+            "unique": false,
+            "columnNames": [
+              "latitude"
+            ],
+            "createSql": "CREATE  INDEX `index_Brewery_latitude` ON `${TABLE_NAME}` (`latitude`)"
+          },
+          {
+            "name": "index_Brewery_longitude",
+            "unique": false,
+            "columnNames": [
+              "longitude"
+            ],
+            "createSql": "CREATE  INDEX `index_Brewery_longitude` ON `${TABLE_NAME}` (`longitude`)"
+          },
+          {
+            "name": "index_Brewery_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "createSql": "CREATE  INDEX `index_Brewery_status` ON `${TABLE_NAME}` (`status`)"
+          },
+          {
+            "name": "index_Brewery_updated",
+            "unique": false,
+            "columnNames": [
+              "updated"
+            ],
+            "createSql": "CREATE  INDEX `index_Brewery_updated` ON `${TABLE_NAME}` (`updated`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Beer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `breweryid` INTEGER NOT NULL, `name` TEXT NOT NULL, `style` INTEGER, `abv` REAL, `image` TEXT, `updated` TEXT NOT NULL, `beermerating` REAL, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "breweryid",
+            "columnName": "breweryid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "style",
+            "columnName": "style",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "abv",
+            "columnName": "abv",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "beermerating",
+            "columnName": "beermerating",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Beer_breweryid",
+            "unique": false,
+            "columnNames": [
+              "breweryid"
+            ],
+            "createSql": "CREATE  INDEX `index_Beer_breweryid` ON `${TABLE_NAME}` (`breweryid`)"
+          },
+          {
+            "name": "index_Beer_name",
+            "unique": false,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE  INDEX `index_Beer_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_Beer_updated",
+            "unique": false,
+            "columnNames": [
+              "updated"
+            ],
+            "createSql": "CREATE  INDEX `index_Beer_updated` ON `${TABLE_NAME}` (`updated`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "beernotes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `beerid` INTEGER NOT NULL, `package` TEXT, `sampled` TEXT, `place` TEXT, `appscore` REAL, `appearance` TEXT, `aroscore` REAL, `aroma` TEXT, `mouscore` REAL, `mouthfeel` TEXT, `ovrscore` REAL, `notes` TEXT, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "beerid",
+            "columnName": "beerid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pkg",
+            "columnName": "package",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sampled",
+            "columnName": "sampled",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "place",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "appscore",
+            "columnName": "appscore",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "appearance",
+            "columnName": "appearance",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aroscore",
+            "columnName": "aroscore",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aroma",
+            "columnName": "aroma",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mouscore",
+            "columnName": "mouscore",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mouthfeel",
+            "columnName": "mouthfeel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ovrscore",
+            "columnName": "ovrscore",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_beernotes_beerid",
+            "unique": false,
+            "columnNames": [
+              "beerid"
+            ],
+            "createSql": "CREATE  INDEX `index_beernotes_beerid` ON `${TABLE_NAME}` (`beerid`)"
+          },
+          {
+            "name": "index_beernotes_sampled",
+            "unique": false,
+            "columnNames": [
+              "sampled"
+            ],
+            "createSql": "CREATE  INDEX `index_beernotes_sampled` ON `${TABLE_NAME}` (`sampled`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "brewerynotes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `breweryid` INTEGER NOT NULL, `date` TEXT NOT NULL, `rating` REAL, `notes` TEXT, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "breweryid",
+            "columnName": "breweryid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rating",
+            "columnName": "rating",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_brewerynotes_breweryid",
+            "unique": false,
+            "columnNames": [
+              "breweryid"
+            ],
+            "createSql": "CREATE  INDEX `index_brewerynotes_breweryid` ON `${TABLE_NAME}` (`breweryid`)"
+          },
+          {
+            "name": "index_brewerynotes_date",
+            "unique": false,
+            "columnNames": [
+              "date"
+            ],
+            "createSql": "CREATE  INDEX `index_brewerynotes_date` ON `${TABLE_NAME}` (`date`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Style",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `updated` TEXT NOT NULL, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Style_updated",
+            "unique": false,
+            "columnNames": [
+              "updated"
+            ],
+            "createSql": "CREATE  INDEX `index_Style_updated` ON `${TABLE_NAME}` (`updated`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eaaac3f879cd9489e1c8df47962965df\")"
+    ]
+  }
+}

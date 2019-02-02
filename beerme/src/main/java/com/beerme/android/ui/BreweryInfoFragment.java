@@ -1,15 +1,19 @@
 package com.beerme.android.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -47,13 +51,25 @@ public class BreweryInfoFragment extends Fragment {
         Log.d("beerme", "onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
         View view = inflater.inflate(R.layout.fragment_brewery_info, container, false);
 
-        TextView hoursView = view.findViewById(R.id.hours_view);
-        LinearLayout servicesLayout = view.findViewById(R.id.services_layout);
+        Activity activity = getActivity();
 
-        Log.d("beerme", brewery.toString());
-        hoursView.setText(brewery.hours);
+        if (activity != null) {
+            TextView hoursView = view.findViewById(R.id.hours_view);
+            LinearLayout servicesLayout = view.findViewById(R.id.services_layout);
+            ImageView imageView = view.findViewById(R.id.image_view);
 
-        brewery.showServicesByName(getActivity(), servicesLayout);
+            Log.d("beerme", brewery.toString());
+            hoursView.setText(brewery.hours);
+            brewery.showServicesByName(activity, servicesLayout);
+
+            if (TextUtils.isEmpty(brewery.image)) {
+                imageView.setVisibility(View.GONE);
+            } else {
+                imageView.setVisibility(View.VISIBLE);
+                String imageUrl = "https://beerme.com/graphics/" + brewery.image;
+                Picasso.with(activity).load(imageUrl).into(imageView);
+            }
+        }
 
         return view;
     }

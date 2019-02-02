@@ -299,6 +299,9 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
                     Log.d("beerme", "Sending request");
                     queue.add(request);
+
+
+
                 }
             });
         }

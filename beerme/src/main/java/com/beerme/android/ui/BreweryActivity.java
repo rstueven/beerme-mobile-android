@@ -83,8 +83,8 @@ public class BreweryActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.tab_pager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
         // https://c1ctech.com/android-sliding-views-using-viewpager-with-pageradapterfragmentpageradapter/

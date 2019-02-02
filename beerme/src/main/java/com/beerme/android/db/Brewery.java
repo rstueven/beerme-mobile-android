@@ -193,6 +193,7 @@ public class Brewery implements Serializable {
             if ((services & svc.code) != 0) {
                 TextView row = new TextView(activity);
                 row.setCompoundDrawablesWithIntrinsicBounds(svc.iconRes, 0, 0, 0);
+                row.setCompoundDrawablePadding((int)(4 * activity.getResources().getDisplayMetrics().density));
                 row.setText(svc.description);
                 servicesView.addView(row);
             }

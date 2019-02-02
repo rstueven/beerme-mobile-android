@@ -31,7 +31,6 @@ public class BreweryInfoFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("beerme", "onCreate(Bundle savedInstanceState)");
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
 
@@ -48,11 +47,11 @@ public class BreweryInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("beerme", "onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
         View view = inflater.inflate(R.layout.fragment_brewery_info, container, false);
 
         Activity activity = getActivity();
 
+        // TODO: Scroll
         if (activity != null) {
             TextView hoursView = view.findViewById(R.id.hours_view);
             LinearLayout servicesLayout = view.findViewById(R.id.services_layout);

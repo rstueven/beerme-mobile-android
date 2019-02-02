@@ -26,6 +26,7 @@
         android:layout_margin="8dp"
         android:drawableStart="@drawable/map"
         android:drawableLeft="@drawable/map"
+        android:drawablePadding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_view" />
@@ -38,6 +39,7 @@
         android:clickable="true"
         android:drawableStart="@drawable/phone"
         android:drawableLeft="@drawable/phone"
+        android:drawablePadding="4dp"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +53,7 @@
         android:clickable="true"
         android:drawableStart="@drawable/web"
         android:drawableLeft="@drawable/web"
+        android:drawablePadding="4dp"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +65,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/web_view">

@@ -51,7 +51,6 @@ public class BreweryInfoFragment extends Fragment {
 
         Activity activity = getActivity();
 
-        // TODO: Scroll
         if (activity != null) {
             TextView hoursView = view.findViewById(R.id.hours_view);
             LinearLayout servicesLayout = view.findViewById(R.id.services_layout);

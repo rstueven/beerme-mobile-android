@@ -9,21 +9,21 @@ import androidx.room.PrimaryKey;
 class BeerNotes {
     @PrimaryKey
     @ColumnInfo(name = "_id")
-    public final long id;
-    public final long beerid;
+    private final long id;
+    private final long beerid;
     @ColumnInfo(name = "package")
-    public final String pkg;
+    private final String pkg;
     //    @TypeConverters(DateConverter.class)
-    public final String sampled;
-    public final String place;
-    public final Double appscore;
-    public final String appearance;
-    public final Double aroscore;
-    public final String aroma;
-    public final Double mouscore;
-    public final String mouthfeel;
-    public final Double ovrscore;
-    public final String notes;
+    private final String sampled;
+    private final String place;
+    private final Double appscore;
+    private final String appearance;
+    private final Double aroscore;
+    private final String aroma;
+    private final Double mouscore;
+    private final String mouthfeel;
+    private final Double ovrscore;
+    private final String notes;
 
     public BeerNotes(long id, long beerid, String pkg, String sampled, String place, Double appscore, String appearance, Double aroscore, String aroma, Double mouscore, String mouthfeel, Double ovrscore, String notes) {
         this.id = id;

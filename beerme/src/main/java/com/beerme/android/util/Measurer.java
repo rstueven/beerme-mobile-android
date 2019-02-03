@@ -32,7 +32,7 @@ public class Measurer {
                 }
             }
 
-            return null;
+            return byCode(DEFAULT);
         }
 
         public static final int size = DistanceUnit.values().length;

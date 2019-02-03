@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!-- TODO: https://developer.android.com/studio/write/app-link-indexing -->
     <application
         android:name=".BeerMeApplication"
         android:allowBackup="true"
@@ -15,8 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
         <activity
-            android:name=".ui.BreweryActivity"
-            android:parentActivityName=".ui.MainActivity">
+            android:name=".ui.BreweryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.beerme.android.ui.MainActivity" />

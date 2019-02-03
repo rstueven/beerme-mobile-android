@@ -29,7 +29,7 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
     }
 
     private final LocationActivity mActivity;
-    private OnItemClickListener mListener;
+    private final OnItemClickListener mListener;
     private List<Brewery> mBreweryList;
 
     public BreweryListViewAdapter(@NonNull LocationActivity activity, @NonNull List<Brewery> list) {
@@ -104,7 +104,7 @@ public class BreweryListViewAdapter extends RecyclerView.Adapter<BreweryListView
             statusView = view.findViewById(R.id.statusView);
         }
 
-        public void bind(@NonNull final Brewery brewery, @NonNull final OnItemClickListener listener) {
+        void bind(@NonNull final Brewery brewery, @NonNull final OnItemClickListener listener) {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

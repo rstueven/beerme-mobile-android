@@ -21,8 +21,8 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         void onItemClick(@NonNull Beer beer);
     }
 
-    private Activity mActivity;
-    private OnItemClickListener mListener;
+    private final Activity mActivity;
+    private final OnItemClickListener mListener;
     private List<Beer> mBeerList;
 
     public BeerListViewAdapter(@NonNull Activity activity, @NonNull List<Beer> list) {
@@ -67,7 +67,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         private final TextView abvView;
         private final LinearLayout starsView;
 
-        public BeerListViewHolder(@NonNull View view) {
+        BeerListViewHolder(@NonNull View view) {
             super(view);
 
             mView = view;
@@ -77,7 +77,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
             starsView = view.findViewById(R.id.starsView);
         }
 
-        public void bind(@NonNull final Beer beer, @NonNull final BeerListViewAdapter.OnItemClickListener listener) {
+        void bind(@NonNull final Beer beer, @NonNull final BeerListViewAdapter.OnItemClickListener listener) {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -54,7 +54,7 @@ public class Brewery implements Serializable {
         CLOSED(8),
         DELETED(16);
 
-        public final int code;
+        final int code;
 
         public final static int DEFAULT = OPEN.code | PLANNED.code;
 

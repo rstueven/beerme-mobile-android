@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.beerme.android.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -57,7 +56,7 @@ public abstract class LocationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
 //        Log.d("beerme", "LocationActivity.onSaveInstanceState()");
         outState.putParcelable(CURRENT_LOCATION, mCurrentLocation);
 

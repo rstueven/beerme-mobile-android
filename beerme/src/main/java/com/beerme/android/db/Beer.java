@@ -85,6 +85,7 @@ public class Beer {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Beer{" +

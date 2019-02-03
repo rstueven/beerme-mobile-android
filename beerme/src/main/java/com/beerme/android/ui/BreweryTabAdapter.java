@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 // https://c1ctech.com/android-sliding-views-using-viewpager-with-pageradapterfragmentpageradapter/
 
-public class BreweryTabAdapter extends FragmentPagerAdapter {
+class BreweryTabAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
 

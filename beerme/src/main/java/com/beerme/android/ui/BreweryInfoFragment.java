@@ -55,7 +55,13 @@ public class BreweryInfoFragment extends Fragment {
             LinearLayout servicesLayout = view.findViewById(R.id.services_layout);
             ImageView imageView = view.findViewById(R.id.image_view);
 
-            hoursView.setText(brewery.hours);
+            if (TextUtils.isEmpty(brewery.hours)) {
+                hoursView.setVisibility(View.GONE);
+            } else {
+                hoursView.setVisibility(View.VISIBLE);
+                hoursView.setText(brewery.hours);
+            }
+
             brewery.showServicesByName(activity, servicesLayout);
 
             if (TextUtils.isEmpty(brewery.image)) {

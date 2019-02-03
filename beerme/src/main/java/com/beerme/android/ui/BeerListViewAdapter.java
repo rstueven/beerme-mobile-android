@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beerme.android.R;
@@ -21,10 +21,12 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         void onItemClick(@NonNull Beer beer);
     }
 
+    private Activity mActivity;
     private OnItemClickListener mListener;
     private List<Beer> mBeerList;
 
     public BeerListViewAdapter(@NonNull Activity activity, @NonNull List<Beer> list) {
+        this.mActivity = activity;
         this.mListener = (OnItemClickListener) activity;
         this.mBeerList = list;
     }
@@ -42,9 +44,15 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         holder.bind(beer, mListener);
 
         holder.nameView.setText(beer.name);
-        holder.styleView.setText(beer.style + " ");
-        holder.abvView.setText(beer.abv + " ");
-//        holder.stars
+        holder.styleView.setText(beer.style == null ? "" : (beer.style + " "));
+
+        if (beer.abv == null) {
+            holder.abvView.setText("");
+        } else {
+            holder.abvView.setText(beer.abv + "% abv");
+        }
+
+        beer.showStars(mActivity, holder.starsView);
     }
 
     @Override
@@ -62,7 +70,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         private final TextView nameView;
         private final TextView styleView;
         private final TextView abvView;
-        private final ImageView starsView;
+        private final LinearLayout starsView;
 
         public BeerListViewHolder(@NonNull View view) {
             super(view);

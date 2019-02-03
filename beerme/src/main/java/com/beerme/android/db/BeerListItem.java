@@ -35,18 +35,16 @@ public class BeerListItem {
 
         layout.removeAllViews();
 
-        // TODO: Better reckoning of score
-        int stars = (int) (beermerating / 5);
+        float stars = (beermerating <= 0) ? 0 : (float) Math.max((Math.floor(beermerating - 10.5) / 2) + 0.5, 0.5);
+        int intStars = (int) stars;
 
-        for (int i = 0; i < stars; i++) {
+        for (int i = 0; i < intStars; i++) {
             ImageView star = new ImageView(activity);
             star.setImageResource(R.drawable.star);
             layout.addView(star);
         }
 
-        // TODO: Half-star
-
-        if ((beermerating / 5) > stars) {
+        if (stars > intStars) {
             ImageView star = new ImageView(activity);
             star.setImageResource(R.drawable.star_half);
             layout.addView(star);

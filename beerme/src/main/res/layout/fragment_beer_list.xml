@@ -4,5 +4,6 @@
     android:id="@+id/beer_list_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="128dp"
     tools:context=".ui.BreweryActivity"
     tools:showIn="@layout/activity_brewery" />

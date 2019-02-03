@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.beerme.android.util.NetworkRequestQueue;
 import com.beerme.android.util.SharedPref;
+import com.google.android.gms.common.util.IOUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
         }
     }
 
-    public static BeerMeDatabase getInstance(Context context) {
+    static BeerMeDatabase getInstance(Context context) {
         if (mInstance == null) {
             BeerMeDatabase.init(context);
         }
@@ -100,7 +102,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
             ZipEntry zipEntry = zin.getNextEntry();
             if (zipEntry == null) {
-                throw new IOException("No zipEntry");
+                throw new IOException("BeerMeDatabase.copyInitialDatabase(" + path + "): No zipEntry");
             }
 
             while ((length = zin.read(buf)) > 0) {
@@ -127,8 +129,6 @@ public abstract class BeerMeDatabase extends RoomDatabase {
             }
         }
         Log.i("beerme", "Database copied in " + (System.currentTimeMillis() - now) + " ms");
-        // TODO: Get the oldest newest-record date and stash it in SharedPrefs. Otherwise the whole database will get downloaded in the first update.
-//        SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
     }
 
     static class DBCallback extends RoomDatabase.Callback {
@@ -144,6 +144,24 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
         public void onOpen(@NonNull final SupportSQLiteDatabase db) {
 //            Log.d("beerme", "onOpen()");
+            Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+//                    Log.d("beerme", "onOpen.execute.run()");
+                    final long now = System.currentTimeMillis();
+
+                    try {
+//                        loadDataFromJSON(now);
+                        loadDataFromURL(db, now);
+                    } catch (Exception e) {
+                        Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
+                        Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+                    }
+                }
+            });
+        }
+
+        private long lastUpdateTime(final SupportSQLiteDatabase db) {
             long lastUpdateFromPrefs = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
 
             if (lastUpdateFromPrefs == 0L) {
@@ -157,163 +175,109 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                 c.close();
 
                 Calendar cal = Calendar.getInstance();
-                cal.set(Integer.parseInt(updStrings[0]), Integer.parseInt(updStrings[1])-1, Integer.parseInt(updStrings[2]));
+                cal.set(Integer.parseInt(updStrings[0]), Integer.parseInt(updStrings[1]) - 1, Integer.parseInt(updStrings[2]));
                 lastUpdateFromPrefs = cal.getTimeInMillis();
                 SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, lastUpdateFromPrefs);
             }
 
-            final long lastUpdate = lastUpdateFromPrefs;
+            return lastUpdateFromPrefs;
+        }
 
-            Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
+        private void loadDataFromJSON(final long now) throws JSONException, IOException {
+            // Hack for loading a JSON file.
+            String response;
+
+            InputStream in = context.getAssets().open("dbUpdate.json");
+            byte[] buf = IOUtils.toByteArray(in);
+            in.close();
+
+            response = new String(buf, "UTF-8");
+            Log.d("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
+            Log.d("beerme", "onResponse(" + response.length() + ")");
+
+            loadData(response, now);
+        }
+
+        private void loadDataFromURL(final SupportSQLiteDatabase db, final long now) {
+            // Download database updates
+
+            final long lastUpdate = lastUpdateTime(db);
+
+            RequestQueue queue = NetworkRequestQueue.getRequestQueue();
+            String dt = dateFormat.format(new Date(lastUpdate));
+            String url = "https://beerme.com/mobile/v3/dbUpdate.php?t=" + dt;
+            Log.d("beerme", "Updates: " + url);
+            // TODO: This can timeout if there's a lot of data.
+            StringRequest request = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.i("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
+                            Log.i("beerme", "onResponse(" + response.length() + ")");
+//                                    Log.d("beerme", response);
+                            try {
+                                loadData(response, now);
+                            } catch (Exception e) {
+                                Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
+                                Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+//                                    Log.e("beerme", "onErrorResponse()");
+                            Log.e("beerme", error.getLocalizedMessage());
+                            Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
+                        }
+                    }
+            );
+
+            Log.d("beerme", "Sending request");
+            queue.add(request);
+        }
+
+        private void loadData(final String response, final long now) throws JSONException {
+            // TODO: Gson is probably more appropriate. Might require model changes.
+            // Although this is working well enough.
+            JSONObject obj = new JSONObject(response);
+
+            JSONArray breweryArr = obj.getJSONArray("brewery");
+            final List<Brewery> breweries = new ArrayList<>();
+
+            for (int i = 0; i < breweryArr.length(); i++) {
+                breweries.add(new Brewery(breweryArr.getJSONObject(i)));
+            }
+
+            JSONArray beerArr = obj.getJSONArray("beer");
+            final List<Beer> beers = new ArrayList<>();
+
+            for (int i = 0; i < beerArr.length(); i++) {
+                beers.add(new Beer(beerArr.getJSONObject(i)));
+            }
+
+            JSONArray styleArr = obj.getJSONArray("style");
+            final List<Style> styles = new ArrayList<>();
+
+            for (int i = 0; i < styleArr.length(); i++) {
+                styles.add(new Style(styleArr.getJSONObject(i)));
+            }
+
+            AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-//                    Log.d("beerme", "onOpen.execute.run()");
-                    final long now = System.currentTimeMillis();
+                    mInstance.breweryDao().insertAll(breweries.toArray(new Brewery[]{}));
+                    mInstance.beerDao().insertAll(beers.toArray(new Beer[]{}));
+                    mInstance.styleDao().insertAll(styles.toArray(new Style[]{}));
 
-                    // Hack for loading a JSON file.
-//                    String response;
-//                    try {
-//                        int length;
-//                        byte[] buf = new byte[16*1024*1024];
-//                        InputStream in = context.getAssets().open("dbUpdate.json");
-//                        while ((length = in.read(buf)) > 0) {
-//                            ;
-//                        }
-//                        in.close();
-//                        response = new String(buf, "UTF-8");
-//                        Log.d("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
-//                        Log.d("beerme", "onResponse(" + response.length() + ")");
-//
-//                        // TODO: Gson is probably more appropriate. Might require model changes.
-//                        // Although this is working well enough.
-//                            JSONObject obj = new JSONObject(response);
-//
-//                            JSONArray breweryArr = obj.getJSONArray("brewery");
-//                            final List<Brewery> breweries = new ArrayList<>();
-//
-//                            for (int i = 0; i < breweryArr.length(); i++) {
-//                                breweries.add(new Brewery(breweryArr.getJSONObject(i)));
-//                            }
-//
-//                            JSONArray beerArr = obj.getJSONArray("beer");
-//                            final List<Beer> beers = new ArrayList<>();
-//
-//                            for (int i = 0; i < beerArr.length(); i++) {
-//                                beers.add(new Beer(beerArr.getJSONObject(i)));
-//                            }
-//
-//                            JSONArray styleArr = obj.getJSONArray("style");
-//                            final List<Style> styles = new ArrayList<>();
-//
-//                            for (int i = 0; i < styleArr.length(); i++) {
-//                                styles.add(new Style(styleArr.getJSONObject(i)));
-//                            }
-//
-//                            AsyncTask.execute(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    mInstance.breweryDao().insertAll(breweries.toArray(new Brewery[]{}));
-//                                    mInstance.beerDao().insertAll(beers.toArray(new Beer[]{}));
-//                                    mInstance.styleDao().insertAll(styles.toArray(new Style[]{}));
-//
-//                                    SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
-//                                    Log.d("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
-//                                }
-//                            });
-//                    } catch (Exception e) {
-//                        Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
-//                        Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
-//                    }
-
-
-
-                    // Download database updates
-                    RequestQueue queue = NetworkRequestQueue.getRequestQueue();
-                    String dt = dateFormat.format(new Date(lastUpdate));
-                    String url = "https://beerme.com/mobile/v3/dbUpdate.php?t=" + dt;
-                    Log.d("beerme", "Updates: " + url);
-                    // TODO: This can timeout if there's a lot of data.
-                    StringRequest request = new StringRequest(Request.Method.GET, url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Log.i("beerme", "Database updates downloaded in " + (System.currentTimeMillis() - now) + " ms");
-                                    Log.i("beerme", "onResponse(" + response.length() + ")");
-//                                    Log.d("beerme", response);
-
-                                    // TODO: Gson is probably more appropriate. Might require model changes.
-                                    // Although this is working well enough.
-                                    try {
-                                        JSONObject obj = new JSONObject(response);
-
-                                        JSONArray breweryArr = obj.getJSONArray("brewery");
-                                        final List<Brewery> breweries = new ArrayList<>();
-
-                                        for (int i = 0; i < breweryArr.length(); i++) {
-//                                            Log.d("beerme", "BREWERY " + i);
-//                                            Log.d("beerme", breweryArr.getJSONObject(i).toString());
-                                            breweries.add(new Brewery(breweryArr.getJSONObject(i)));
-                                        }
-
-                                        JSONArray beerArr = obj.getJSONArray("beer");
-                                        final List<Beer> beers = new ArrayList<>();
-
-                                        for (int i = 0; i < beerArr.length(); i++) {
-//                                            Log.d("beerme", "BEER " + i);
-//                                            Log.d("beerme", beerArr.getJSONObject(i).toString());
-                                            beers.add(new Beer(beerArr.getJSONObject(i)));
-                                        }
-
-                                        JSONArray styleArr = obj.getJSONArray("style");
-                                        final List<Style> styles = new ArrayList<>();
-
-                                        for (int i = 0; i < styleArr.length(); i++) {
-//                                            Log.d("beerme", "STYLE " + i);
-//                                            Log.d("beerme", styleArr.getJSONObject(i).toString());
-                                            styles.add(new Style(styleArr.getJSONObject(i)));
-                                        }
-
-                                        AsyncTask.execute(new Runnable() {
-                                            @Override
-                                            public void run() {
-//                                                mInstance.breweryDao().upsertAll(breweries.toArray(new Brewery[]{}));
-//                                                mInstance.beerDao().upsertAll(beers.toArray(new Beer[]{}));
-//                                                mInstance.styleDao().upsertAll(styles.toArray(new Style[]{}));
-                                                mInstance.breweryDao().insertAll(breweries.toArray(new Brewery[]{}));
-                                                mInstance.beerDao().insertAll(beers.toArray(new Beer[]{}));
-                                                mInstance.styleDao().insertAll(styles.toArray(new Style[]{}));
-
-                                                SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
-                                                Log.i("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
-                                            }
-                                        });
-                                    } catch (JSONException e) {
-                                        Log.e("beerme", "Database updates parse failed: " + e.getLocalizedMessage());
-                                        Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
-                                    }
-
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-//                                    Log.e("beerme", "onErrorResponse()");
-                                    Log.e("beerme", error.getLocalizedMessage());
-                                    Log.e("beerme", "Database updates failed after " + (System.currentTimeMillis() - now) + " ms");
-                                }
-                            }
-                    );
-
-//                    Log.d("beerme", "Sending request");
-                    queue.add(request);
-
-
-
+                    SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, System.currentTimeMillis());
+                    Log.d("beerme", "Database updates installed in " + (System.currentTimeMillis() - now) + " ms");
                 }
             });
         }
     }
 
+    // TODO: Clean up the migration
     private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {

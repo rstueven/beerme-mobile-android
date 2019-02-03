@@ -128,7 +128,7 @@ public class Brewery implements Serializable {
             this.updated = obj.getString("updated");
         } catch (JSONException e) {
             Log.e("beerme", "Brewery(" + obj.toString() + ")");
-            throw new JSONException("Brewery() failed: " + e.getLocalizedMessage());
+            throw new JSONException("Brewery(): " + e.getLocalizedMessage());
         }
     }
 

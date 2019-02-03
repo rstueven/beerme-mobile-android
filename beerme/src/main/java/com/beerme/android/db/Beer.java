@@ -28,7 +28,7 @@ public class Beer {
     public Double beermerating;
 
     // TODO: Some of these could be e.g. optString()
-    public Beer(@NonNull JSONObject obj) throws JSONException {
+    Beer(@NonNull JSONObject obj) throws JSONException {
         try {
             this.id = obj.getInt("id");
             this.breweryid = obj.getInt("breweryid");
@@ -40,11 +40,11 @@ public class Beer {
             this.beermerating = obj.optDouble("beermerating");
         } catch (JSONException e) {
             Log.e("beerme", obj.toString());
-            throw new JSONException("Beer() failed: " + e.getLocalizedMessage());
+            throw new JSONException("Beer(): " + e.getLocalizedMessage());
         }
     }
 
-    public Beer(long id, long breweryid, @NonNull String name, Long style, Double abv, String image, @NonNull String updated, Double beermerating) {
+    Beer(long id, long breweryid, @NonNull String name, Long style, Double abv, String image, @NonNull String updated, Double beermerating) {
         this.id = id;
         this.breweryid = breweryid;
         this.name = name;

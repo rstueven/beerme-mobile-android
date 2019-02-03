@@ -23,19 +23,19 @@ public class Style {
     public String updated;
 
     // TODO: Some of these could be e.g. optString()
-    public Style(@NonNull JSONObject obj) throws JSONException {
+    Style(@NonNull JSONObject obj) throws JSONException {
         try {
             this.id = obj.getInt("id");
             this.name = obj.getString("name");
             this.updated = obj.getString("updated");
         } catch (JSONException e) {
             Log.e("beerme", obj.toString());
-            throw new JSONException("Style() failed: " + e.getLocalizedMessage());
+            throw new JSONException("Style(): " + e.getLocalizedMessage());
         }
     }
 
 
-    public Style(long id, @NonNull String name, @NonNull String updated) {
+    Style(long id, @NonNull String name, @NonNull String updated) {
         this.id = id;
         this.name = name;
         this.updated = updated;

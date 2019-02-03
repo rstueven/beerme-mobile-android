@@ -2,6 +2,7 @@ package com.beerme.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -50,15 +51,6 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
     public static void init(Context context) {
 //        Log.d("beerme", "BeerMeDatabase.init()");
-        // Change this whenever a new database file is installed.
-        // OR BETTER YET
-        // Get the last update date from the database itself.
-        long updated = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
-        if (updated == 0L) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(2019, 0, 21);
-            SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, cal.getTimeInMillis());
-        }
 
         final String DB_PATH = context.getDatabasePath(DB_NAME).getPath();
 
@@ -152,9 +144,26 @@ public abstract class BeerMeDatabase extends RoomDatabase {
 
         public void onOpen(@NonNull final SupportSQLiteDatabase db) {
 //            Log.d("beerme", "onOpen()");
-            // TODO: This should actually come from the database.
-            final long lastUpdate = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
-//            Log.d("beerme", "Last Update: " + lastUpdate);
+            long lastUpdateFromPrefs = SharedPref.read(SharedPref.Pref.DB_LAST_UPDATE, 0L);
+
+            if (lastUpdateFromPrefs == 0L) {
+                if (mInstance == null) {
+                    throw new IllegalStateException("BeerMeDatabase.onOpen(): null mInstance");
+                }
+
+                Cursor c = db.query("SELECT MAX(updated) FROM brewery");
+                c.moveToFirst();
+                String[] updStrings = c.getString(0).split("-");
+                c.close();
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(Integer.parseInt(updStrings[0]), Integer.parseInt(updStrings[1])-1, Integer.parseInt(updStrings[2]));
+                lastUpdateFromPrefs = cal.getTimeInMillis();
+                SharedPref.write(SharedPref.Pref.DB_LAST_UPDATE, lastUpdateFromPrefs);
+            }
+
+            final long lastUpdate = lastUpdateFromPrefs;
+
             Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -222,7 +231,7 @@ public abstract class BeerMeDatabase extends RoomDatabase {
                     RequestQueue queue = NetworkRequestQueue.getRequestQueue();
                     String dt = dateFormat.format(new Date(lastUpdate));
                     String url = "https://beerme.com/mobile/v3/dbUpdate.php?t=" + dt;
-//                    Log.d("beerme", "Update URL: " + url);
+                    Log.d("beerme", "Updates: " + url);
                     // TODO: This can timeout if there's a lot of data.
                     StringRequest request = new StringRequest(Request.Method.GET, url,
                             new Response.Listener<String>() {

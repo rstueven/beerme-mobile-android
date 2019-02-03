@@ -10,6 +10,8 @@ import com.beerme.android.R;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+// TODO: BreweryNotesFragment
+
 public class BreweryNotesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

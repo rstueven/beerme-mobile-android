@@ -45,12 +45,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
 
         holder.nameView.setText(beer.name);
         holder.styleView.setText(beer.style == null ? "" : (beer.style + " "));
-
-        if (beer.abv == null) {
-            holder.abvView.setText("");
-        } else {
-            holder.abvView.setText(beer.abv + "% abv");
-        }
+        holder.abvView.setText(beer.abv == null ? "" : beer.abv + "% abv");
 
         beer.showStars(mActivity, holder.starsView);
     }

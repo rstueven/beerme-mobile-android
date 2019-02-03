@@ -9,21 +9,14 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 public class BeerListViewModel extends AndroidViewModel {
-    private LiveData<List<Beer>> beerList;
+    private LiveData<List<BeerListItem>> beerList;
 
     public BeerListViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public LiveData<List<Beer>> getBeerList() {
+    public LiveData<List<BeerListItem>> getBeerListByBreweryId(final long breweryId) {
         BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
-        beerList = db.beerDao().getAllBeers();
-        return beerList;
-    }
-
-    public LiveData<List<Beer>> getBeerListByBreweryId(final long breweryId) {
-        BeerMeDatabase db = BeerMeDatabase.getInstance(this.getApplication());
-        beerList = db.beerDao().getBeersByBreweryId(breweryId);
-        return beerList;
+        return db.beerDao().getBeersByBreweryId(breweryId);
     }
 }

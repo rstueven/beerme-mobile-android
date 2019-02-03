@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.beerme.android.R;
-import com.beerme.android.db.Beer;
+import com.beerme.android.db.BeerListItem;
 import com.beerme.android.db.BeerListViewModel;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class BeerListFragment extends Fragment {
     private long breweryId;
     private BeerListViewAdapter beerListViewAdapter;
-    private List<Beer> beerList;
+    private List<BeerListItem> beerList;
 
     static BeerListFragment getInstance(long breweryId) {
         BeerListFragment frag = new BeerListFragment();
@@ -58,7 +58,7 @@ public class BeerListFragment extends Fragment {
 
         if (activity != null) {
             RecyclerView recyclerView = view.findViewById(R.id.beer_list_view);
-            beerListViewAdapter = new BeerListViewAdapter(activity, new ArrayList<Beer>());
+            beerListViewAdapter = new BeerListViewAdapter(activity, new ArrayList<BeerListItem>());
             recyclerView.setLayoutManager(new LinearLayoutManager(activity));
             recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
 
@@ -66,9 +66,9 @@ public class BeerListFragment extends Fragment {
 
             BeerListViewModel beerListViewModel = ViewModelProviders.of(this).get(BeerListViewModel.class);
 
-            beerListViewModel.getBeerListByBreweryId(breweryId).observe(this, new Observer<List<Beer>>() {
+            beerListViewModel.getBeerListByBreweryId(breweryId).observe(this, new Observer<List<BeerListItem>>() {
                 @Override
-                public void onChanged(List<Beer> beers) {
+                public void onChanged(List<BeerListItem> beers) {
                     beerList = beers;
                     beerListViewAdapter.addItems(beerList);
                 }

@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beerme.android.R;
-import com.beerme.android.db.Beer;
+import com.beerme.android.db.BeerListItem;
 
 import java.util.List;
 
@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapter.BeerListViewHolder> {
     // http://antonioleiva.com/recyclerview-listener/
     public interface OnItemClickListener {
-        void onItemClick(@NonNull Beer beer);
+        void onItemClick(@NonNull BeerListItem beer);
     }
 
     private final Activity mActivity;
     private final OnItemClickListener mListener;
-    private List<Beer> mBeerList;
+    private List<BeerListItem> mBeerList;
 
-    public BeerListViewAdapter(@NonNull Activity activity, @NonNull List<Beer> list) {
+    public BeerListViewAdapter(@NonNull Activity activity, @NonNull List<BeerListItem> list) {
         this.mActivity = activity;
         this.mListener = (OnItemClickListener) activity;
         this.mBeerList = list;
@@ -39,12 +39,12 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull BeerListViewHolder holder, int position) {
-        Beer beer = mBeerList.get(position);
+        BeerListItem beer = mBeerList.get(position);
 
         holder.bind(beer, mListener);
 
         holder.nameView.setText(beer.name);
-        holder.styleView.setText(beer.style == null ? "" : (beer.style + " "));
+        holder.styleView.setText(beer.stylename);
         holder.abvView.setText(beer.abv == null ? "" : beer.abv + "% abv");
 
         beer.showStars(mActivity, holder.starsView);
@@ -55,7 +55,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
         return mBeerList.size();
     }
 
-    public void addItems(List<Beer> list) {
+    public void addItems(List<BeerListItem> list) {
         mBeerList = list;
         notifyDataSetChanged();
     }
@@ -77,7 +77,7 @@ public class BeerListViewAdapter extends RecyclerView.Adapter<BeerListViewAdapte
             starsView = view.findViewById(R.id.starsView);
         }
 
-        void bind(@NonNull final Beer beer, @NonNull final BeerListViewAdapter.OnItemClickListener listener) {
+        void bind(@NonNull final BeerListItem beer, @NonNull final BeerListViewAdapter.OnItemClickListener listener) {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

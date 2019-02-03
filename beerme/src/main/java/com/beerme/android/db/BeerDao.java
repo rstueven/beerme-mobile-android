@@ -17,8 +17,8 @@ public abstract class BeerDao {
     @Query("SELECT * FROM beer WHERE name LIKE :name")
     abstract LiveData<Beer> getBeerByName(String name);
 
-    @Query("SELECT * FROM beer WHERE breweryid = :breweryId ORDER BY name")
-    abstract LiveData<List<Beer>> getBeersByBreweryId(long breweryId);
+    @Query("SELECT beer._id, beer.name, beer.beermerating, beer.abv, style.name AS stylename FROM beer LEFT JOIN style ON beer.style = style._id WHERE breweryid = :breweryId ORDER BY beer.name")
+    abstract LiveData<List<BeerListItem>> getBeersByBreweryId(long breweryId);
 
     @Query("SELECT * FROM beer")
     abstract LiveData<List<Beer>> getAllBeers();

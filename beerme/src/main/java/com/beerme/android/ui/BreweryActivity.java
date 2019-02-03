@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.beerme.android.R;
-import com.beerme.android.db.Beer;
+import com.beerme.android.db.BeerListItem;
 import com.beerme.android.db.Brewery;
 import com.google.android.material.tabs.TabLayout;
 
@@ -99,7 +99,7 @@ public class BreweryActivity extends AppCompatActivity implements BeerListViewAd
     }
 
     @Override
-    public void onItemClick(@NonNull Beer beer) {
+    public void onItemClick(@NonNull BeerListItem beer) {
         Log.d("beerme", "BreweryActivity.onItemClick()");
         Log.d("beerme", beer.toString());
     }

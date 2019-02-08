@@ -10,18 +10,12 @@ import android.view.MenuItem;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
-import com.beerme.android.db.BreweryListViewModel;
 import com.beerme.android.util.LocationActivity;
 import com.beerme.android.util.ToolbarIconTinter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends LocationActivity
@@ -36,22 +30,25 @@ public class MainActivity extends LocationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startActivity(new Intent(this, MapActivity.class));
+        this.finish();
+
         RecyclerView recyclerView = findViewById(R.id.brewery_list_view);
-        breweryListViewAdapter = new BreweryListViewAdapter(this, new ArrayList<Brewery>());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-        recyclerView.setAdapter(breweryListViewAdapter);
-
-        BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
-
-        breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
-            @Override
-            public void onChanged(List<Brewery> breweries) {
-                breweryList = breweries;
-                breweryListViewAdapter.addItems(breweryList);
-            }
-        });
+//        breweryListViewAdapter = new BreweryListViewAdapter(this, new ArrayList<Brewery>());
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//
+//        recyclerView.setAdapter(breweryListViewAdapter);
+//
+//        BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
+//
+//        breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
+//            @Override
+//            public void onChanged(List<Brewery> breweries) {
+//                breweryList = breweries;
+//                breweryListViewAdapter.addItems(breweryList);
+//            }
+//        });
     }
 
     @Override

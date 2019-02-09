@@ -34,12 +34,15 @@
 
         <activity
             android:name=".ui.MapActivity"
-            android:label="@string/title_activity_map"></activity>
-        <activity android:name=".ui.BreweryActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.beerme.android.ui.MainActivity" />
-        </activity>
+            android:label="@string/breweries"/>
+        <activity
+            android:name=".ui.BreweryListActivity"
+            android:label="@string/breweries"/>
+        <activity android:name=".ui.BreweryActivity"/>
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.beerme.android.ui.MainActivity" />-->
+        <!--</activity>-->
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

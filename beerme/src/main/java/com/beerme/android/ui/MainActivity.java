@@ -1,111 +1,33 @@
 package com.beerme.android.ui;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
-import com.beerme.android.R;
-import com.beerme.android.db.Brewery;
-import com.beerme.android.util.LocationActivity;
-import com.beerme.android.util.ToolbarIconTinter;
+import com.beerme.android.util.BeerMeActivity;
+import com.beerme.android.util.SharedPref;
 
-import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-public class MainActivity extends LocationActivity
-        implements StatusFilterDialog.StatusFilterListener, DistanceUnitDialog.DistanceUnitListener,
-        BreweryListViewAdapter.OnItemClickListener {
-    private BreweryListViewAdapter breweryListViewAdapter;
-    private List<Brewery> breweryList;
+/**
+ * Just a switch to Map or BreweryList based on the SharedPref setting.
+ */
+public class MainActivity extends BeerMeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        startActivity(new Intent(this, MapActivity.class));
-        this.finish();
+        final String mapOrList = SharedPref.read(SharedPref.Pref.MAP_OR_LIST, MapOrListDialog.DEFAULT);
 
-        RecyclerView recyclerView = findViewById(R.id.brewery_list_view);
-//        breweryListViewAdapter = new BreweryListViewAdapter(this, new ArrayList<Brewery>());
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//
-//        recyclerView.setAdapter(breweryListViewAdapter);
-//
-//        BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
-//
-//        breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
-//            @Override
-//            public void onChanged(List<Brewery> breweries) {
-//                breweryList = breweries;
-//                breweryListViewAdapter.addItems(breweryList);
-//            }
-//        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.brewerylist_menu, menu);
-        ToolbarIconTinter.tintIcons(this, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.status_filter:
-                new StatusFilterDialog(this).build().show();
-                return true;
-            case R.id.distance_unit:
-                new DistanceUnitDialog(this).build().show();
-                return true;
+        switch (mapOrList) {
+            case MapOrListDialog.MAP:
+                startActivity(new Intent(this, MapActivity.class));
+                break;
+            case MapOrListDialog.LIST:
+                startActivity(new Intent(this, BreweryListActivity.class));
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                throw new IllegalArgumentException("MainActivity.onCreate(): unknown mapOrList <" + mapOrList + ">");
         }
-    }
 
-    @Override
-    protected void onLocationUpdated(Location location) {
-        if (location != null && breweryList != null) {
-            breweryListViewAdapter.addItems(breweryList);
-        } else {
-            Log.w("beerme", "MainActivity.onLocationUpdated(): null location or breweryList");
-        }
-    }
-
-    @Override
-    public void onStatusFilterChanged(int statusFilter) {
-//        Log.d("beerme", "MainActivity.onStatusFilterChanged(" + statusFilter + ")");
-        if (breweryList != null) {
-            breweryListViewAdapter.addItems(breweryList);
-        } else {
-            Log.w("beerme", "MainActivity.onStatusFilterChanged(): null breweryList");
-        }
-    }
-
-    @Override
-    public void onDistanceUnitChanged(int distanceUnit) {
-        if (breweryList != null) {
-            breweryListViewAdapter.addItems(breweryList);
-        } else {
-            Log.w("beerme", "MainActivity.onDistanceUnitChanged(): null breweryList");
-        }
-    }
-
-    @Override
-    public void onItemClick(@NonNull Brewery brewery) {
-//        Log.d("beerme", "onItemClick(" + brewery.id + ")");
-        Intent intent = new Intent(this, BreweryActivity.class);
-        intent.putExtra("brewery", brewery);
-        startActivity(intent);
+        this.finish();
     }
 }

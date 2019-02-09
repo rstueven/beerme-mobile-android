@@ -3,8 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/map_or_list"
+        android:icon="@drawable/map_or_list"
+        android:title="@string/map_or_list"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/status_filter"
-        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:icon="@drawable/status_filter"
         android:title="@string/status_filter"
         app:showAsAction="never" />
 

@@ -9,7 +9,7 @@ import com.beerme.android.util.SharedPref;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-class DistanceUnitDialog extends AlertDialog {
+public class DistanceUnitDialog extends AlertDialog {
     private final Activity mActivity;
     private final int itemCount = Measurer.DistanceUnit.size;
     private final String[] itemList = Measurer.DistanceUnit.names();
@@ -18,12 +18,12 @@ class DistanceUnitDialog extends AlertDialog {
         void onDistanceUnitChanged(int distanceUnit);
     }
 
-    DistanceUnitDialog(@NonNull Activity activity) {
+    public DistanceUnitDialog(@NonNull Activity activity) {
         super(activity);
         this.mActivity = activity;
     }
 
-    AlertDialog build() {
+    public AlertDialog build() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setCancelable(false);
 

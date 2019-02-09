@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.beerme.android.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -17,11 +18,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public abstract class LocationActivity extends AppCompatActivity {
+public abstract class LocationActivity extends BeerMeActivity {
     private static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_GRANTED = PackageManager.PERMISSION_GRANTED;
@@ -53,6 +53,17 @@ public abstract class LocationActivity extends AppCompatActivity {
         stopLocationUpdates();
 
         super.onPause();
+    }
+
+    /**
+     * In case finish() gets called from onCreate()
+     */
+    @Override
+    protected void onDestroy() {
+//        Log.d("beerme", "LocationActivity.onDestroy()");
+        stopLocationUpdates();
+
+        super.onDestroy();
     }
 
     @Override

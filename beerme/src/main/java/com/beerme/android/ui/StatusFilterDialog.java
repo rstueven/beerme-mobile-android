@@ -11,7 +11,7 @@ import com.beerme.android.util.SharedPref;
 
 import androidx.annotation.NonNull;
 
-class StatusFilterDialog extends AlertDialog {
+public class StatusFilterDialog extends AlertDialog {
     private final int itemCount = Brewery.Status.size;
     private final String[] itemList = Brewery.Status.names();
     private final boolean[] checkedItems = getCheckedItems(itemCount);
@@ -21,12 +21,12 @@ class StatusFilterDialog extends AlertDialog {
         void onStatusFilterChanged(int statusFilter);
     }
 
-    StatusFilterDialog(@NonNull Activity activity) {
+    public StatusFilterDialog(@NonNull Activity activity) {
         super(activity);
         this.mActivity = activity;
     }
 
-    AlertDialog build() {
+    public AlertDialog build() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setCancelable(false);
 

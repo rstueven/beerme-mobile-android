@@ -13,6 +13,8 @@
     <string name="picture_of_the_brewery">Picture of the brewery</string>
     <string name="info">Info</string>
     <string name="title_activity_map">Map</string>
+    <string name="breweries">Breweries</string>
+    <string name="map_or_list">Map or List</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

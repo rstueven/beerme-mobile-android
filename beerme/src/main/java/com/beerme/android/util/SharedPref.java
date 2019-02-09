@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.beerme.android.db.Brewery;
+import com.beerme.android.ui.MapOrListDialog;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,7 @@ public class SharedPref {
         DB_LAST_UPDATE("dbLastUpdate"),
         STATUS_FILTER("statusFilter"),
         DISTANCE_UNIT("distanceUnit"),
+        MAP_OR_LIST("mapOrList"),
         IS_REQUESTING_LOCATION_UPDATES("isRequestingLocationUpdates");
 
         private final String key;
@@ -49,6 +51,11 @@ public class SharedPref {
         int distanceUnit = SharedPref.read(Pref.DISTANCE_UNIT, 0);
         if (distanceUnit == 0) {
             SharedPref.write(Pref.DISTANCE_UNIT, Measurer.DistanceUnit.DEFAULT);
+        }
+
+        String mapOrList = SharedPref.read(Pref.MAP_OR_LIST, null);
+        if (mapOrList == null) {
+            SharedPref.write(Pref.MAP_OR_LIST, MapOrListDialog.DEFAULT);
         }
     }
 

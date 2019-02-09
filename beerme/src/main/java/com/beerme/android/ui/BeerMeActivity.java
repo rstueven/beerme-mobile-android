@@ -1,13 +1,11 @@
-package com.beerme.android.util;
+package com.beerme.android.ui;
 
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.beerme.android.R;
-import com.beerme.android.ui.DistanceUnitDialog;
-import com.beerme.android.ui.MapOrListDialog;
-import com.beerme.android.ui.StatusFilterDialog;
+import com.beerme.android.util.ToolbarIconTinter;
 
 import androidx.appcompat.app.AppCompatActivity;
 

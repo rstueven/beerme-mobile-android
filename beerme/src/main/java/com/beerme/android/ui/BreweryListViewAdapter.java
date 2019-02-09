@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
-import com.beerme.android.util.LocationActivity;
 import com.beerme.android.util.SharedPref;
 
 import java.util.ArrayList;

@@ -3,7 +3,6 @@ package com.beerme.android.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.beerme.android.util.BeerMeActivity;
 import com.beerme.android.util.SharedPref;
 
 /**

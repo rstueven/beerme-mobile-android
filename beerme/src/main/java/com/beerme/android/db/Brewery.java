@@ -155,9 +155,9 @@ public class Brewery implements Serializable {
             Location.distanceBetween(location.getLatitude(), location.getLongitude(), latitude, longitude, results);
             Measurer.DistanceUnit distanceUnit = Measurer.DistanceUnit.byCode(SharedPref.read(SharedPref.Pref.DISTANCE_UNIT, Measurer.DistanceUnit.DEFAULT));
             String distance = Measurer.distanceToUnit(results[0], distanceUnit);
-            float bearing = results[1];
+            String bearing = Measurer.bearingToDirection(results[1]);
 
-            return String.format(Locale.getDefault(), "%s %s", distance, Measurer.bearingToDirection(bearing));
+            return String.format(Locale.getDefault(), "%s %s", distance, bearing);
         }
     }
 

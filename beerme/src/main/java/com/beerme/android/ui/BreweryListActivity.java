@@ -71,6 +71,7 @@ public class BreweryListActivity extends LocationActivity
 
     @Override
     public void onDistanceUnitChanged(int distanceUnit) {
+        Log.d("beerme", "MainActivity.onDistanceUnitChanged(" + distanceUnit + ")");
         if (breweryList != null) {
             breweryListViewAdapter.addItems(breweryList);
         } else {

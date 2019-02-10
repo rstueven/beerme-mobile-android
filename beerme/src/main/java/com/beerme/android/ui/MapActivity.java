@@ -14,9 +14,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -24,15 +24,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class MapActivity extends LocationActivity
-        implements OnMapReadyCallback, MapOrListDialog.MapOrListListener, StatusFilterDialog.StatusFilterListener {
+        implements OnMapReadyCallback, MapOrListDialog.MapOrListListener,
+        StatusFilterDialog.StatusFilterListener {
     private GoogleMap mMap;
-    private List<Long> mapped = new ArrayList<>();
+    private ClusterManager<MarkerItem> mClusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        // Obtain the MapFragment and get notified when the map is ready to be used.
+
         MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment == null) {
@@ -42,15 +43,6 @@ public class MapActivity extends LocationActivity
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the MapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     // If you've got this far, you already have the location permission.
     @SuppressLint("MissingPermission")
     @Override
@@ -58,6 +50,10 @@ public class MapActivity extends LocationActivity
         mMap = googleMap;
 
         mMap.setMyLocationEnabled(true);
+
+        mClusterManager = new ClusterManager<>(this, mMap);
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
 
         final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
         loadBreweryMarkers(statusFilter);
@@ -71,15 +67,16 @@ public class MapActivity extends LocationActivity
             @Override
             public void onChanged(List<Brewery> breweries) {
                 Log.d("beerme", "MapActivity.observe()");
-                LatLng latLng;
+                MarkerItem item;
 
                 for (Brewery brewery : breweries) {
-                    if (!mapped.contains(brewery.id) && ((brewery.status & statusFilter) != 0)) {
-                        mapped.add(brewery.id);
-                        latLng = new LatLng(brewery.latitude, brewery.longitude);
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(brewery.name));
+                    if ((brewery.status & statusFilter) != 0) {
+                        item = new MarkerItem(brewery.latitude, brewery.longitude, brewery.name, brewery.address);
+                        mClusterManager.addItem(item);
                     }
                 }
+
+                mClusterManager.cluster();
             }
         });
     }
@@ -106,8 +103,35 @@ public class MapActivity extends LocationActivity
     @Override
     public void onStatusFilterChanged(int statusFilter) {
         Log.d("beerme", "MapActivity.onStatusFilterChanged(" + statusFilter + ")");
-        mapped.clear();
         mMap.clear();
+        mClusterManager.clearItems();
         loadBreweryMarkers(statusFilter);
+    }
+
+    public class MarkerItem implements ClusterItem {
+        private final LatLng mPosition;
+        private final String mTitle;
+        private final String mSnippet;
+
+        MarkerItem(double lat, double lng, String title, String snippet) {
+            mPosition = new LatLng(lat, lng);
+            mTitle = title;
+            mSnippet = snippet;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return mPosition;
+        }
+
+        @Override
+        public String getTitle() {
+            return mTitle;
+        }
+
+        @Override
+        public String getSnippet() {
+            return mSnippet;
+        }
     }
 }

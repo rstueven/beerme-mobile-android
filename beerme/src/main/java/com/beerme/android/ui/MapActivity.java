@@ -24,7 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class MapActivity extends LocationActivity
-        implements OnMapReadyCallback, MapOrListDialog.MapOrListListener {
+        implements OnMapReadyCallback, MapOrListDialog.MapOrListListener, StatusFilterDialog.StatusFilterListener {
     private GoogleMap mMap;
     private List<Long> mapped = new ArrayList<>();
 
@@ -59,24 +59,18 @@ public class MapActivity extends LocationActivity
 
         mMap.setMyLocationEnabled(true);
 
-        loadBreweryMarkers();
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
+        loadBreweryMarkers(statusFilter);
     }
 
-    private void loadBreweryMarkers() {
-        Log.d("beerme", "MapActivity.loadBreweryMarkers()");
-        final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
+    private void loadBreweryMarkers(final int statusFilter) {
+        Log.d("beerme", "MapActivity.loadBreweryMarkers(" + statusFilter + ")");
         BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
 
         breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
             @Override
             public void onChanged(List<Brewery> breweries) {
                 Log.d("beerme", "MapActivity.observe()");
-                Log.d("beerme", breweries.size() + " breweries");
                 LatLng latLng;
 
                 for (Brewery brewery : breweries) {
@@ -93,11 +87,11 @@ public class MapActivity extends LocationActivity
     @Override
     protected void onLocationUpdated(Location location) {
 //        Log.d("beerme", "MapActivity.onLocationUpdated()");
-        if (location != null && mMap != null) {
+//        if (location != null && mMap != null) {
 //            Log.d("beerme", location.toString());
 //            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        }
+//        }
     }
 
     @Override
@@ -107,5 +101,13 @@ public class MapActivity extends LocationActivity
             startActivity(new Intent(this, BreweryListActivity.class));
             this.finish();
         }
+    }
+
+    @Override
+    public void onStatusFilterChanged(int statusFilter) {
+        Log.d("beerme", "MapActivity.onStatusFilterChanged(" + statusFilter + ")");
+        mapped.clear();
+        mMap.clear();
+        loadBreweryMarkers(statusFilter);
     }
 }

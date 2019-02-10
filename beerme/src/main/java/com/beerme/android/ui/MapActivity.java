@@ -7,17 +7,26 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.beerme.android.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.beerme.android.db.Brewery;
+import com.beerme.android.db.BreweryListViewModel;
+import com.beerme.android.util.SharedPref;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class MapActivity extends LocationActivity
         implements OnMapReadyCallback, MapOrListDialog.MapOrListListener {
     private GoogleMap mMap;
+    private List<Long> mapped = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,12 @@ public class MapActivity extends LocationActivity
     // If you've got this far, you already have the location permission.
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         mMap.setMyLocationEnabled(true);
+
+        loadBreweryMarkers();
 
         // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
@@ -56,13 +67,36 @@ public class MapActivity extends LocationActivity
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    private void loadBreweryMarkers() {
+        Log.d("beerme", "MapActivity.loadBreweryMarkers()");
+        final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
+        BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
+
+        breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
+            @Override
+            public void onChanged(List<Brewery> breweries) {
+                Log.d("beerme", "MapActivity.observe()");
+                Log.d("beerme", breweries.size() + " breweries");
+                LatLng latLng;
+
+                for (Brewery brewery : breweries) {
+                    if (!mapped.contains(brewery.id) && ((brewery.status & statusFilter) != 0)) {
+                        mapped.add(brewery.id);
+                        latLng = new LatLng(brewery.latitude, brewery.longitude);
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(brewery.name));
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     protected void onLocationUpdated(Location location) {
 //        Log.d("beerme", "MapActivity.onLocationUpdated()");
         if (location != null && mMap != null) {
 //            Log.d("beerme", location.toString());
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+//            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
         }
     }
 

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -53,7 +57,34 @@ public class MapActivity extends LocationActivity
 
         mClusterManager = new ClusterManager<>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+//        mMap.setOnMarkerClickListener(mClusterManager);
+//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                Log.d("beerme", "onMarkerClick(" + marker.getTitle() + ")");
+//                return false;
+//            }
+//        });
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                Log.d("beerme", "getInfoWindow(" + marker.getTitle() + ")");
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                Log.d("beerme", "getInfoContents(" + marker.getTitle() + ")");
+                View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.brewery_info_window, null);
+                TextView name = view.findViewById(R.id.name);
+                TextView address = view.findViewById(R.id.address);
+
+                name.setText(marker.getTitle());
+                address.setText(marker.getSnippet());
+
+                return view;
+            }
+        });
 
         final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
         loadBreweryMarkers(statusFilter);

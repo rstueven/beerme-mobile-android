@@ -8,16 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beerme.android.R;
 import com.beerme.android.db.Brewery;
 import com.beerme.android.db.BreweryListViewModel;
 import com.beerme.android.util.SharedPref;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -50,14 +53,49 @@ public class MapActivity extends LocationActivity
     // If you've got this far, you already have the location permission.
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(@NonNull final GoogleMap googleMap) {
         mMap = googleMap;
 
         mMap.setMyLocationEnabled(true);
 
         mClusterManager = new ClusterManager<>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
-//        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<MarkerItem> cluster) {
+                java.util.Collection<MarkerItem> collection = cluster.getItems();
+
+                LatLng pos;
+                LatLng loc = collection.iterator().next().getPosition();
+                double lat = loc.latitude;
+                double lng = loc.longitude;
+                boolean same = true;
+
+                for (MarkerItem m : collection) {
+                    pos = m.mPosition;
+                    if (pos.latitude != lat || pos.longitude != lng) {
+                        same = false;
+                        break;
+                    }
+                }
+
+                // TODO: Uncluster all the markers in a "same" cluster.
+                Log.d("beerme", "SAME: " + same);
+                if (same) {
+                    Toast.makeText(MapActivity.this, collection.size() + " breweries listed at this location.", Toast.LENGTH_LONG).show();
+                } else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            cluster.getPosition(),
+                            (float) Math.floor(googleMap.getCameraPosition().zoom + 1)),
+                            300, null
+                    );
+                }
+                return true;
+            }
+        });
+
 //        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //            @Override
 //            public boolean onMarkerClick(Marker marker) {
@@ -69,6 +107,7 @@ public class MapActivity extends LocationActivity
             @Override
             public View getInfoWindow(Marker marker) {
                 Log.d("beerme", "getInfoWindow(" + marker.getTitle() + ")");
+                Log.d("beerme", marker.toString());
                 return null;
             }
 
@@ -163,6 +202,16 @@ public class MapActivity extends LocationActivity
         @Override
         public String getSnippet() {
             return mSnippet;
+        }
+
+        @Override
+        @NonNull
+        public String toString() {
+            return "MarkerItem{" +
+                    "mPosition=" + mPosition +
+                    ", mTitle='" + mTitle + '\'' +
+                    ", mSnippet='" + mSnippet + '\'' +
+                    '}';
         }
     }
 }

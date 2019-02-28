@@ -2,7 +2,6 @@ package com.beerme.android.ui;
 
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.beerme.android.R;
@@ -26,9 +25,10 @@ public class BreweryListActivity extends LocationActivity
     private List<Brewery> breweryList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+//    protected void onCreate(Bundle savedInstanceState) {
+    public void onPermissionGranted() {
         setTheme(R.style.AppTheme);
-        super.onCreate(savedInstanceState);
+//        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brewery_list);
 
         RecyclerView recyclerView = findViewById(R.id.brewery_list_view);

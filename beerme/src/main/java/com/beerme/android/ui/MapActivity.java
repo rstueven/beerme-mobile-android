@@ -1,9 +1,9 @@
 package com.beerme.android.ui;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,21 +27,27 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class MapActivity extends LocationActivity
         implements OnMapReadyCallback, MapOrListDialog.MapOrListListener,
         StatusFilterDialog.StatusFilterListener {
+
+    private static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final int PERMISSION_GRANTED = PackageManager.PERMISSION_GRANTED;
+
     private GoogleMap mMap;
     private ClusterManager<MarkerItem> mClusterManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+//    protected void onCreate(Bundle savedInstanceState) {
+    public void onPermissionGranted() {
+        Log.d("beerme", "MapActivity.onPermissionGranted()");
         setContentView(R.layout.activity_map);
 
-        MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment == null) {
             throw new IllegalStateException("MapActivity.onCreate(): null mapFragment");
@@ -50,51 +56,51 @@ public class MapActivity extends LocationActivity
         mapFragment.getMapAsync(this);
     }
 
-    // If you've got this far, you already have the location permission.
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
+        Log.d("beerme", "MapActivity.onMapReady()");
         mMap = googleMap;
 
-        mMap.setMyLocationEnabled(true);
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
 
-        mClusterManager = new ClusterManager<>(this, mMap);
-        mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+            mClusterManager = new ClusterManager<>(this, mMap);
+            mMap.setOnCameraIdleListener(mClusterManager);
+            mMap.setOnMarkerClickListener(mClusterManager);
 
-        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerItem>() {
-            @Override
-            public boolean onClusterClick(Cluster<MarkerItem> cluster) {
-                java.util.Collection<MarkerItem> collection = cluster.getItems();
+            mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerItem>() {
+                @Override
+                public boolean onClusterClick(Cluster<MarkerItem> cluster) {
+                    java.util.Collection<MarkerItem> collection = cluster.getItems();
 
-                LatLng pos;
-                LatLng loc = collection.iterator().next().getPosition();
-                double lat = loc.latitude;
-                double lng = loc.longitude;
-                boolean same = true;
+                    LatLng pos;
+                    LatLng loc = collection.iterator().next().getPosition();
+                    double lat = loc.latitude;
+                    double lng = loc.longitude;
+                    boolean same = true;
 
-                for (MarkerItem m : collection) {
-                    pos = m.mPosition;
-                    if (pos.latitude != lat || pos.longitude != lng) {
-                        same = false;
-                        break;
+                    for (MarkerItem m : collection) {
+                        pos = m.mPosition;
+                        if (pos.latitude != lat || pos.longitude != lng) {
+                            same = false;
+                            break;
+                        }
                     }
-                }
 
-                // TODO: Uncluster all the markers in a "same" cluster.
-                Log.d("beerme", "SAME: " + same);
-                if (same) {
-                    Toast.makeText(MapActivity.this, collection.size() + " breweries listed at this location.", Toast.LENGTH_LONG).show();
-                } else {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                            cluster.getPosition(),
-                            (float) Math.floor(googleMap.getCameraPosition().zoom + 1)),
-                            300, null
-                    );
+                    // TODO: Uncluster all the markers in a "same" cluster.
+                    Log.d("beerme", "SAME: " + same);
+                    if (same) {
+                        Toast.makeText(MapActivity.this, collection.size() + " breweries listed at this location.", Toast.LENGTH_LONG).show();
+                    } else {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                                cluster.getPosition(),
+                                (float) Math.floor(googleMap.getCameraPosition().zoom + 1)),
+                                300, null
+                        );
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
 
 //        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //            @Override
@@ -103,30 +109,31 @@ public class MapActivity extends LocationActivity
 //                return false;
 //            }
 //        });
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                Log.d("beerme", "getInfoWindow(" + marker.getTitle() + ")");
-                Log.d("beerme", marker.toString());
-                return null;
-            }
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    Log.d("beerme", "getInfoWindow(" + marker.getTitle() + ")");
+                    Log.d("beerme", marker.toString());
+                    return null;
+                }
 
-            @Override
-            public View getInfoContents(Marker marker) {
-                Log.d("beerme", "getInfoContents(" + marker.getTitle() + ")");
-                View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.brewery_info_window, null);
-                TextView name = view.findViewById(R.id.name);
-                TextView address = view.findViewById(R.id.address);
+                @Override
+                public View getInfoContents(Marker marker) {
+                    Log.d("beerme", "getInfoContents(" + marker.getTitle() + ")");
+                    View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.brewery_info_window, null);
+                    TextView name = view.findViewById(R.id.name);
+                    TextView address = view.findViewById(R.id.address);
 
-                name.setText(marker.getTitle());
-                address.setText(marker.getSnippet());
+                    name.setText(marker.getTitle());
+                    address.setText(marker.getSnippet());
 
-                return view;
-            }
-        });
+                    return view;
+                }
+            });
 
-        final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
-        loadBreweryMarkers(statusFilter);
+            final int statusFilter = SharedPref.read(SharedPref.Pref.STATUS_FILTER, 0);
+            loadBreweryMarkers(statusFilter);
+        }
     }
 
     private void loadBreweryMarkers(final int statusFilter) {

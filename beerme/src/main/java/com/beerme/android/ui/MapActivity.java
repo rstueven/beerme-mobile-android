@@ -1,10 +1,13 @@
 package com.beerme.android.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,9 @@ public class MapActivity extends LocationActivity
         mapFragment.getMapAsync(this);
     }
 
+    private Cluster<MarkerItem> clickedCluster;
+    private MarkerItem clickedItem;
+
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         Log.d("beerme", "MapActivity.onMapReady()");
@@ -61,68 +67,26 @@ public class MapActivity extends LocationActivity
 
             mClusterManager = new ClusterManager<>(this, mMap);
             mMap.setOnCameraIdleListener(mClusterManager);
+            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+
+            mClusterManager.getClusterMarkerCollection().setOnInfoWindowAdapter(new ClusterInfoWindowAdapter());
+            mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new ItemInfoWindowAdapter(this));
+
             mMap.setOnMarkerClickListener(mClusterManager);
 
             mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerItem>() {
                 @Override
                 public boolean onClusterClick(Cluster<MarkerItem> cluster) {
-                    java.util.Collection<MarkerItem> collection = cluster.getItems();
-
-                    LatLng pos;
-                    LatLng loc = collection.iterator().next().getPosition();
-                    double lat = loc.latitude;
-                    double lng = loc.longitude;
-                    boolean same = true;
-
-                    for (MarkerItem m : collection) {
-                        pos = m.mPosition;
-                        if (pos.latitude != lat || pos.longitude != lng) {
-                            same = false;
-                            break;
-                        }
-                    }
-
-                    // TODO: Uncluster all the markers in a "same" cluster.
-                    Log.d("beerme", "SAME: " + same);
-                    if (same) {
-                        Toast.makeText(MapActivity.this, collection.size() + " breweries listed at this location.", Toast.LENGTH_LONG).show();
-                    } else {
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                cluster.getPosition(),
-                                (float) Math.floor(googleMap.getCameraPosition().zoom + 1)),
-                                300, null
-                        );
-                    }
-                    return true;
+                    clickedCluster = cluster;
+                    return false;
                 }
             });
 
-//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//                Log.d("beerme", "onMarkerClick(" + marker.getTitle() + ")");
-//                return false;
-//            }
-//        });
-            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerItem>() {
                 @Override
-                public View getInfoWindow(Marker marker) {
-                    Log.d("beerme", "getInfoWindow(" + marker.getTitle() + ")");
-                    Log.d("beerme", marker.toString());
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    Log.d("beerme", "getInfoContents(" + marker.getTitle() + ")");
-                    View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.brewery_info_window, null);
-                    TextView name = view.findViewById(R.id.name);
-                    TextView address = view.findViewById(R.id.address);
-
-                    name.setText(marker.getTitle());
-                    address.setText(marker.getSnippet());
-
-                    return view;
+                public boolean onClusterItemClick(MarkerItem item) {
+                    clickedItem = item;
+                    return false;
                 }
             });
 
@@ -143,7 +107,7 @@ public class MapActivity extends LocationActivity
 
                 for (Brewery brewery : breweries) {
                     if ((brewery.status & statusFilter) != 0) {
-                        item = new MarkerItem(brewery.latitude, brewery.longitude, brewery.name, brewery.address);
+                        item = new MarkerItem(brewery);
                         mClusterManager.addItem(item);
                     }
                 }
@@ -181,14 +145,16 @@ public class MapActivity extends LocationActivity
     }
 
     public class MarkerItem implements ClusterItem {
+        private final Brewery mBrewery;
         private final LatLng mPosition;
-        private final String mTitle;
-        private final String mSnippet;
 
-        MarkerItem(double lat, double lng, String title, String snippet) {
-            mPosition = new LatLng(lat, lng);
-            mTitle = title;
-            mSnippet = snippet;
+        MarkerItem(@NonNull final Brewery brewery) {
+            mBrewery = brewery;
+            mPosition = new LatLng(mBrewery.latitude, mBrewery.longitude);
+        }
+
+        public Brewery getBrewery() {
+            return mBrewery;
         }
 
         @Override
@@ -198,22 +164,111 @@ public class MapActivity extends LocationActivity
 
         @Override
         public String getTitle() {
-            return mTitle;
+            return mBrewery.name;
         }
 
         @Override
         public String getSnippet() {
-            return mSnippet;
+            return mBrewery.address;
         }
 
         @Override
         @NonNull
         public String toString() {
             return "MarkerItem{" +
-                    "mPosition=" + mPosition +
-                    ", mTitle='" + mTitle + '\'' +
-                    ", mSnippet='" + mSnippet + '\'' +
+                    "mPosition=" + getPosition() +
+                    ", mTitle='" + getTitle() + '\'' +
+                    ", mSnippet='" + getSnippet() + '\'' +
                     '}';
+        }
+    }
+
+    class ClusterInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        @Override
+        public View getInfoWindow(Marker marker) {
+            Log.d("beerme", "ClusterInfoWindowAdapter.getInfoWindow()");
+            Log.d("beerme", "MARKER: " + marker.toString());
+            Log.d("beerme", "CLICKED_CLUSTER: " + clickedCluster.toString());
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            Log.d("beerme", "ClusterInfoWindowAdapter.getInfoContents()");
+            Log.d("beerme", "MARKER: " + marker.toString());
+            Log.d("beerme", "CLICKED_CLUSTER: " + clickedCluster.toString());
+            java.util.Collection<MarkerItem> collection = clickedCluster.getItems();
+
+            LatLng pos;
+            LatLng loc = collection.iterator().next().getPosition();
+            double lat = loc.latitude;
+            double lng = loc.longitude;
+            boolean same = true;
+
+            for (MarkerItem m : collection) {
+                pos = m.mPosition;
+                if (pos.latitude != lat || pos.longitude != lng) {
+                    same = false;
+                    break;
+                }
+            }
+
+            if (same) {
+                // TODO: Uncluster all the markers in a "same" cluster.
+                Toast.makeText(MapActivity.this, collection.size() + " breweries listed at this location.", Toast.LENGTH_LONG).show();
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        clickedCluster.getPosition(),
+                        (float) Math.floor(mMap.getCameraPosition().zoom + 1)),
+                        300, null
+                );
+            }
+            return null;
+        }
+    }
+
+    class ItemInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final Activity mActivity;
+
+        ItemInfoWindowAdapter(@NonNull Activity activity) {
+            mActivity = activity;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            Log.d("beerme", "ItemInfoWindowAdapter.getInfoWindow()");
+            Log.d("beerme", "MARKER: " + marker.toString());
+            Log.d("beerme", "CLICKED_ITEM: " + clickedItem.toString());
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            Log.d("beerme", "ItemInfoWindowAdapter.getInfoContents()");
+            Log.d("beerme", "MARKER: " + marker.toString());
+            Log.d("beerme", "CLICKED_ITEM: " + clickedItem.toString());
+            View view = LayoutInflater.from(mActivity).inflate(R.layout.brewery_info_window, null);
+            TextView nameView = view.findViewById(R.id.name_view);
+            TextView addressView = view.findViewById(R.id.address_view);
+            TextView hoursView = view.findViewById(R.id.hours_view);
+            LinearLayout servicesView = view.findViewById(R.id.services_layout);
+
+            nameView.setText(marker.getTitle());
+            addressView.setText(marker.getSnippet());
+
+            Brewery brewery = clickedItem.getBrewery();
+
+            String hours = brewery.hours;
+            if (TextUtils.isEmpty(hours)) {
+                hoursView.setVisibility(View.GONE);
+            } else {
+                hoursView.setVisibility(View.VISIBLE);
+                hoursView.setText(clickedItem.getBrewery().hours);
+            }
+
+            brewery.showServiceIcons(mActivity, servicesView);
+
+            return view;
         }
     }
 }

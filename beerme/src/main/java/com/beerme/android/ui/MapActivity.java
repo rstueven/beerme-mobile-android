@@ -1,8 +1,6 @@
 package com.beerme.android.ui;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,9 +32,6 @@ import androidx.lifecycle.ViewModelProviders;
 public class MapActivity extends LocationActivity
         implements OnMapReadyCallback, MapOrListDialog.MapOrListListener,
         StatusFilterDialog.StatusFilterListener {
-
-    private static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final int PERMISSION_GRANTED = PackageManager.PERMISSION_GRANTED;
 
     private GoogleMap mMap;
     private ClusterManager<MarkerItem> mClusterManager;

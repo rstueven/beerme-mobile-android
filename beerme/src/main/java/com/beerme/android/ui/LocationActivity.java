@@ -23,9 +23,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public abstract class LocationActivity extends BeerMeActivity {
-    private static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    protected static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int REQUEST_FINE_LOCATION = 1;
-    private static final int PERMISSION_GRANTED = PackageManager.PERMISSION_GRANTED;
+    protected static final int PERMISSION_GRANTED = PackageManager.PERMISSION_GRANTED;
     private static final int INTERVAL = 5000;
     private static final String CURRENT_LOCATION = "currentLocation";
 

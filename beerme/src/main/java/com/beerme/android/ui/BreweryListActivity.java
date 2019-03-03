@@ -60,7 +60,6 @@ public class BreweryListActivity extends LocationActivity
 
     @Override
     public void onStatusFilterChanged(int statusFilter) {
-//        Log.d("beerme", "MainActivity.onStatusFilterChanged(" + statusFilter + ")");
         if (breweryList != null) {
             breweryListViewAdapter.addItems(breweryList);
         } else {
@@ -70,7 +69,6 @@ public class BreweryListActivity extends LocationActivity
 
     @Override
     public void onDistanceUnitChanged(int distanceUnit) {
-        Log.d("beerme", "MainActivity.onDistanceUnitChanged(" + distanceUnit + ")");
         if (breweryList != null) {
             breweryListViewAdapter.addItems(breweryList);
         } else {
@@ -80,7 +78,6 @@ public class BreweryListActivity extends LocationActivity
 
     @Override
     public void onItemClick(@NonNull Brewery brewery) {
-//        Log.d("beerme", "onItemClick(" + brewery.id + ")");
         Intent intent = new Intent(this, BreweryActivity.class);
         intent.putExtra("brewery", brewery);
         startActivity(intent);
@@ -88,7 +85,6 @@ public class BreweryListActivity extends LocationActivity
 
     @Override
     public void onMapOrListChanged(@NonNull String mapOrList) {
-        Log.d("beerme", "BreweryListActivity.onMapOrListChanged(" + mapOrList + ")");
         if (mapOrList.equals(MapOrListDialog.MAP)) {
             startActivity(new Intent(this, MapActivity.class));
             this.finish();

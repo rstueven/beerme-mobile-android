@@ -34,7 +34,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class MapActivity extends LocationActivity
         implements OnMapReadyCallback, MapOrListDialog.MapOrListListener,
-        StatusFilterDialog.StatusFilterListener {
+        StatusFilterDialog.StatusFilterListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private ClusterManager<MarkerItem> mClusterManager;
@@ -42,7 +42,6 @@ public class MapActivity extends LocationActivity
     @Override
 //    protected void onCreate(Bundle savedInstanceState) {
     public void onPermissionGranted() {
-        Log.d("beerme", "MapActivity.onPermissionGranted()");
         setContentView(R.layout.activity_map);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -59,7 +58,6 @@ public class MapActivity extends LocationActivity
 
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
-        Log.d("beerme", "MapActivity.onMapReady()");
         mMap = googleMap;
 
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
@@ -68,6 +66,7 @@ public class MapActivity extends LocationActivity
             mClusterManager = new ClusterManager<>(this, mMap);
             mMap.setOnCameraIdleListener(mClusterManager);
             mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+            mMap.setOnInfoWindowClickListener(this);
 
             mClusterManager.getClusterMarkerCollection().setOnInfoWindowAdapter(new ClusterInfoWindowAdapter());
             mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new ItemInfoWindowAdapter(this));
@@ -96,13 +95,11 @@ public class MapActivity extends LocationActivity
     }
 
     private void loadBreweryMarkers(final int statusFilter) {
-        Log.d("beerme", "MapActivity.loadBreweryMarkers(" + statusFilter + ")");
         BreweryListViewModel breweryListViewModel = ViewModelProviders.of(this).get(BreweryListViewModel.class);
 
         breweryListViewModel.getBreweryList().observe(this, new Observer<List<Brewery>>() {
             @Override
             public void onChanged(List<Brewery> breweries) {
-                Log.d("beerme", "MapActivity.observe()");
                 MarkerItem item;
 
                 for (Brewery brewery : breweries) {
@@ -129,7 +126,6 @@ public class MapActivity extends LocationActivity
 
     @Override
     public void onMapOrListChanged(@NonNull String mapOrList) {
-        Log.d("beerme", "MapActivity.onMapOrListChanged(" + mapOrList + ")");
         if (mapOrList.equals(MapOrListDialog.LIST)) {
             startActivity(new Intent(this, BreweryListActivity.class));
             this.finish();
@@ -138,10 +134,17 @@ public class MapActivity extends LocationActivity
 
     @Override
     public void onStatusFilterChanged(int statusFilter) {
-        Log.d("beerme", "MapActivity.onStatusFilterChanged(" + statusFilter + ")");
         mMap.clear();
         mClusterManager.clearItems();
         loadBreweryMarkers(statusFilter);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        final Brewery brewery = clickedItem.getBrewery();
+        Intent intent = new Intent(this, BreweryActivity.class);
+        intent.putExtra("brewery", brewery);
+        startActivity(intent);
     }
 
     public class MarkerItem implements ClusterItem {
@@ -186,17 +189,11 @@ public class MapActivity extends LocationActivity
     class ClusterInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         @Override
         public View getInfoWindow(Marker marker) {
-            Log.d("beerme", "ClusterInfoWindowAdapter.getInfoWindow()");
-            Log.d("beerme", "MARKER: " + marker.toString());
-            Log.d("beerme", "CLICKED_CLUSTER: " + clickedCluster.toString());
             return null;
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-            Log.d("beerme", "ClusterInfoWindowAdapter.getInfoContents()");
-            Log.d("beerme", "MARKER: " + marker.toString());
-            Log.d("beerme", "CLICKED_CLUSTER: " + clickedCluster.toString());
             java.util.Collection<MarkerItem> collection = clickedCluster.getItems();
 
             LatLng pos;
@@ -236,17 +233,11 @@ public class MapActivity extends LocationActivity
 
         @Override
         public View getInfoWindow(Marker marker) {
-            Log.d("beerme", "ItemInfoWindowAdapter.getInfoWindow()");
-            Log.d("beerme", "MARKER: " + marker.toString());
-            Log.d("beerme", "CLICKED_ITEM: " + clickedItem.toString());
             return null;
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-            Log.d("beerme", "ItemInfoWindowAdapter.getInfoContents()");
-            Log.d("beerme", "MARKER: " + marker.toString());
-            Log.d("beerme", "CLICKED_ITEM: " + clickedItem.toString());
             View view = LayoutInflater.from(mActivity).inflate(R.layout.brewery_info_window, null);
             TextView nameView = view.findViewById(R.id.name_view);
             TextView addressView = view.findViewById(R.id.address_view);

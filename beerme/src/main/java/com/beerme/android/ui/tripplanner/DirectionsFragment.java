@@ -1,6 +1,6 @@
 package com.beerme.android.ui.tripplanner;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class DirectionsFragment extends Fragment {
 //	private static final String DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json?";

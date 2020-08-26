@@ -3,8 +3,8 @@ package com.beerme.android.ui;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.beerme.android.R;
 import com.beerme.android.location.LocationFragment;

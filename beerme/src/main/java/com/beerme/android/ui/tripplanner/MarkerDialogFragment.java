@@ -1,6 +1,6 @@
 package com.beerme.android.ui.tripplanner;
 
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 
 public class MarkerDialogFragment extends DialogFragment {
 

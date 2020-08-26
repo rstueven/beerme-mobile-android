@@ -6,8 +6,8 @@ import java.util.Map;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.beerme.android.R;
 import com.beerme.android.ui.DialogFrag;

@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aFileDialog/aFileDialog.iml" filepath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/beerme/beerme.iml" filepath="$PROJECT_DIR$/beerme/beerme.iml" />
-      <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android.iml" filepath="$PROJECT_DIR$/beerme-mobile-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aFileDialog/aFileDialog.iml" filepath="$PROJECT_DIR$/aFileDialog/aFileDialog.iml" group="beerme-mobile-android/aFileDialog" />
+      <module fileurl="file://$PROJECT_DIR$/beerme/beerme.iml" filepath="$PROJECT_DIR$/beerme/beerme.iml" group="beerme-mobile-android/beerme" />
+      <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android.iml" filepath="$PROJECT_DIR$/beerme-mobile-android.iml" group="beerme-mobile-android" />
     </modules>
   </component>
 </project>

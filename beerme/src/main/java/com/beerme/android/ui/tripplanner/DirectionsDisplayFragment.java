@@ -1,6 +1,6 @@
 package com.beerme.android.ui.tripplanner;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class DirectionsDisplayFragment extends Fragment {
 //    private Activity mActivity;

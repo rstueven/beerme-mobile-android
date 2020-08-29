@@ -35,6 +35,13 @@ android {
             versionName "2.5.5-56 (free)"
         }
     }
+
+    // Necessary until minSdkVersion >= 26
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+
+    }
 }
 
 dependencies {

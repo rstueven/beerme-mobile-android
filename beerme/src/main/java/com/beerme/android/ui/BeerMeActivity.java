@@ -40,6 +40,8 @@ import com.beerme.android.utils.Version;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -93,16 +95,20 @@ public abstract class BeerMeActivity extends AppCompatActivity {
             if (adView != null) {
                 adView.setVisibility(View.VISIBLE);
                 adView.setAdListener(new AdListener() {
-                    @Override
+                    //                    @Override
                     public void onAdFailedToLoad(int errorCode) {
                         Log.w(Utils.APPTAG, "Ad failed to load: " + errorCode);
                     }
                 });
 
-                AdRequest.Builder builder = new AdRequest.Builder();
-                builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                builder.addTestDevice("C8E6BE9575D0D42208B498EF58A9B3A8");
-                adView.loadAd(builder.build());
+                List<String> testDevices = new ArrayList<>();
+                testDevices.add(AdRequest.DEVICE_ID_EMULATOR);
+
+                RequestConfiguration requestConfiguration = new RequestConfiguration.Builder()
+                        .setTestDeviceIds(testDevices)
+                        .build();
+                MobileAds.setRequestConfiguration(requestConfiguration);
+                adView.loadAd(new AdRequest.Builder().build());
             }
         }
     }
@@ -130,7 +136,8 @@ public abstract class BeerMeActivity extends AppCompatActivity {
         }
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -351,6 +358,7 @@ public abstract class BeerMeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     private void checkStoragePermission(final String mode) {
         final BeerMeActivity self = this;
         final int permission;
@@ -373,13 +381,13 @@ public abstract class BeerMeActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(self, new String[] {WRITE_EXTERNAL_STORAGE}, permission);
+                                ActivityCompat.requestPermissions(self, new String[]{WRITE_EXTERNAL_STORAGE}, permission);
                             }
                         })
                         .create()
                         .show();
             } else {
-                ActivityCompat.requestPermissions(self, new String[] {WRITE_EXTERNAL_STORAGE}, permission);
+                ActivityCompat.requestPermissions(self, new String[]{WRITE_EXTERNAL_STORAGE}, permission);
             }
         } else {
             switch (mode) {
@@ -392,7 +400,7 @@ public abstract class BeerMeActivity extends AppCompatActivity {
             }
         }
     }
-    
+
     private void setupExportDialog(final Context context) {
         final FileChooserDialog exportDialog;
 

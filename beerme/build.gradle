@@ -1,13 +1,19 @@
 apply plugin: 'com.android.application'
 
+static def getApiKey(key){
+    Properties props = new Properties()
+    props.load(new FileInputStream(new File('local.properties')))
+    return props[key]
+}
+
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 29
-        versionCode 56
+        targetSdkVersion 32
+        versionCode 57
+        manifestPlaceholders = [ GOOGLE_MAPS_API_KEY:getApiKey("google.maps.key")]
     }
 
     buildTypes {
@@ -17,9 +23,6 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'MissingTranslation'
-    }
 
     flavorDimensions "version"
 
@@ -27,12 +30,12 @@ android {
         paid {
             dimension "version"
             applicationId "com.beerme.android"
-            versionName "2.5.5-56"
+            versionName "2.5.6-57"
         }
         free {
             dimension "version"
             applicationId "com.beerme.android_free"
-            versionName "2.5.5-56 (free)"
+            versionName "2.5.6-57 (free)"
         }
     }
 
@@ -42,16 +45,19 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
 
     }
+    lint {
+        disable 'MissingTranslation'
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.browser:browser:1.2.0'
-    implementation 'com.google.android.gms:play-services-ads:19.4.0'
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 //    implementation project(':lvl')
     implementation 'com.androidmapsextensions:android-maps-extensions:2.4.0'
     implementation project(':aFileDialog')

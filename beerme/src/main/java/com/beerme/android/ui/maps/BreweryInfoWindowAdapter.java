@@ -51,7 +51,7 @@ public class BreweryInfoWindowAdapter implements InfoWindowAdapter {
 
 	@Override
 	public View getInfoContents(Marker marker) {
-		if (marker.isCluster()) {
+		if (marker != null && marker.isCluster()) {
 			List<Marker> markers = marker.getMarkers();
 			int i = 0;
 			String text = "";

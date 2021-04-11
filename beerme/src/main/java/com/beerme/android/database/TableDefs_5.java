@@ -11,9 +11,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
-import android.util.Log;
 
 import com.beerme.android.R;
 import com.beerme.android.utils.ErrLog;
@@ -339,7 +340,7 @@ public class TableDefs_5 extends TableDefs {
                         .setContentText(String.format(mContext.getString(R.string.Loading_TABLE_data), mName))
                         .setSmallIcon(R.drawable.ic_home)
                         .setProgress(0, 0, true)
-                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), 0));
+                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
 
                 File file = new File(fileName);
                 long start = 0;
@@ -487,7 +488,7 @@ public class TableDefs_5 extends TableDefs {
                                 String.format(mContext.getString(R.string.Loading_TABLE_data), mName))
                         .setSmallIcon(R.drawable.ic_home)
                         .setProgress(0, 0, true)
-                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), 0));
+                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
 
                 File file = new File(fileName);
                 long start = 0;
@@ -636,7 +637,7 @@ public class TableDefs_5 extends TableDefs {
                         .setContentText(String.format(mContext.getString(R.string.Loading_TABLE_data), mName))
                         .setSmallIcon(R.drawable.ic_home)
                         .setProgress(0, 0, true)
-                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), 0));
+                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
 
                 File file = new File(fileName);
                 long start = 0;

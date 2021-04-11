@@ -1,15 +1,19 @@
 package com.beerme.android.database;
 
+import static com.beerme.android.utils.SharedPref.Pref.KEY_DB_LAST_UPDATE;
+import static com.beerme.android.utils.SharedPref.Pref.KEY_DB_UPDATING;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import androidx.fragment.app.Fragment;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
 
 import com.beerme.android.R;
 import com.beerme.android.utils.SharedPref;
@@ -17,9 +21,6 @@ import com.beerme.android.utils.Utils;
 
 import java.util.Calendar;
 import java.util.HashMap;
-
-import static com.beerme.android.utils.SharedPref.Pref.KEY_DB_LAST_UPDATE;
-import static com.beerme.android.utils.SharedPref.Pref.KEY_DB_UPDATING;
 
 public abstract class TableDefs extends Fragment {
     public static final String TABLE_BREWERYNOTES = "brewerynotes";
@@ -188,7 +189,7 @@ public abstract class TableDefs extends Fragment {
                 .setContentText(context.getText(R.string.Download_in_progress))
                 .setSmallIcon(R.drawable.ic_home)
                 .setProgress(0, 0, true)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0));
+                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(id, builder.build());

@@ -19,13 +19,6 @@
 
 package ar.com.daidalos.afiledialog;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +28,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 import ar.com.daidalos.afiledialog.view.FileItem;
 
 /**
@@ -362,7 +362,7 @@ class FileChooserCore {
 	/**
 	 * Defines the value of the labels.
 	 * 
-	 * @param label The labels.
+	 * @param labels The labels.
 	 */
 	public void setLabels(FileChooserLabels labels) {
 		this.labels = labels;

@@ -2,8 +2,6 @@ package com.beerme.android.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +10,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.beerme.android.R;
 
@@ -45,7 +46,7 @@ public class RatingPickerFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        setStyle(R.style.BeerMeTheme, R.style.BeerMeTheme);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BeerMeTheme);
 
         mListener = (RatingListener) activity;
 

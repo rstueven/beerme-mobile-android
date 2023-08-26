@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.beerme.android",
+  "variantName": "paidRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 58,
+      "versionName": "2.5.7-58",
+      "outputFile": "beerme-paid-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

@@ -4,7 +4,13 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/beerme-mobile-android.iml" filepath="$PROJECT_DIR$/beerme-mobile-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.iml" filepath="$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.main.iml" filepath="$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/aFileDialog/beerme-mobile-android.aFileDialog.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.iml" filepath="$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.main.iml" filepath="$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/beerme/beerme-mobile-android.beerme.unitTest.iml" />
     </modules>
   </component>
 </project>

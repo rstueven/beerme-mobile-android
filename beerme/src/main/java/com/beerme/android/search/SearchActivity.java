@@ -69,6 +69,7 @@ public class SearchActivity extends BeerMeActivity implements LoaderCallbacks<Cu
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
         handleIntent(intent);
+        super.onNewIntent(intent);
     }
 
     @Override

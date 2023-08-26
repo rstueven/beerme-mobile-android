@@ -19,17 +19,15 @@
 
 package ar.com.daidalos.afiledialog;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-import ar.com.daidalos.afiledialog.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A file chooser implemented in a Dialog. 
@@ -214,7 +212,7 @@ public class FileChooserDialog extends Dialog implements FileChooser {
 	/**
 	 * Defines the value of the labels.
 	 * 
-	 * @param label The labels.
+	 * @param labels The labels.
 	 */
 	public void setLabels(FileChooserLabels labels) {
 		this.core.setLabels(labels);

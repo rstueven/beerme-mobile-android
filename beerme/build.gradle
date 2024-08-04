@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 59
+        versionCode 60
         manifestPlaceholders = [ GOOGLE_MAPS_API_KEY:getApiKey("google.maps.key")]
     }
 
@@ -30,12 +30,12 @@ android {
         paid {
             dimension "version"
             applicationId "com.beerme.android"
-            versionName "2.5.7-59"
+            versionName "2.5.8-60"
         }
         free {
             dimension "version"
             applicationId "com.beerme.android_free"
-            versionName "2.5.7-59 (free)"
+            versionName "2.5.8-60 (free)"
         }
     }
 
@@ -52,13 +52,13 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.browser:browser:1.7.0'
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'androidx.browser:browser:1.8.0'
+    implementation 'com.google.android.gms:play-services-ads:23.2.0'
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'com.google.android.gms:play-services-maps:19.0.0'
 //    implementation project(':lvl')
     implementation 'com.androidmapsextensions:android-maps-extensions:2.4.0'
     implementation project(':aFileDialog')

@@ -2,39 +2,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-2808758250833616/9157858591"
-            android:visibility="gone" />
+        <!--        <com.google.android.gms.ads.AdView-->
+        <!--            xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+        <!--            android:id="@+id/adView"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            ads:adSize="SMART_BANNER"-->
+        <!--            ads:adUnitId="ca-app-pub-2808758250833616/9157858591"-->
+        <!--            android:visibility="gone" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:id="@+id/beerdetail_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </FrameLayout>
+                    android:layout_height="wrap_content"></FrameLayout>
 
                 <ImageView
                     android:id="@+id/beerdetail_image"
@@ -49,8 +48,7 @@
                 android:id="@+id/beernotes_frame"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
-            </FrameLayout>
+                android:layout_weight="1"></FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

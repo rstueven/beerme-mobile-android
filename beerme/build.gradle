@@ -7,7 +7,7 @@ static def getApiKey(key){
 }
 
 android {
-    compileSdk 36
+    compileSdkVersion 36
 
     defaultConfig {
         minSdkVersion 24
@@ -55,7 +55,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.browser:browser:1.9.0'
-    implementation 'com.google.android.gms:play-services-ads:24.5.0'
+    implementation 'com.google.android.gms:play-services-ads:24.6.0'
     implementation 'com.google.android.gms:play-services-auth:21.4.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
     implementation 'com.google.android.gms:play-services-maps:19.2.0'

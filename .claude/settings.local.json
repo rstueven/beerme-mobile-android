@@ -30,7 +30,10 @@
       "Bash(unzip -l ~/.gradle/caches/modules-2/files-2.1/com.github.MKergall/osmbonuspack/*/*/osmbonuspack-*.aar)",
       "Bash(unzip -o -q classes.jar org/osmdroid/bonuspack/clustering/*.class)",
       "Bash(javap -p -c org/osmdroid/bonuspack/clustering/RadiusMarkerClusterer.class)",
-      "Bash(javap -p org/osmdroid/bonuspack/clustering/MarkerClusterer.class)"
+      "Bash(javap -p org/osmdroid/bonuspack/clustering/MarkerClusterer.class)",
+      "Bash(curl -s \"https://beerme.com/mobile/v3/beerNoteList.php\" -o /tmp/notes_full.json)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }

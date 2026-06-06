@@ -2,11 +2,16 @@ package com.beerme.ui.map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.beerme.data.model.Brewery
 import com.beerme.data.repository.BreweryRepository
 import com.beerme.data.repository.UserPreferencesRepository
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +53,7 @@ class MapViewModel(
         viewModelScope.launch {
             breweryRepository.syncBreweries()
             breweryRepository.syncBeers()
+            breweryRepository.syncTastingNotes()
         }
     }
 
@@ -59,22 +65,38 @@ class MapViewModel(
         }
     }
 
-    @SuppressLint("MissingPermission")
-    fun requestUserLocation(context: Context) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    _userLocation.value = GeoPoint(location.latitude, location.longitude)
-                } else {
-                    // Fall back to the last known location (e.g. GPS not yet warm).
-                    fusedLocationClient.lastLocation.addOnSuccessListener { last ->
-                        if (last != null) {
-                            _userLocation.value = GeoPoint(last.latitude, last.longitude)
-                        }
-                    }
-                }
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            result.lastLocation?.let {
+                _userLocation.value = GeoPoint(it.latitude, it.longitude)
             }
+        }
+    }
+
+    /** Continuously tracks the device location so the map can follow it. */
+    @SuppressLint("MissingPermission")
+    fun startLocationUpdates(context: Context) {
+        if (fusedLocationClient != null) return
+        val client = LocationServices.getFusedLocationProviderClient(context.applicationContext)
+        fusedLocationClient = client
+
+        // Seed quickly from the last known location while GPS warms up.
+        client.lastLocation.addOnSuccessListener { last ->
+            if (last != null && _userLocation.value == null) {
+                _userLocation.value = GeoPoint(last.latitude, last.longitude)
+            }
+        }
+
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5_000L)
+            .setMinUpdateDistanceMeters(10f)
+            .build()
+        client.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
+    }
+
+    override fun onCleared() {
+        fusedLocationClient?.removeLocationUpdates(locationCallback)
+        fusedLocationClient = null
     }
 
     /**

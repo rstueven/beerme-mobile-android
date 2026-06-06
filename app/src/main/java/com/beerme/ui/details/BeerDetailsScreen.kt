@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -146,24 +145,61 @@ fun TastingNoteItem(note: TastingNote) {
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Rating: ", fontWeight = FontWeight.Bold)
-                repeat(note.rating) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = note.sampled ?: "",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                note.score?.let {
+                    Text(
+                        text = "${"%.1f".format(it)}/20",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = note.note, style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(4.dp))
+            val context = listOfNotNull(note.packaging, note.place).joinToString(", ")
+            if (context.isNotEmpty()) {
+                Text(
+                    text = context,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            TastingAspect("Appearance", note.appearanceScore, 3, note.appearance)
+            TastingAspect("Aroma", note.aromaScore, 4, note.aroma)
+            TastingAspect("Mouthfeel & Flavor", note.mouthfeelScore, 10, note.mouthfeel)
+            TastingAspect("Overall", note.overallScore, 3, note.notes)
+        }
+    }
+}
+
+@Composable
+private fun TastingAspect(label: String, score: Double?, maxScore: Int, text: String?) {
+    if (score == null && text.isNullOrBlank()) return
+    Spacer(modifier = Modifier.height(8.dp))
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        score?.let {
             Text(
-                text = "by ${note.user}",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.align(Alignment.End)
+                text = "${"%.1f".format(it)}/$maxScore",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
             )
         }
+    }
+    if (!text.isNullOrBlank()) {
+        Text(text = text, style = MaterialTheme.typography.bodyMedium)
     }
 }

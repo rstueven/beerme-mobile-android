@@ -2,6 +2,7 @@ package com.beerme.data.remote
 
 import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
+import com.beerme.data.model.TastingNote
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,4 +16,9 @@ interface BreweryApiService {
     suspend fun getBeers(
         @Query("t") timestamp: String? = null
     ): List<Beer>
+
+    @GET("mobile/v3/beerNoteList.php")
+    suspend fun getBeerNotes(
+        @Query("t") timestamp: String? = null
+    ): List<TastingNote>
 }

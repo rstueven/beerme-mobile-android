@@ -55,12 +55,21 @@ class BreweryRepository(
 
     suspend fun getBeerById(id: String): Beer? = beerDao.getBeerById(id)
 
-    fun getTastingNotesForBeer(beerId: String): Flow<List<TastingNote>> {
-        return tastingNoteDao.getTastingNotesForBeer(beerId)
+    suspend fun syncTastingNotes() {
+        try {
+            val lastSampled = tastingNoteDao.getLatestSampledTimestamp()
+            val newNotes = apiService.getBeerNotes(lastSampled)
+
+            if (newNotes.isNotEmpty()) {
+                tastingNoteDao.insertTastingNotes(newNotes)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    suspend fun addTastingNote(tastingNote: TastingNote) {
-        tastingNoteDao.insertTastingNote(tastingNote)
+    fun getTastingNotesForBeer(beerId: String): Flow<List<TastingNote>> {
+        return tastingNoteDao.getTastingNotesForBeer(beerId)
     }
 
     suspend fun insertBeers(beers: List<Beer>) {

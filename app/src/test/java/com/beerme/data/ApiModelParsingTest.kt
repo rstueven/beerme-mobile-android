@@ -3,6 +3,7 @@ package com.beerme.data
 import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryService
+import com.beerme.data.model.TastingNote
 import com.beerme.data.model.getAvailableServices
 import com.beerme.data.remote.FlexibleDoubleAdapter
 import com.squareup.moshi.Moshi
@@ -72,5 +73,38 @@ class ApiModelParsingTest {
         assertEquals(20.0, pizza.score!!, 1e-9)
         assertNull(beers[1].abv)
         assertNull(beers[1].score)
+    }
+
+    @Test
+    fun `parses beer note list sample`() {
+        val json = """
+            [{"id":"12477","beer_id":"65537","package":"draught","score":"20.00","sampled":"2026-05-30",
+              "place":"at the brewery","appearancescore":"3.00","appearance":"Bright golden. Thick head.",
+              "aromascore":"4.00","aroma":"Fruity hops, citrusy and floral. Mild biscuity malt.",
+              "mouthfeelscore":"10.00","mouthfeel":"Medium-big body, smooth.",
+              "overallscore":"3.00","notes":"Great beer."},
+             {"id":"100","beer_id":"1234","package":"bottle","score":"14.00","sampled":"2001-07-04",
+              "place":"home","appearancescore":"2.00","appearance":null,"aromascore":"3.00","aroma":null,
+              "mouthfeelscore":"7.00","mouthfeel":null,"overallscore":"2.00","notes":null}]
+        """.trimIndent()
+
+        val type = Types.newParameterizedType(List::class.java, TastingNote::class.java)
+        val notes = moshi.adapter<List<TastingNote>>(type).fromJson(json)!!
+
+        assertEquals(2, notes.size)
+        val full = notes[0]
+        assertEquals("65537", full.beerId)
+        assertEquals("draught", full.packaging)
+        assertEquals(20.0, full.score!!, 1e-9)
+        assertEquals(3.0, full.appearanceScore!!, 1e-9)
+        assertEquals(4.0, full.aromaScore!!, 1e-9)
+        assertEquals(10.0, full.mouthfeelScore!!, 1e-9)
+        assertEquals(3.0, full.overallScore!!, 1e-9)
+        assertEquals("Great beer.", full.notes)
+        // Older notes carry scores but no descriptive text
+        val sparse = notes[1]
+        assertEquals(14.0, sparse.score!!, 1e-9)
+        assertNull(sparse.appearance)
+        assertNull(sparse.notes)
     }
 }

@@ -138,13 +138,19 @@ fun MapScreen(
         }
     }
 
-    // Handle startup zoom/center; re-run once breweries arrive so the zoom
-    // level can be derived from nearby brewery density.
+    // On the first fix, center on the user with a zoom derived from nearby
+    // brewery density (re-run once breweries arrive). On subsequent fixes the
+    // map follows the location but keeps whatever zoom level is selected.
+    var initialZoomDone by remember { mutableStateOf(false) }
     val hasBreweries = breweries.isNotEmpty()
     LaunchedEffect(userLocation, hasBreweries) {
-        userLocation?.let { point ->
+        val point = userLocation ?: return@LaunchedEffect
+        if (!initialZoomDone) {
             val zoom = viewModel.calculateZoom(point, breweries)
             mapView.controller.animateTo(point, zoom, 1000L)
+            if (hasBreweries) initialZoomDone = true
+        } else {
+            mapView.controller.animateTo(point, mapView.zoomLevelDouble, 600L)
         }
     }
 
@@ -199,11 +205,11 @@ fun MapScreen(
         }
     }
 
-    // Ask for location permission on first composition; fetch the user's
-    // location as soon as it is granted.
+    // Ask for location permission on first composition; start following the
+    // device location as soon as it is granted.
     LaunchedEffect(permissionState.allPermissionsGranted) {
         if (permissionState.allPermissionsGranted) {
-            viewModel.requestUserLocation(context)
+            viewModel.startLocationUpdates(context)
         } else {
             permissionState.launchMultiplePermissionRequest()
         }

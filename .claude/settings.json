@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(adb shell screencap *)",
+      "Bash(adb pull *)",
+      "Bash(adb shell input *)",
+      "Bash(adb emu geo *)",
+      "Bash(adb shell am *)",
+      "Bash(./gradlew :app:assembleDebug *)",
+      "Bash(adb install *)",
+      "Bash(adb logcat *)",
+      "Bash(javap *)",
+      "Bash(./gradlew :app:testDebugUnitTest *)",
+      "Bash(adb devices *)"
+    ]
+  }
+}

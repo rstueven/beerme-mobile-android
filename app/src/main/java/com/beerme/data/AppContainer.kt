@@ -11,6 +11,7 @@ import com.beerme.data.repository.UserPreferencesRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -40,6 +41,9 @@ class AppContainer(context: Context) {
         // OkHttp's 10s default read timeout is not enough on slow links.
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(120, TimeUnit.SECONDS)
+        // BASIC logs one line per request/response (URL incl. the
+        // incremental 't' parameter, status, byte count).
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
         .build()
 
     private val apiService: BreweryApiService by lazy {

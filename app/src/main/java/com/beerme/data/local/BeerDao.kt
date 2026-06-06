@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BeerDao {
-    @Query("SELECT * FROM beers WHERE breweryId = :breweryId")
+    @Query("SELECT * FROM beers WHERE breweryId = :breweryId ORDER BY name COLLATE NOCASE ASC")
     fun getBeersByBrewery(breweryId: String): Flow<List<Beer>>
 
     @Query("SELECT * FROM beers WHERE id = :id")

@@ -158,7 +158,10 @@ fun MapScreen(
         if (!initialZoomDone) {
             val box = viewModel.calculateTargetBox(point, breweries)
             if (box != null) {
-                mapView.zoomToBoundingBox(box, true, 64)
+                // Jump (not animate): an animated fit races against the next
+                // GPS fix, whose follow-pan would freeze the zoom mid-flight
+                // at a far-too-wide level.
+                mapView.zoomToBoundingBox(box, false, 64)
                 initialZoomDone = true
             } else {
                 // Breweries not yet synced: center on the user meanwhile.

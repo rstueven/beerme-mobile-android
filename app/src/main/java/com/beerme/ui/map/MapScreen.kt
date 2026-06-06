@@ -148,17 +148,22 @@ fun MapScreen(
         }
     }
 
-    // On the first fix, center on the user with a zoom derived from nearby
-    // brewery density (re-run once breweries arrive). On subsequent fixes the
-    // map follows the location but keeps whatever zoom level is selected.
+    // On the first fix, fit the view to the 5-20 breweries nearest the user
+    // (re-run once breweries arrive). On subsequent fixes the map follows
+    // the location but keeps whatever zoom level is selected.
     var initialZoomDone by remember { mutableStateOf(false) }
     val hasBreweries = breweries.isNotEmpty()
     LaunchedEffect(userLocation, hasBreweries) {
         val point = userLocation ?: return@LaunchedEffect
         if (!initialZoomDone) {
-            val zoom = viewModel.calculateZoom(point, breweries)
-            mapView.controller.animateTo(point, zoom, 1000L)
-            if (hasBreweries) initialZoomDone = true
+            val box = viewModel.calculateTargetBox(point, breweries)
+            if (box != null) {
+                mapView.zoomToBoundingBox(box, true, 64)
+                initialZoomDone = true
+            } else {
+                // Breweries not yet synced: center on the user meanwhile.
+                mapView.controller.animateTo(point, 10.0, 1000L)
+            }
         } else {
             mapView.controller.animateTo(point, mapView.zoomLevelDouble, 600L)
         }

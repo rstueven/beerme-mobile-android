@@ -22,7 +22,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
+import kotlin.math.cos
 
 class MapViewModel(
     private val breweryRepository: BreweryRepository,
@@ -101,32 +103,36 @@ class MapViewModel(
     }
 
     /**
-     * Calculates an initial zoom level that displays between 5 and 20 breweries.
+     * Computes a bounding box centered on the user that the map can fit
+     * exactly, sized so roughly 5-20 brewery markers are visible.
+     *
+     * The radius reaches the 8th-nearest brewery: the fitted viewport is a
+     * tall rectangle around that circle, so the on-screen count lands above
+     * 8 but stays well under 20 for roughly uniform brewery density.
      */
-    fun calculateZoom(userPoint: GeoPoint, breweries: List<Brewery>): Double {
-        if (breweries.isEmpty()) return 10.0
-
+    fun calculateTargetBox(userPoint: GeoPoint, breweries: List<Brewery>): BoundingBox? {
         val distances = breweries.mapNotNull { b ->
             if (b.latitude != null && b.longitude != null) {
                 userPoint.distanceToAsDouble(GeoPoint(b.latitude, b.longitude))
             } else null
         }.sorted()
+        if (distances.isEmpty()) return null
 
-        if (distances.isEmpty()) return 4.0
+        val target = distances[minOf(7, distances.size - 1)]
+        // 10% breathing room; never tighter than a 500m radius.
+        val radius = maxOf(target * 1.1, 500.0)
+        val dLat = radius / METERS_PER_DEGREE
+        val dLon = radius /
+                (METERS_PER_DEGREE * cos(Math.toRadians(userPoint.latitude))).coerceAtLeast(1.0)
+        return BoundingBox(
+            (userPoint.latitude + dLat).coerceAtMost(85.0),
+            userPoint.longitude + dLon,
+            (userPoint.latitude - dLat).coerceAtLeast(-85.0),
+            userPoint.longitude - dLon
+        )
+    }
 
-        // We want to show at least 5 and up to 20.
-        // Let's pick the distance to the 15th closest brewery as a target for the view radius.
-        val targetIndex = if (distances.size >= 15) 14 else distances.size - 1
-        val radiusMeters = distances[targetIndex]
-
-        return when {
-            radiusMeters < 500 -> 17.0
-            radiusMeters < 1500 -> 15.0
-            radiusMeters < 5000 -> 13.0
-            radiusMeters < 15000 -> 11.0
-            radiusMeters < 50000 -> 9.0
-            radiusMeters < 150000 -> 7.0
-            else -> 4.0
-        }
+    private companion object {
+        const val METERS_PER_DEGREE = 111_320.0
     }
 }

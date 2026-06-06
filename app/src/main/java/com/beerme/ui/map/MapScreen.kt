@@ -8,13 +8,20 @@ import android.graphics.Paint
 import android.view.MotionEvent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -25,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +42,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.beerme.data.model.BreweryStatus
+import com.beerme.data.repository.SyncPhase
 import com.beerme.ui.theme.BeerAmber
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -72,6 +81,7 @@ fun MapScreen(
     val breweries by viewModel.breweries.collectAsState()
     val statusFilters by viewModel.statusFilters.collectAsState()
     val userLocation by viewModel.userLocation.collectAsState()
+    val syncPhase by viewModel.syncPhase.collectAsState()
 
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -220,20 +230,74 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { mapView }
         )
-        Row(
-            modifier = Modifier
-                .statusBarsPadding()
-                .padding(horizontal = 8.dp)
-                .horizontalScroll(rememberScrollState())
-        ) {
-            BreweryStatus.entries.forEach { status ->
-                FilterChip(
-                    selected = status.code in statusFilters,
-                    onClick = { viewModel.toggleStatusFilter(status.code) },
-                    label = { Text(status.label) },
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    elevation = FilterChipDefaults.elevatedFilterChipElevation()
+        Column(modifier = Modifier.statusBarsPadding()) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .horizontalScroll(rememberScrollState())
+            ) {
+                BreweryStatus.entries.forEach { status ->
+                    FilterChip(
+                        selected = status.code in statusFilters,
+                        onClick = { viewModel.toggleStatusFilter(status.code) },
+                        label = { Text(status.label) },
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        elevation = FilterChipDefaults.elevatedFilterChipElevation()
+                    )
+                }
+            }
+            if (syncPhase != SyncPhase.IDLE) {
+                SyncStatusBanner(
+                    phase = syncPhase,
+                    isInitialLoad = breweries.isEmpty(),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SyncStatusBanner(
+    phase: SyncPhase,
+    isInitialLoad: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        tonalElevation = 3.dp,
+        shadowElevation = 3.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column {
+                Text(
+                    text = when (phase) {
+                        SyncPhase.BREWERIES -> "Updating breweries…"
+                        SyncPhase.BEERS -> "Updating beers…"
+                        SyncPhase.TASTING_NOTES -> "Updating tasting notes…"
+                        SyncPhase.IDLE -> ""
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                if (isInitialLoad) {
+                    Text(
+                        text = "First download may take a minute",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
         }
     }

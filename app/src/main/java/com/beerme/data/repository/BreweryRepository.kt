@@ -8,7 +8,12 @@ import com.beerme.data.model.Brewery
 import com.beerme.data.model.TastingNote
 import com.beerme.data.remote.BreweryApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+
+/** Which dataset a running sync is currently downloading. */
+enum class SyncPhase { IDLE, BREWERIES, BEERS, TASTING_NOTES }
 
 class BreweryRepository(
     private val breweryDao: BreweryDao,
@@ -18,6 +23,23 @@ class BreweryRepository(
     private val userPreferencesRepository: UserPreferencesRepository
 ) {
     val breweries: Flow<List<Brewery>> = breweryDao.getAllBreweries()
+
+    private val _syncPhase = MutableStateFlow(SyncPhase.IDLE)
+    val syncPhase: StateFlow<SyncPhase> = _syncPhase
+
+    /** Refreshes all three datasets, reporting progress via [syncPhase]. */
+    suspend fun syncAll() {
+        try {
+            _syncPhase.value = SyncPhase.BREWERIES
+            syncBreweries()
+            _syncPhase.value = SyncPhase.BEERS
+            syncBeers()
+            _syncPhase.value = SyncPhase.TASTING_NOTES
+            syncTastingNotes()
+        } finally {
+            _syncPhase.value = SyncPhase.IDLE
+        }
+    }
 
     suspend fun syncBreweries() {
         try {

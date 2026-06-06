@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.beerme.data.model.Brewery
 import com.beerme.data.repository.BreweryRepository
+import com.beerme.data.repository.SyncPhase
 import com.beerme.data.repository.UserPreferencesRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -49,11 +50,11 @@ class MapViewModel(
     private val _userLocation = MutableStateFlow<GeoPoint?>(null)
     val userLocation: StateFlow<GeoPoint?> = _userLocation
 
+    val syncPhase: StateFlow<SyncPhase> = breweryRepository.syncPhase
+
     init {
         viewModelScope.launch {
-            breweryRepository.syncBreweries()
-            breweryRepository.syncBeers()
-            breweryRepository.syncTastingNotes()
+            breweryRepository.syncAll()
         }
     }
 

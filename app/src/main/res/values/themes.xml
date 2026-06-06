@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.BeerMeMobile" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+</resources>

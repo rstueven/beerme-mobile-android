@@ -4,7 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
 import android.view.MotionEvent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -154,6 +156,35 @@ fun MapScreen(
         }
     }
 
+    // Blue dot marking the device's current location, drawn above the
+    // brewery markers and not tappable.
+    val locationMarker = remember {
+        val size = 48
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val center = size / 2f
+        canvas.drawCircle(center, center, center,
+            Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE })
+        canvas.drawCircle(center, center, center - 6f,
+            Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF4285F4.toInt() })
+        Marker(mapView).apply {
+            icon = BitmapDrawable(context.resources, bitmap)
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+            setInfoWindow(null)
+            setOnMarkerClickListener { _, _ -> true }
+        }
+    }
+
+    // Keep the dot on the latest GPS fix; add it lazily on the first one.
+    LaunchedEffect(userLocation) {
+        val point = userLocation ?: return@LaunchedEffect
+        locationMarker.position = point
+        if (!mapView.overlays.contains(locationMarker)) {
+            mapView.overlays.add(locationMarker)
+        }
+        mapView.invalidate()
+    }
+
     val clusterer = remember {
         RadiusMarkerClusterer(context).apply {
             // RadiusMarkerClusterer requires a cluster icon before first draw.
@@ -165,7 +196,7 @@ fun MapScreen(
         }
     }
 
-    // On the first fix, fit the view to the 5-20 breweries nearest the user
+    // On the first fix, fit the view to the breweries nearest the user
     // (re-run once breweries arrive). On subsequent fixes the map follows
     // the location, keeping whatever zoom level is selected, for as long as
     // follow mode is engaged.
@@ -226,7 +257,8 @@ fun MapScreen(
         clusterer.items.addAll(markers)
         clusterer.invalidate()
         if (!mapView.overlays.contains(clusterer)) {
-            mapView.overlays.add(clusterer)
+            // Insert below the location dot so the dot stays visible.
+            mapView.overlays.add(0, clusterer)
         }
         mapView.invalidate()
     }

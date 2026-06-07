@@ -104,11 +104,11 @@ class MapViewModel(
 
     /**
      * Computes a bounding box centered on the user that the map can fit
-     * exactly, sized so roughly 5-20 brewery markers are visible.
+     * exactly, sized so at least a handful of brewery markers are visible.
      *
-     * The radius reaches the 8th-nearest brewery: the fitted viewport is a
-     * tall rectangle around that circle, so the on-screen count lands above
-     * 8 but stays well under 20 for roughly uniform brewery density.
+     * The radius reaches the 5th-nearest brewery: the fitted viewport is a
+     * tall rectangle around that circle, so the on-screen count lands a bit
+     * above 5 for roughly uniform brewery density.
      */
     fun calculateTargetBox(userPoint: GeoPoint, breweries: List<Brewery>): BoundingBox? {
         val distances = breweries.mapNotNull { b ->
@@ -118,7 +118,7 @@ class MapViewModel(
         }.sorted()
         if (distances.isEmpty()) return null
 
-        val target = distances[minOf(7, distances.size - 1)]
+        val target = distances[minOf(4, distances.size - 1)]
         // 10% breathing room; never tighter than a 500m radius.
         val radius = maxOf(target * 1.1, 500.0)
         val dLat = radius / METERS_PER_DEGREE

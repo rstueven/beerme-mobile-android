@@ -196,7 +196,13 @@ fun MapScreen(
     }
 
     val clusterer = remember {
-        RadiusMarkerClusterer(context).apply {
+        object : RadiusMarkerClusterer(context) {
+            // The base class closes item popups on every re-cluster (its
+            // invalidate() forces one on the next draw pass), which would
+            // dismiss the popup right after the rebuild effect restores it.
+            // The rebuild effect owns the shared info window's lifecycle.
+            override fun hideInfoWindows() {}
+        }.apply {
             // RadiusMarkerClusterer requires a cluster icon before first draw.
             val size = 96
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
@@ -254,7 +260,9 @@ fun MapScreen(
                             position = GeoPoint(lat, lon)
                             title = brewery.name
                             snippet = brewery.address
+                            // Hours are meaningless for a closed brewery.
                             subDescription = brewery.hours
+                                .takeUnless { brewery.status == BreweryStatus.CLOSED.code }
                             relatedObject = brewery.id
                             infoWindow = sharedInfoWindow
                         }
@@ -344,7 +352,9 @@ fun MapScreen(
                 .navigationBarsPadding()
                 .padding(16.dp),
             containerColor = if (isFollowing) {
-                MaterialTheme.colorScheme.primaryContainer
+                // Full primary (brown on cream theme) so the engaged state
+                // is unmistakable against the surface-colored idle state.
+                MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.surface
             }

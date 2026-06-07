@@ -128,8 +128,10 @@ fun BreweryHeader(brewery: Brewery) {
         brewery.address?.let {
             Text(text = it, style = MaterialTheme.typography.bodyLarge)
         }
-        brewery.hours?.let {
-            Text(text = it, style = MaterialTheme.typography.bodyMedium)
+        if (brewery.status != BreweryStatus.CLOSED.code) {
+            brewery.hours?.let {
+                Text(text = it, style = MaterialTheme.typography.bodyMedium)
+            }
         }
         brewery.phone?.let {
             Text(text = "Phone: $it", style = MaterialTheme.typography.bodyMedium)

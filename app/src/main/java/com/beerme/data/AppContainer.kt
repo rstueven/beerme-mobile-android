@@ -3,10 +3,13 @@ package com.beerme.data
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.beerme.BuildConfig
 import com.beerme.data.local.AppDatabase
 import com.beerme.data.remote.BreweryApiService
 import com.beerme.data.remote.FlexibleDoubleAdapter
+import com.beerme.data.remote.GeocodingApiService
 import com.beerme.data.repository.BreweryRepository
+import com.beerme.data.repository.GeocodingRepository
 import com.beerme.data.repository.UserPreferencesRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -55,8 +58,27 @@ class AppContainer(context: Context) {
             .create(BreweryApiService::class.java)
     }
 
+    // LocationIQ geocoding shares the OkHttp client but has its own base URL.
+    // Null when no API key is configured, which disables geographic search.
+    private val geocodingApiService: GeocodingApiService? by lazy {
+        if (BuildConfig.LOCATIONIQ_API_KEY.isEmpty()) {
+            null
+        } else {
+            Retrofit.Builder()
+                .baseUrl("https://api.locationiq.com/")
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+                .create(GeocodingApiService::class.java)
+        }
+    }
+
     val userPreferencesRepository: UserPreferencesRepository by lazy {
         UserPreferencesRepository(context.dataStore)
+    }
+
+    val geocodingRepository: GeocodingRepository by lazy {
+        GeocodingRepository(geocodingApiService, BuildConfig.LOCATIONIQ_API_KEY)
     }
 
     val repository: BreweryRepository by lazy {

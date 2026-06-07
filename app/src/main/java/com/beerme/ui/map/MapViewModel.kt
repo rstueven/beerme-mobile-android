@@ -5,8 +5,11 @@ import android.content.Context
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
 import com.beerme.data.repository.BreweryRepository
+import com.beerme.data.repository.GeocodingRepository
+import com.beerme.data.repository.PlaceResult
 import com.beerme.data.repository.SyncPhase
 import com.beerme.data.repository.UserPreferencesRepository
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -15,20 +18,26 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import kotlin.math.cos
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class MapViewModel(
     private val breweryRepository: BreweryRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val geocodingRepository: GeocodingRepository
 ) : ViewModel() {
 
     val statusFilters: StateFlow<Set<String>> = userPreferencesRepository.statusFilters
@@ -53,6 +62,47 @@ class MapViewModel(
     val userLocation: StateFlow<GeoPoint?> = _userLocation
 
     val syncPhase: StateFlow<SyncPhase> = breweryRepository.syncPhase
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
+    fun onSearchQueryChange(query: String) {
+        _searchQuery.value = query
+    }
+
+    fun clearSearch() {
+        _searchQuery.value = ""
+    }
+
+    /** Breweries matching the live search query (local, near-instant). */
+    val breweryResults: StateFlow<List<Brewery>> = _searchQuery
+        .debounce(SEARCH_DEBOUNCE_MS)
+        .mapLatest { query ->
+            val trimmed = query.trim()
+            if (trimmed.length < MIN_QUERY_LENGTH) emptyList()
+            else breweryRepository.searchBreweries(trimmed)
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    /** Beers matching the live search query (local, near-instant). */
+    val beerResults: StateFlow<List<Beer>> = _searchQuery
+        .debounce(SEARCH_DEBOUNCE_MS)
+        .mapLatest { query ->
+            val trimmed = query.trim()
+            if (trimmed.length < MIN_QUERY_LENGTH) emptyList()
+            else breweryRepository.searchBeers(trimmed)
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    /** Geographic places matching the query (LocationIQ; debounced longer). */
+    val placeResults: StateFlow<List<PlaceResult>> = _searchQuery
+        .debounce(PLACE_DEBOUNCE_MS)
+        .mapLatest { query ->
+            val trimmed = query.trim()
+            if (trimmed.length < MIN_QUERY_LENGTH) emptyList()
+            else geocodingRepository.search(trimmed)
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         viewModelScope.launch {
@@ -141,5 +191,8 @@ class MapViewModel(
 
     private companion object {
         const val METERS_PER_DEGREE = 111_320.0
+        const val MIN_QUERY_LENGTH = 2
+        const val SEARCH_DEBOUNCE_MS = 200L
+        const val PLACE_DEBOUNCE_MS = 350L
     }
 }

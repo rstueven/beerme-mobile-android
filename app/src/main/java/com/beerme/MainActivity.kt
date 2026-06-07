@@ -77,7 +77,8 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 return MapViewModel(
                                     appContainer.repository,
-                                    appContainer.userPreferencesRepository
+                                    appContainer.userPreferencesRepository,
+                                    appContainer.geocodingRepository
                                 ) as T
                             }
                         }
@@ -86,6 +87,9 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                         viewModel = viewModel,
                         onBreweryClick = { id ->
                             backStack.add(BreweryDetailsRoute(id))
+                        },
+                        onBeerClick = { id ->
+                            backStack.add(BeerDetailsRoute(id))
                         }
                     )
                 }

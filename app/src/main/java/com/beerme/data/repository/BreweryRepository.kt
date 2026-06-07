@@ -98,6 +98,14 @@ class BreweryRepository(
 
     suspend fun getBeerById(id: String): Beer? = beerDao.getBeerById(id)
 
+    /** Breweries whose name contains [query] (case-insensitive substring). */
+    suspend fun searchBreweries(query: String, limit: Int = SEARCH_LIMIT): List<Brewery> =
+        breweryDao.searchByName(query, limit)
+
+    /** Beers whose name contains [query] (case-insensitive substring). */
+    suspend fun searchBeers(query: String, limit: Int = SEARCH_LIMIT): List<Beer> =
+        beerDao.searchByName(query, limit)
+
     suspend fun syncTastingNotes() {
         val lastSampled = tastingNoteDao.getLatestSampledTimestamp()
         val newNotes = apiService.getBeerNotes(lastSampled)
@@ -113,5 +121,10 @@ class BreweryRepository(
 
     suspend fun insertBeers(beers: List<Beer>) {
         beerDao.insertBeers(beers)
+    }
+
+    private companion object {
+        /** Cap on rows returned per search type, to keep the result list tidy. */
+        const val SEARCH_LIMIT = 8
     }
 }

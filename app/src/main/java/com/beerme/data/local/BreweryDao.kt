@@ -15,6 +15,12 @@ interface BreweryDao {
     @Query("SELECT * FROM breweries WHERE id = :id")
     suspend fun getBreweryById(id: String): Brewery?
 
+    @Query(
+        "SELECT * FROM breweries WHERE name LIKE '%' || :query || '%' " +
+            "ORDER BY name COLLATE NOCASE ASC LIMIT :limit"
+    )
+    suspend fun searchByName(query: String, limit: Int): List<Brewery>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBreweries(breweries: List<Brewery>)
 

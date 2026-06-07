@@ -150,7 +150,7 @@ fun TastingNoteItem(note: TastingNote) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = note.sampled ?: "",
+                    text = note.sampled?.let { formatSampledDate(it) } ?: "",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)

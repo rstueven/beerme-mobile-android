@@ -83,7 +83,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.beerme.BuildConfig
-import com.beerme.data.model.Beer
+import com.beerme.data.model.BeerWithBrewery
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryStatus
 import com.beerme.data.repository.PlaceResult
@@ -609,7 +609,7 @@ private fun AppDrawerContent(
 private fun SearchResults(
     query: String,
     breweries: List<Brewery>,
-    beers: List<Beer>,
+    beers: List<BeerWithBrewery>,
     places: List<PlaceResult>,
     onBrewerySelected: (String) -> Unit,
     onBeerSelected: (String) -> Unit,
@@ -660,16 +660,22 @@ private fun SearchResults(
                 icon = Icons.Filled.Storefront,
                 title = { it.name },
                 subtitle = { it.address },
-                onClick = { onBrewerySelected(it.id) }
+                onClick = { onBrewerySelected(it.id) },
+                trailingContent = { brewery -> BreweryStatusLabel(brewery.status) }
             )
             1 -> ResultList(
                 items = beers,
                 emptyText = "No beers match “$trimmed”",
-                itemKey = { it.id },
+                itemKey = { it.beer.id },
                 icon = Icons.Filled.SportsBar,
-                title = { it.name },
-                subtitle = { it.style },
-                onClick = { onBeerSelected(it.id) }
+                title = { it.beer.name },
+                // Brewery name disambiguates same-named beers (e.g. "IPA").
+                subtitle = {
+                    listOfNotNull(it.breweryName, it.beer.style)
+                        .joinToString(" · ")
+                        .ifEmpty { null }
+                },
+                onClick = { onBeerSelected(it.beer.id) }
             )
             else -> ResultList(
                 items = places,
@@ -694,7 +700,8 @@ private fun <T> ResultList(
     icon: ImageVector,
     title: (T) -> String,
     subtitle: (T) -> String?,
-    onClick: (T) -> Unit
+    onClick: (T) -> Unit,
+    trailingContent: (@Composable (T) -> Unit)? = null
 ) {
     if (items.isEmpty()) {
         SearchHint(emptyText)
@@ -708,10 +715,31 @@ private fun <T> ResultList(
                     { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
                 },
                 leadingContent = { Icon(icon, contentDescription = null) },
+                trailingContent = trailingContent?.let { { it(item) } },
                 modifier = Modifier.clickable { onClick(item) }
             )
         }
     }
+}
+
+/**
+ * The brewery's status as a trailing label, shown only when it is not "Open"
+ * (the common case needs no annotation). Closed breweries are flagged in the
+ * error colour.
+ */
+@Composable
+private fun BreweryStatusLabel(statusCode: String?) {
+    val status = BreweryStatus.entries.firstOrNull { it.code == statusCode }
+    if (status == null || status == BreweryStatus.OPEN) return
+    Text(
+        text = status.label,
+        style = MaterialTheme.typography.labelMedium,
+        color = if (status == BreweryStatus.CLOSED) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    )
 }
 
 @Composable

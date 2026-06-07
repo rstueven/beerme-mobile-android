@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.beerme.data.model.Beer
+import com.beerme.data.model.BeerWithBrewery
 import com.beerme.data.model.Brewery
 import com.beerme.data.repository.BreweryRepository
 import com.beerme.data.repository.GeocodingRepository
@@ -84,8 +84,8 @@ class MapViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    /** Beers matching the live search query (local, near-instant). */
-    val beerResults: StateFlow<List<Beer>> = _searchQuery
+    /** Beers (with brewery name) matching the live search query. */
+    val beerResults: StateFlow<List<BeerWithBrewery>> = _searchQuery
         .debounce(SEARCH_DEBOUNCE_MS)
         .mapLatest { query ->
             val trimmed = query.trim()

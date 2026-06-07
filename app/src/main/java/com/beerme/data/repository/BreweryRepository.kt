@@ -4,6 +4,7 @@ import com.beerme.data.local.BeerDao
 import com.beerme.data.local.BreweryDao
 import com.beerme.data.local.TastingNoteDao
 import com.beerme.data.model.Beer
+import com.beerme.data.model.BeerWithBrewery
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.TastingNote
 import com.beerme.data.remote.BreweryApiService
@@ -102,8 +103,11 @@ class BreweryRepository(
     suspend fun searchBreweries(query: String, limit: Int = SEARCH_LIMIT): List<Brewery> =
         breweryDao.searchByName(query, limit)
 
-    /** Beers whose name contains [query] (case-insensitive substring). */
-    suspend fun searchBeers(query: String, limit: Int = SEARCH_LIMIT): List<Beer> =
+    /**
+     * Beers whose name contains [query] (case-insensitive substring), each
+     * paired with its brewery's name.
+     */
+    suspend fun searchBeers(query: String, limit: Int = SEARCH_LIMIT): List<BeerWithBrewery> =
         beerDao.searchByName(query, limit)
 
     suspend fun syncTastingNotes() {

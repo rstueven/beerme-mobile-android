@@ -12,14 +12,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationSearching
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -93,12 +99,23 @@ fun MapScreen(
     // Visible region (bounding box + zoom), updated when panning/zooming settles.
     var viewport by remember { mutableStateOf<Pair<BoundingBox, Double>?>(null) }
 
+    // While true, the map tracks the device location. Touching the map
+    // disengages it; the my-location button re-engages it.
+    var isFollowing by remember { mutableStateOf(true) }
+
+    @SuppressLint("ClickableViewAccessibility")
     val mapView = remember {
         MapView(context).apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(4.0)
             controller.setCenter(GeoPoint(39.8283, -98.5795))
+            setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    isFollowing = false
+                }
+                false // never consume; the map handles the gesture
+            }
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 viewport = boundingBox to zoomLevelDouble
             }
@@ -150,17 +167,23 @@ fun MapScreen(
 
     // On the first fix, fit the view to the 5-20 breweries nearest the user
     // (re-run once breweries arrive). On subsequent fixes the map follows
-    // the location but keeps whatever zoom level is selected.
+    // the location, keeping whatever zoom level is selected, for as long as
+    // follow mode is engaged.
     var initialZoomDone by remember { mutableStateOf(false) }
     val hasBreweries = breweries.isNotEmpty()
-    LaunchedEffect(userLocation, hasBreweries) {
+    val isLaidOut = viewport != null
+    LaunchedEffect(userLocation, hasBreweries, isFollowing, isLaidOut) {
+        if (!isFollowing) return@LaunchedEffect
         val point = userLocation ?: return@LaunchedEffect
         if (!initialZoomDone) {
+            // zoomToBoundingBox needs a measured view; wait for first layout.
+            if (!isLaidOut) return@LaunchedEffect
             val box = viewModel.calculateTargetBox(point, breweries)
             if (box != null) {
-                // Jump (not animate): an animated fit races against the next
-                // GPS fix, whose follow-pan would freeze the zoom mid-flight
-                // at a far-too-wide level.
+                // Kill any in-flight animation, then jump (not animate): an
+                // animated fit races against the next GPS fix, whose
+                // follow-pan would freeze the zoom mid-flight.
+                mapView.controller.stopAnimation(false)
                 mapView.zoomToBoundingBox(box, false, 64)
                 initialZoomDone = true
             } else {
@@ -261,6 +284,27 @@ fun MapScreen(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                 )
             }
+        }
+        FloatingActionButton(
+            onClick = { isFollowing = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(16.dp),
+            containerColor = if (isFollowing) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
+        ) {
+            Icon(
+                imageVector = if (isFollowing) {
+                    Icons.Filled.MyLocation
+                } else {
+                    Icons.Filled.LocationSearching
+                },
+                contentDescription = "Return to my location"
+            )
         }
     }
 }

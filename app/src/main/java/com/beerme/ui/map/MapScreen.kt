@@ -49,6 +49,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.beerme.BuildConfig
 import com.beerme.data.model.BreweryStatus
 import com.beerme.data.repository.SyncPhase
 import com.beerme.ui.theme.BeerAmber
@@ -62,9 +63,11 @@ import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
@@ -77,6 +80,26 @@ import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
  * margin around the visible region are loaded.
  */
 private const val MIN_MARKER_ZOOM = 6.0
+
+/**
+ * LocationIQ street tiles when an API key is configured (locationiq.apiKey in
+ * local.properties), otherwise the default OpenStreetMap tile server.
+ */
+private val tileSource = if (BuildConfig.LOCATIONIQ_API_KEY.isNotEmpty()) {
+    XYTileSource(
+        "LocationIQStreets",
+        0, 19, 256,
+        ".png?key=${BuildConfig.LOCATIONIQ_API_KEY}",
+        arrayOf(
+            "https://a-tiles.locationiq.com/v3/streets/r/",
+            "https://b-tiles.locationiq.com/v3/streets/r/",
+            "https://c-tiles.locationiq.com/v3/streets/r/"
+        ),
+        "© LocationIQ © OpenStreetMap contributors"
+    )
+} else {
+    TileSourceFactory.MAPNIK
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -109,7 +132,7 @@ fun MapScreen(
     @SuppressLint("ClickableViewAccessibility")
     val mapView = remember {
         MapView(context).apply {
-            setTileSource(TileSourceFactory.MAPNIK)
+            setTileSource(tileSource)
             setMultiTouchControls(true)
             controller.setZoom(4.0)
             controller.setCenter(GeoPoint(39.8283, -98.5795))
@@ -121,6 +144,11 @@ fun MapScreen(
                 setAlignBottom(true)
                 unitsOfMeasure = ScaleBarOverlay.UnitsOfMeasure.imperial
                 setScaleBarOffset((10 * density).toInt(), (48 * density).toInt())
+            })
+            // Tile-source attribution (required by LocationIQ's terms).
+            overlays.add(CopyrightOverlay(context).apply {
+                setCopyrightNotice(tileSource.copyrightNotice)
+                setOffset((10 * density).toInt(), (28 * density).toInt())
             })
             setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
@@ -233,6 +261,10 @@ fun MapScreen(
                 mapView.controller.stopAnimation(false)
                 mapView.zoomToBoundingBox(box, false, 64)
                 initialZoomDone = true
+                // The non-animated jump doesn't reliably emit scroll/zoom
+                // events, so refresh the viewport by hand or the markers
+                // never load on a stationary device.
+                viewport = mapView.boundingBox to mapView.zoomLevelDouble
             } else {
                 // Breweries not yet synced: center on the user meanwhile.
                 mapView.controller.animateTo(point, 10.0, 1000L)

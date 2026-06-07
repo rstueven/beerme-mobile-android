@@ -15,9 +15,13 @@ interface BreweryDao {
     @Query("SELECT * FROM breweries WHERE id = :id")
     suspend fun getBreweryById(id: String): Brewery?
 
+    // Ranked by relevance: earliest match position first (so prefix/exact
+    // matches beat interior ones), then shorter names (favouring exact
+    // matches), then alphabetically.
     @Query(
         "SELECT * FROM breweries WHERE name LIKE '%' || :query || '%' " +
-            "ORDER BY name COLLATE NOCASE ASC LIMIT :limit"
+            "ORDER BY INSTR(LOWER(name), LOWER(:query)), LENGTH(name), " +
+            "name COLLATE NOCASE ASC LIMIT :limit"
     )
     suspend fun searchByName(query: String, limit: Int): List<Brewery>
 

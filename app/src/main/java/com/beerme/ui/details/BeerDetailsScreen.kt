@@ -27,7 +27,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beerme.data.model.Beer
@@ -200,6 +205,18 @@ private fun TastingAspect(label: String, score: Double?, maxScore: Int, text: St
         }
     }
     if (!text.isNullOrBlank()) {
-        Text(text = text, style = MaterialTheme.typography.bodyMedium)
+        // Tasting-note prose may contain HTML (e.g. <em>, <a href>).
+        Text(
+            text = AnnotatedString.fromHtml(
+                text,
+                linkStyles = TextLinkStyles(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.secondary,
+                        textDecoration = TextDecoration.Underline
+                    )
+                )
+            ),
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

@@ -1,5 +1,7 @@
 package com.beerme.ui.details
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beerme.data.model.Beer
@@ -108,6 +112,7 @@ fun BreweryDetailsScreen(
 
 @Composable
 fun BreweryHeader(brewery: Brewery) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,14 +141,40 @@ fun BreweryHeader(brewery: Brewery) {
                 Text(text = it, style = MaterialTheme.typography.bodyMedium)
             }
         }
-        brewery.phone?.let {
-            Text(text = "Phone: $it", style = MaterialTheme.typography.bodyMedium)
-        }
-        brewery.websiteUrl?.let {
+        brewery.phone?.let { phone ->
             Text(
-                text = it,
+                text = "Phone: $phone",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.secondary,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    // ACTION_DIAL opens the dialer pre-filled; needs no permission.
+                    runCatching {
+                        context.startActivity(
+                            Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
+                        )
+                    }
+                }
+            )
+        }
+        brewery.websiteUrl?.let { web ->
+            // The feed omits the scheme (e.g. "www.example.com/"); add one so
+            // the intent resolves to a browser.
+            val url = if (web.startsWith("http://", true) || web.startsWith("https://", true)) {
+                web
+            } else {
+                "https://$web"
+            }
+            Text(
+                text = web,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    runCatching {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    }
+                }
             )
         }
     }

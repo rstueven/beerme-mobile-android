@@ -157,7 +157,7 @@ fun TastingNoteItem(note: TastingNote) {
                 )
                 note.score?.let {
                     Text(
-                        text = "${"%.1f".format(it)}/20",
+                        text = "${formatHalfScore(it)}/20",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -193,7 +193,7 @@ private fun TastingAspect(label: String, score: Double?, maxScore: Int, text: St
         )
         score?.let {
             Text(
-                text = "${"%.1f".format(it)}/$maxScore",
+                text = "${formatHalfScore(it)}/$maxScore",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary
             )

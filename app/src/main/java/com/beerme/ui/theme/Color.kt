@@ -2,28 +2,44 @@ package com.beerme.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Vibrant Beer Palette
+// beerme.com palette (https://beerme.com/css/beerme.css)
+val BeerMeCream = Color(0xFFF3EFB9) // body background-color
+val BeerMeBrown = Color(0xFF663333) // body color
+val BeerMeGray = Color(0xFF808080)  // link color / hover background
+
+// Map cluster dot (map data viz, not themed chrome)
 val BeerAmber = Color(0xFFFFBF00)
-val BeerGold = Color(0xFFFFD700)
-val BeerBrown = Color(0xFF8B4513)
-val BeerCream = Color(0xFFFFFDD0)
 
-val PrimaryLight = Color(0xFF7A5900)
-val OnPrimaryLight = Color(0xFFFFFFFF)
-val PrimaryContainerLight = Color(0xFFFFDF9C)
-val OnPrimaryContainerLight = Color(0xFF261900)
+val PrimaryLight = BeerMeBrown
+val OnPrimaryLight = BeerMeCream
+val PrimaryContainerLight = Color(0xFFE7E1A0) // cream, one shade deeper
+val OnPrimaryContainerLight = BeerMeBrown
 
-val SecondaryLight = Color(0xFF6C5C3F)
-val OnSecondaryLight = Color(0xFFFFFFFF)
-val SecondaryContainerLight = Color(0xFFF6E0BB)
-val OnSecondaryContainerLight = Color(0xFF251A04)
+val SecondaryLight = BeerMeGray
+val OnSecondaryLight = BeerMeCream
+val SecondaryContainerLight = BeerMeGray // mimics the site's link hover
+val OnSecondaryContainerLight = BeerMeCream
 
-val PrimaryDark = Color(0xFFFABD00)
-val OnPrimaryDark = Color(0xFF402D00)
-val PrimaryContainerDark = Color(0xFF5C4200)
-val OnPrimaryContainerDark = Color(0xFFFFDF9C)
+val BackgroundLight = BeerMeCream
+val OnBackgroundLight = BeerMeBrown
+val SurfaceLight = BeerMeCream
+val OnSurfaceLight = BeerMeBrown
+val SurfaceVariantLight = Color(0xFFE7E1A0)
+val OnSurfaceVariantLight = BeerMeBrown
 
-val SecondaryDark = Color(0xFFD9C4A1)
-val OnSecondaryDark = Color(0xFF3B2E15)
-val SecondaryContainerDark = Color(0xFF53452A)
-val OnSecondaryContainerDark = Color(0xFFF6E0BB)
+val PrimaryDark = BeerMeCream
+val OnPrimaryDark = BeerMeBrown
+val PrimaryContainerDark = BeerMeBrown
+val OnPrimaryContainerDark = BeerMeCream
+
+val SecondaryDark = Color(0xFFB5B5B5)
+val OnSecondaryDark = Color(0xFF332222)
+val SecondaryContainerDark = Color(0xFF595959)
+val OnSecondaryContainerDark = BeerMeCream
+
+val BackgroundDark = Color(0xFF2B1B1B)
+val OnBackgroundDark = Color(0xFFF0EBBE)
+val SurfaceDark = Color(0xFF2B1B1B)
+val OnSurfaceDark = Color(0xFFF0EBBE)
+val SurfaceVariantDark = Color(0xFF3E2A2A)
+val OnSurfaceVariantDark = Color(0xFFE2DCA9)

@@ -31,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
+import com.beerme.data.model.BreweryStatus
 import com.beerme.data.model.getAvailableServices
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,6 +113,18 @@ fun BreweryHeader(brewery: Brewery) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        BreweryStatus.entries.firstOrNull { it.code == brewery.status }?.let { status ->
+            Text(
+                text = status.label,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = when (status) {
+                    BreweryStatus.OPEN -> Color(0xFF2E7D32)
+                    BreweryStatus.CLOSED -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+        }
         brewery.address?.let {
             Text(text = it, style = MaterialTheme.typography.bodyLarge)
         }

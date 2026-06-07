@@ -36,7 +36,7 @@ data class Brewery(
 enum class BreweryStatus(val code: String, val label: String) {
     OPEN("1", "Open"),
     PLANNED("2", "Planned"),
-    UNKNOWN("4", "Unknown"),
+    UNKNOWN("4", "No Longer Brewing"),
     CLOSED("8", "Closed")
 }
 

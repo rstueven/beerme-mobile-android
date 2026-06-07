@@ -66,6 +66,7 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 
 /**
@@ -112,6 +113,15 @@ fun MapScreen(
             setMultiTouchControls(true)
             controller.setZoom(4.0)
             controller.setCenter(GeoPoint(39.8283, -98.5795))
+            val density = resources.displayMetrics.density
+            // Lift the zoom buttons (36dp bitmaps) half their height so the
+            // system navigation bar doesn't cover them.
+            zoomController.display.setAdditionalPixelMargins(0f, 0f, 0f, 18f * density)
+            overlays.add(ScaleBarOverlay(this).apply {
+                setAlignBottom(true)
+                unitsOfMeasure = ScaleBarOverlay.UnitsOfMeasure.imperial
+                setScaleBarOffset((10 * density).toInt(), (48 * density).toInt())
+            })
             setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     isFollowing = false
@@ -244,6 +254,7 @@ fun MapScreen(
                             position = GeoPoint(lat, lon)
                             title = brewery.name
                             snippet = brewery.address
+                            subDescription = brewery.hours
                             relatedObject = brewery.id
                             infoWindow = sharedInfoWindow
                         }
@@ -252,6 +263,12 @@ fun MapScreen(
             }
         }
 
+        // The rebuild discards the marker an open popup is anchored to;
+        // remember which brewery it was showing so it can be re-opened on
+        // that brewery's replacement marker.
+        val openBreweryId = if (sharedInfoWindow.isOpen) {
+            (sharedInfoWindow.relatedObject as? Marker)?.relatedObject as? String
+        } else null
         sharedInfoWindow.close()
         clusterer.items.clear()
         clusterer.items.addAll(markers)
@@ -259,6 +276,9 @@ fun MapScreen(
         if (!mapView.overlays.contains(clusterer)) {
             // Insert below the location dot so the dot stays visible.
             mapView.overlays.add(0, clusterer)
+        }
+        openBreweryId?.let { id ->
+            markers.firstOrNull { it.relatedObject == id }?.showInfoWindow()
         }
         mapView.invalidate()
     }

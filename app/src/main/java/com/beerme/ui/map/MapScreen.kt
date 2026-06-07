@@ -8,32 +8,45 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.view.MotionEvent
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.LocationSearching
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +54,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +74,7 @@ import com.beerme.ui.theme.BeerAmber
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.events.DelayedMapListener
@@ -351,58 +367,142 @@ fun MapScreen(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { mapView }
-        )
-        Column(modifier = Modifier.statusBarsPadding()) {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .horizontalScroll(rememberScrollState())
-            ) {
-                BreweryStatus.entries.forEach { status ->
-                    FilterChip(
-                        selected = status.code in statusFilters,
-                        onClick = { viewModel.toggleStatusFilter(status.code) },
-                        label = { Text(status.label) },
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        elevation = FilterChipDefaults.elevatedFilterChipElevation()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppDrawerContent(
+                statusFilters = statusFilters,
+                onToggleStatus = { viewModel.toggleStatusFilter(it) }
+            )
+        }
+    ) {
+        Box(modifier = modifier.fillMaxSize()) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { mapView }
+            )
+            // Sync status banner; start-padded so it clears the menu button.
+            if (syncPhase != SyncPhase.Idle) {
+                Column(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(start = 64.dp)
+                ) {
+                    SyncStatusBanner(
+                        phase = syncPhase,
+                        isInitialLoad = breweries.isEmpty(),
+                        onRetry = { viewModel.retrySync() },
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                     )
                 }
             }
-            if (syncPhase != SyncPhase.Idle) {
-                SyncStatusBanner(
-                    phase = syncPhase,
-                    isInitialLoad = breweries.isEmpty(),
-                    onRetry = { viewModel.retrySync() },
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            // Hamburger menu button, floating over the full-bleed map.
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .statusBarsPadding()
+                    .padding(12.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 4.dp
+            ) {
+                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Open menu"
+                    )
+                }
+            }
+            FloatingActionButton(
+                onClick = { isFollowing = true },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
+                    .padding(16.dp),
+                containerColor = if (isFollowing) {
+                    // Full primary (brown on cream theme) so the engaged state
+                    // is unmistakable against the surface-colored idle state.
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.surface
+                }
+            ) {
+                Icon(
+                    imageVector = if (isFollowing) {
+                        Icons.Filled.MyLocation
+                    } else {
+                        Icons.Filled.LocationSearching
+                    },
+                    contentDescription = "Return to my location"
                 )
             }
         }
-        FloatingActionButton(
-            onClick = { isFollowing = true },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-                .padding(16.dp),
-            containerColor = if (isFollowing) {
-                // Full primary (brown on cream theme) so the engaged state
-                // is unmistakable against the surface-colored idle state.
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
-        ) {
-            Icon(
-                imageVector = if (isFollowing) {
-                    Icons.Filled.MyLocation
-                } else {
-                    Icons.Filled.LocationSearching
-                },
-                contentDescription = "Return to my location"
+    }
+}
+
+/**
+ * Hamburger-menu drawer. The "Settings" item expands into a status-filter
+ * submenu that toggles which brewery statuses are shown on the map.
+ */
+@Composable
+private fun AppDrawerContent(
+    statusFilters: Set<String>,
+    onToggleStatus: (String) -> Unit
+) {
+    var settingsExpanded by rememberSaveable { mutableStateOf(false) }
+
+    ModalDrawerSheet {
+        Text(
+            text = "BeerMe",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)
+        )
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(8.dp))
+        NavigationDrawerItem(
+            label = { Text("Settings") },
+            icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
+            badge = {
+                Icon(
+                    imageVector = if (settingsExpanded) {
+                        Icons.Filled.ExpandLess
+                    } else {
+                        Icons.Filled.ExpandMore
+                    },
+                    contentDescription = null
+                )
+            },
+            selected = false,
+            onClick = { settingsExpanded = !settingsExpanded },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+        if (settingsExpanded) {
+            Text(
+                text = "Status Filter",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 28.dp, top = 8.dp, bottom = 4.dp)
             )
+            BreweryStatus.entries.forEach { status ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onToggleStatus(status.code) }
+                        .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = status.code in statusFilters,
+                        onCheckedChange = { onToggleStatus(status.code) }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = status.label)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

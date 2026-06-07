@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -31,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -369,10 +372,11 @@ fun MapScreen(
                     )
                 }
             }
-            if (syncPhase != SyncPhase.IDLE) {
+            if (syncPhase != SyncPhase.Idle) {
                 SyncStatusBanner(
                     phase = syncPhase,
                     isInitialLoad = breweries.isEmpty(),
+                    onRetry = { viewModel.retrySync() },
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                 )
             }
@@ -407,12 +411,24 @@ fun MapScreen(
 private fun SyncStatusBanner(
     phase: SyncPhase,
     isInitialLoad: Boolean,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val error = phase as? SyncPhase.Error
+    val containerColor = if (error != null) {
+        MaterialTheme.colorScheme.errorContainer
+    } else {
+        MaterialTheme.colorScheme.primaryContainer
+    }
+    val contentColor = if (error != null) {
+        MaterialTheme.colorScheme.onErrorContainer
+    } else {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    }
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = containerColor,
         tonalElevation = 3.dp,
         shadowElevation = 3.dp
     ) {
@@ -420,29 +436,54 @@ private fun SyncStatusBanner(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(18.dp),
-                strokeWidth = 2.dp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            if (error != null) {
+                Icon(
+                    imageVector = Icons.Filled.ErrorOutline,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                    tint = contentColor
+                )
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = contentColor
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = when (phase) {
-                        SyncPhase.BREWERIES -> "Updating breweries…"
-                        SyncPhase.BEERS -> "Updating beers…"
-                        SyncPhase.TASTING_NOTES -> "Updating tasting notes…"
-                        SyncPhase.IDLE -> ""
+                        SyncPhase.Breweries -> "Updating breweries…"
+                        SyncPhase.Beers -> "Updating beers…"
+                        SyncPhase.TastingNotes -> "Updating tasting notes…"
+                        is SyncPhase.Error -> "Couldn't update ${phase.dataset}"
+                        SyncPhase.Idle -> ""
                     },
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = contentColor
                 )
-                if (isInitialLoad) {
+                if (error?.message != null) {
+                    Text(
+                        text = error.message,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = contentColor
+                    )
+                } else if (isInitialLoad && error == null) {
                     Text(
                         text = "First download may take a minute",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = contentColor
                     )
+                }
+            }
+            if (error != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                TextButton(
+                    onClick = onRetry,
+                    colors = ButtonDefaults.textButtonColors(contentColor = contentColor)
+                ) {
+                    Text("Retry")
                 }
             }
         }

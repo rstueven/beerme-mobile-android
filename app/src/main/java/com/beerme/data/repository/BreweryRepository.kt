@@ -7,13 +7,25 @@ import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.TastingNote
 import com.beerme.data.remote.BreweryApiService
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 
-/** Which dataset a running sync is currently downloading. */
-enum class SyncPhase { IDLE, BREWERIES, BEERS, TASTING_NOTES }
+/** Which dataset a running sync is currently downloading, or how it failed. */
+sealed interface SyncPhase {
+    data object Idle : SyncPhase
+    data object Breweries : SyncPhase
+    data object Beers : SyncPhase
+    data object TastingNotes : SyncPhase
+
+    /**
+     * A sync stopped because [dataset] (a human-readable name) failed.
+     * [message] is the underlying error text, if any.
+     */
+    data class Error(val dataset: String, val message: String?) : SyncPhase
+}
 
 class BreweryRepository(
     private val breweryDao: BreweryDao,
@@ -24,48 +36,57 @@ class BreweryRepository(
 ) {
     val breweries: Flow<List<Brewery>> = breweryDao.getAllBreweries()
 
-    private val _syncPhase = MutableStateFlow(SyncPhase.IDLE)
+    private val _syncPhase = MutableStateFlow<SyncPhase>(SyncPhase.Idle)
     val syncPhase: StateFlow<SyncPhase> = _syncPhase
 
-    /** Refreshes all three datasets, reporting progress via [syncPhase]. */
+    /**
+     * Refreshes all three datasets in order, reporting progress via [syncPhase].
+     * If a dataset fails, the sync stops and [syncPhase] settles on
+     * [SyncPhase.Error] naming the dataset that failed (rather than silently
+     * falling back to [SyncPhase.Idle], which is indistinguishable from success).
+     */
     suspend fun syncAll() {
         try {
-            _syncPhase.value = SyncPhase.BREWERIES
+            _syncPhase.value = SyncPhase.Breweries
             syncBreweries()
-            _syncPhase.value = SyncPhase.BEERS
+            _syncPhase.value = SyncPhase.Beers
             syncBeers()
-            _syncPhase.value = SyncPhase.TASTING_NOTES
+            _syncPhase.value = SyncPhase.TastingNotes
             syncTastingNotes()
-        } finally {
-            _syncPhase.value = SyncPhase.IDLE
+            _syncPhase.value = SyncPhase.Idle
+        } catch (e: CancellationException) {
+            // Scope cancelled (e.g. screen left mid-sync): not a failure, and
+            // rethrowing keeps structured concurrency intact.
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+            val dataset = when (_syncPhase.value) {
+                SyncPhase.Breweries -> "breweries"
+                SyncPhase.Beers -> "beers"
+                SyncPhase.TastingNotes -> "tasting notes"
+                else -> "data"
+            }
+            _syncPhase.value = SyncPhase.Error(dataset, e.message)
         }
     }
 
     suspend fun syncBreweries() {
-        try {
-            val dbLastUpdate = breweryDao.getLatestUpdateTimestamp()
-            val lastUpdate = dbLastUpdate ?: userPreferencesRepository.lastUpdateTimestamp.first()
-            val newBreweries = apiService.getBreweries(lastUpdate)
-            
-            if (newBreweries.isNotEmpty()) {
-                breweryDao.insertBreweries(newBreweries)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val dbLastUpdate = breweryDao.getLatestUpdateTimestamp()
+        val lastUpdate = dbLastUpdate ?: userPreferencesRepository.lastUpdateTimestamp.first()
+        val newBreweries = apiService.getBreweries(lastUpdate)
+
+        if (newBreweries.isNotEmpty()) {
+            breweryDao.insertBreweries(newBreweries)
         }
     }
 
     suspend fun syncBeers() {
-        try {
-            val dbLastUpdate = beerDao.getLatestUpdateTimestamp()
-            val lastUpdate = dbLastUpdate ?: userPreferencesRepository.beerLastUpdateTimestamp.first()
-            val newBeers = apiService.getBeers(lastUpdate)
-            
-            if (newBeers.isNotEmpty()) {
-                beerDao.insertBeers(newBeers)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val dbLastUpdate = beerDao.getLatestUpdateTimestamp()
+        val lastUpdate = dbLastUpdate ?: userPreferencesRepository.beerLastUpdateTimestamp.first()
+        val newBeers = apiService.getBeers(lastUpdate)
+
+        if (newBeers.isNotEmpty()) {
+            beerDao.insertBeers(newBeers)
         }
     }
 
@@ -78,15 +99,11 @@ class BreweryRepository(
     suspend fun getBeerById(id: String): Beer? = beerDao.getBeerById(id)
 
     suspend fun syncTastingNotes() {
-        try {
-            val lastSampled = tastingNoteDao.getLatestSampledTimestamp()
-            val newNotes = apiService.getBeerNotes(lastSampled)
+        val lastSampled = tastingNoteDao.getLatestSampledTimestamp()
+        val newNotes = apiService.getBeerNotes(lastSampled)
 
-            if (newNotes.isNotEmpty()) {
-                tastingNoteDao.insertTastingNotes(newNotes)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (newNotes.isNotEmpty()) {
+            tastingNoteDao.insertTastingNotes(newNotes)
         }
     }
 

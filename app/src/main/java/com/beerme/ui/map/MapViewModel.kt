@@ -60,6 +60,13 @@ class MapViewModel(
         }
     }
 
+    /** Re-runs the full sync, e.g. after a failure surfaced via [syncPhase]. */
+    fun retrySync() {
+        viewModelScope.launch {
+            breweryRepository.syncAll()
+        }
+    }
+
     fun toggleStatusFilter(statusCode: String) {
         viewModelScope.launch {
             val current = userPreferencesRepository.statusFilters.first()

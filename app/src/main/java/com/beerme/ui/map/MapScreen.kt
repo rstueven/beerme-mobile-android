@@ -167,17 +167,32 @@ fun MapScreen(
     // Visible region (bounding box + zoom), updated when panning/zooming settles.
     var viewport by remember { mutableStateOf<Pair<BoundingBox, Double>?>(null) }
 
+    // Camera (center + zoom) persisted across navigation, so returning from a
+    // detail screen restores the map exactly as it was left rather than
+    // resetting to the startup view. NaN means "not set yet" — the first launch
+    // falls back to the default center/zoom below.
+    var savedLat by rememberSaveable { mutableStateOf(Double.NaN) }
+    var savedLon by rememberSaveable { mutableStateOf(Double.NaN) }
+    var savedZoom by rememberSaveable { mutableStateOf(Double.NaN) }
+
     // While true, the map tracks the device location. Touching the map
-    // disengages it; the my-location button re-engages it.
-    var isFollowing by remember { mutableStateOf(true) }
+    // disengages it; the my-location button re-engages it. Saved across
+    // navigation so a map left in the disengaged state stays put on return.
+    var isFollowing by rememberSaveable { mutableStateOf(true) }
 
     @SuppressLint("ClickableViewAccessibility")
     val mapView = remember {
         MapView(context).apply {
             setTileSource(tileSource)
             setMultiTouchControls(true)
-            controller.setZoom(4.0)
-            controller.setCenter(GeoPoint(39.8283, -98.5795))
+            if (!savedLat.isNaN() && !savedLon.isNaN() && !savedZoom.isNaN()) {
+                // Restore the camera from a previous visit to this screen.
+                controller.setZoom(savedZoom)
+                controller.setCenter(GeoPoint(savedLat, savedLon))
+            } else {
+                controller.setZoom(4.0)
+                controller.setCenter(GeoPoint(39.8283, -98.5795))
+            }
             val density = resources.displayMetrics.density
             // Lift the zoom buttons (36dp bitmaps) half their height so the
             // system navigation bar doesn't cover them.
@@ -212,6 +227,17 @@ fun MapScreen(
                     return true
                 }
             }, 300L))
+        }
+    }
+
+    // Track the camera whenever the visible region settles, so the saved
+    // values are current the moment we navigate away and the screen is torn
+    // down (its plain remembered MapView is rebuilt on return).
+    LaunchedEffect(viewport) {
+        viewport?.let { (box, zoom) ->
+            savedLat = box.centerLatitude
+            savedLon = box.centerLongitude
+            savedZoom = zoom
         }
     }
 
@@ -286,7 +312,9 @@ fun MapScreen(
     // (re-run once breweries arrive). On subsequent fixes the map follows
     // the location, keeping whatever zoom level is selected, for as long as
     // follow mode is engaged.
-    var initialZoomDone by remember { mutableStateOf(false) }
+    // Saved across navigation so the one-time fit-to-nearest-breweries zoom
+    // isn't re-run when returning to an already-positioned map.
+    var initialZoomDone by rememberSaveable { mutableStateOf(false) }
     val hasBreweries = breweries.isNotEmpty()
     val isLaidOut = viewport != null
     LaunchedEffect(userLocation, hasBreweries, isFollowing, isLaidOut) {

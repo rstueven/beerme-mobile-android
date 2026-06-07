@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
+import com.beerme.data.model.BreweryService
 import com.beerme.data.model.BreweryStatus
 import com.beerme.data.model.getAvailableServices
 
@@ -152,7 +153,12 @@ fun BreweryHeader(brewery: Brewery) {
 @Composable
 fun BreweryServices(brewery: Brewery) {
     val services = brewery.getAvailableServices()
-    if (services.isNotEmpty()) {
+    // "Open to the Public" is the unremarkable default: never show it as a
+    // positive chip; instead surface its absence with a "Not Open to the
+    // Public" chip.
+    val isOpenToPublic = BreweryService.OPEN in services
+    val otherServices = services.filter { it != BreweryService.OPEN }
+    if (otherServices.isNotEmpty() || !isOpenToPublic) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -167,7 +173,13 @@ fun BreweryServices(brewery: Brewery) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                services.forEach { service ->
+                if (!isOpenToPublic) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Not Open to the Public") }
+                    )
+                }
+                otherServices.forEach { service ->
                     AssistChip(
                         onClick = {},
                         label = { Text(service.label) }

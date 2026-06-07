@@ -21,8 +21,9 @@ android {
         applicationId = "com.beerme"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        // Continues the versionCode sequence from the v2.x app (last was 59).
+        versionCode = 60
+        versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

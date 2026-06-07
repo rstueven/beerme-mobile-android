@@ -362,9 +362,14 @@ fun MapScreen(
                             position = GeoPoint(lat, lon)
                             title = brewery.name
                             snippet = brewery.address
-                            // Hours are meaningless for a closed brewery.
-                            subDescription = brewery.hours
-                                .takeUnless { brewery.status == BreweryStatus.CLOSED.code }
+                            // Show the status for any non-open brewery; for open
+                            // ones show the hours instead (hours are meaningless
+                            // for a planned/defunct/closed brewery).
+                            val statusLabel = BreweryStatus.entries
+                                .firstOrNull { it.code == brewery.status }
+                                ?.takeUnless { it == BreweryStatus.OPEN }
+                                ?.label
+                            subDescription = statusLabel ?: brewery.hours
                             relatedObject = brewery.id
                             infoWindow = sharedInfoWindow
                         }

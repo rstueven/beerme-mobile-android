@@ -429,6 +429,10 @@ fun MapScreen(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        // Disable the edge-swipe gesture so horizontal map panning reaches the
+        // MapView instead of opening the drawer. The drawer still opens via the
+        // hamburger button in the search bar.
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             AppDrawerContent(
                 statusFilters = statusFilters,

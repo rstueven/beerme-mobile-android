@@ -94,6 +94,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.cos
+import kotlin.math.ln
+import kotlin.math.sqrt
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.events.DelayedMapListener
 import org.osmdroid.events.MapListener
@@ -117,6 +120,65 @@ import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
  * margin around the visible region are loaded.
  */
 private const val MIN_MARKER_ZOOM = 6.0
+
+/**
+ * Zoom a searched-to brewery animates to before any de-clustering. Closer
+ * zooms are used only when needed to pull the brewery out of a cluster.
+ */
+private const val BREWERY_FOCUS_ZOOM = 15.0
+
+/**
+ * RadiusMarkerClusterer stops clustering above its mMaxClusteringZoomLevel (17,
+ * left at the library default), so at this zoom every brewery renders as its own
+ * pin — even ones sharing identical coordinates — while street tiles are still
+ * available. Used as the upper bound for [zoomToIsolateBrewery]: there is never
+ * any need to zoom in past the level where clustering is already off.
+ */
+private const val CLUSTER_OFF_ZOOM = 18.0
+
+/**
+ * Returns the zoom level — clamped to [BREWERY_FOCUS_ZOOM, CLUSTER_OFF_ZOOM] —
+ * at which [target]'s own placemark escapes the marker clusterer, so its bubble
+ * shows on the brewery itself rather than on a cluster.
+ *
+ * RadiusMarkerClusterer groups any markers within [CLUSTER_RADIUS_PX] screen
+ * pixels of each other, so the target stands alone once its nearest neighbour is
+ * farther than that. Web-mercator resolution is 156543.03·cos(lat) m/px at zoom
+ * 0 and halves per level, so the threshold is
+ *   100·156543·cos(lat) / 2^z < nearestMeters,
+ * and we add a level of headroom so it sits comfortably clear of the radius.
+ * Breweries that can't be separated this way (identical coordinates) just go to
+ * [CLUSTER_OFF_ZOOM], where clustering is disabled regardless.
+ */
+private fun zoomToIsolateBrewery(
+    target: Brewery,
+    breweries: List<Brewery>,
+    maxZoom: Double
+): Double {
+    val cap = minOf(CLUSTER_OFF_ZOOM, maxZoom)
+    val lat = target.latitude ?: return BREWERY_FOCUS_ZOOM
+    val lon = target.longitude ?: return BREWERY_FOCUS_ZOOM
+    val latRad = Math.toRadians(lat)
+    // Equirectangular metres-per-degree is accurate enough at neighbour scale.
+    val mPerDegLat = 111_320.0
+    val mPerDegLon = 111_320.0 * cos(latRad)
+    var nearestSq = Double.MAX_VALUE
+    for (b in breweries) {
+        if (b.id == target.id) continue
+        val bLat = b.latitude ?: continue
+        val bLon = b.longitude ?: continue
+        val dx = (bLon - lon) * mPerDegLon
+        val dy = (bLat - lat) * mPerDegLat
+        val sq = dx * dx + dy * dy
+        if (sq < nearestSq) nearestSq = sq
+    }
+    if (nearestSq == Double.MAX_VALUE) return BREWERY_FOCUS_ZOOM   // no neighbours
+    val nearestMeters = sqrt(nearestSq)
+    if (nearestMeters <= 0.0) return cap                          // identical coords
+    val CLUSTER_RADIUS_PX = 100.0
+    val threshold = ln(CLUSTER_RADIUS_PX * 156_543.03392 * cos(latRad) / nearestMeters) / ln(2.0)
+    return (threshold + 1.0).coerceIn(BREWERY_FOCUS_ZOOM, cap)
+}
 
 /**
  * LocationIQ street tiles when an API key is configured (locationiq.apiKey in
@@ -526,8 +588,14 @@ fun MapScreen(
                             // Stop following so the next GPS fix doesn't yank the
                             // map away from the brewery the user just chose.
                             isFollowing = false
+                            // Zoom close enough that the brewery isn't swallowed
+                            // by a cluster, so its own bubble can show.
+                            val targetZoom = zoomToIsolateBrewery(
+                                brewery, breweries, mapView.maxZoomLevel
+                            )
                             mapView.controller.animateTo(
-                                GeoPoint(brewery.latitude, brewery.longitude), 15.0, 1000L
+                                GeoPoint(brewery.latitude, brewery.longitude),
+                                targetZoom, 1000L
                             )
                             // Open its bubble once the marker rebuild reaches it.
                             pendingBubbleBreweryId = brewery.id

@@ -180,6 +180,12 @@ fun MapScreen(
     // navigation so a map left in the disengaged state stays put on return.
     var isFollowing by rememberSaveable { mutableStateOf(true) }
 
+    // Set when a brewery is picked from search results: the map animates to it
+    // and its bubble should open once the marker rebuild produces its marker
+    // (the marker doesn't exist until the new region is in view). Cleared once
+    // the bubble is shown.
+    var pendingBubbleBreweryId by rememberSaveable { mutableStateOf<String?>(null) }
+
     @SuppressLint("ClickableViewAccessibility")
     val mapView = remember {
         MapView(context).apply {
@@ -395,6 +401,14 @@ fun MapScreen(
         openBreweryId?.let { id ->
             markers.firstOrNull { it.relatedObject == id }?.showInfoWindow()
         }
+        // A brewery just picked from search: open its bubble as soon as its
+        // marker exists, then stop waiting.
+        pendingBubbleBreweryId?.let { id ->
+            markers.firstOrNull { it.relatedObject == id }?.let { marker ->
+                marker.showInfoWindow()
+                pendingBubbleBreweryId = null
+            }
+        }
         mapView.invalidate()
     }
 
@@ -505,10 +519,19 @@ fun MapScreen(
                     breweries = breweryResults,
                     beers = beerResults,
                     places = placeResults,
-                    onBrewerySelected = { id ->
+                    onBrewerySelected = { brewery ->
                         searchExpanded = false
                         viewModel.clearSearch()
-                        onBreweryClick(id)
+                        if (brewery.latitude != null && brewery.longitude != null) {
+                            // Stop following so the next GPS fix doesn't yank the
+                            // map away from the brewery the user just chose.
+                            isFollowing = false
+                            mapView.controller.animateTo(
+                                GeoPoint(brewery.latitude, brewery.longitude), 15.0, 1000L
+                            )
+                            // Open its bubble once the marker rebuild reaches it.
+                            pendingBubbleBreweryId = brewery.id
+                        }
                     },
                     onBeerSelected = { id ->
                         searchExpanded = false
@@ -648,7 +671,7 @@ private fun SearchResults(
     breweries: List<Brewery>,
     beers: List<BeerWithBrewery>,
     places: List<PlaceResult>,
-    onBrewerySelected: (String) -> Unit,
+    onBrewerySelected: (Brewery) -> Unit,
     onBeerSelected: (String) -> Unit,
     onPlaceSelected: (PlaceResult) -> Unit
 ) {
@@ -697,7 +720,7 @@ private fun SearchResults(
                 icon = Icons.Filled.Storefront,
                 title = { it.name },
                 subtitle = { it.address },
-                onClick = { onBrewerySelected(it.id) },
+                onClick = { onBrewerySelected(it) },
                 trailingContent = { brewery -> BreweryStatusLabel(brewery.status) }
             )
             1 -> ResultList(

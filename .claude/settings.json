@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(adb *)",
       "Bash(adb shell screencap *)",
       "Bash(adb pull *)",
       "Bash(adb shell input *)",

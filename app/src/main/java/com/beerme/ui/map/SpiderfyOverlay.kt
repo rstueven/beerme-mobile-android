@@ -64,6 +64,17 @@ class SpiderfyOverlay(
         return w to h
     }
 
+    /**
+     * Fan [group] out immediately (e.g. from a tap on a cluster of co-located
+     * breweries). No-op for fewer than two markers.
+     */
+    fun spiderfy(group: List<Marker>, mapView: MapView) {
+        if (group.size < 2) return
+        InfoWindow.closeAllInfoWindowsOn(mapView)
+        open(group)
+        mapView.invalidate()
+    }
+
     private fun open(group: List<Marker>) {
         val n = group.size
         val (iconW, iconH) = iconSize(group.first())
@@ -126,12 +137,9 @@ class SpiderfyOverlay(
 
         val stack = findStack(Point(e.x.toInt(), e.y.toInt()))
         if (stack.size < 2) return false // let the clusterer handle a lone marker
-        // Close any open bubble (e.g. the one from focusing a searched brewery);
-        // left open it overlaps the legs and, being a real View, would swallow
-        // leg taps.
-        InfoWindow.closeAllInfoWindowsOn(mapView)
-        open(stack)
-        mapView.invalidate()
+        // spiderfy() closes any open bubble first; left open it overlaps the legs
+        // and, being a real View, would otherwise swallow the leg taps.
+        spiderfy(stack, mapView)
         return true
     }
 }

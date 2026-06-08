@@ -2,6 +2,7 @@ package com.beerme.ui.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Point
@@ -99,6 +100,7 @@ import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.sqrt
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
+import org.osmdroid.bonuspack.clustering.StaticCluster
 import org.osmdroid.events.DelayedMapListener
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
@@ -120,6 +122,30 @@ import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
  * historical OOM/ANR issues). Above it, only breweries within an expanded
  * margin around the visible region are loaded.
  */
+/**
+ * RadiusMarkerClusterer whose cluster markers report taps via [onClusterTap]
+ * instead of opening an (empty) cluster info window. [onClusterTap] is wired up
+ * after the overlay that handles the tap exists.
+ */
+private class BreweryClusterer(context: Context) : RadiusMarkerClusterer(context) {
+    var onClusterTap: ((StaticCluster, MapView) -> Unit)? = null
+
+    // The base class closes item popups on every re-cluster (its invalidate()
+    // forces one on the next draw pass), which would dismiss the popup right
+    // after the rebuild effect restores it. The rebuild effect owns the shared
+    // info window's lifecycle.
+    override fun hideInfoWindows() {}
+
+    override fun buildClusterMarker(cluster: StaticCluster, mapView: MapView): Marker {
+        val marker = super.buildClusterMarker(cluster, mapView)
+        marker.setOnMarkerClickListener { _, mv ->
+            onClusterTap?.invoke(cluster, mv)
+            true
+        }
+        return marker
+    }
+}
+
 private const val MIN_MARKER_ZOOM = 6.0
 
 /**
@@ -136,6 +162,14 @@ private const val BREWERY_FOCUS_ZOOM = 15.0
  * any need to zoom in past the level where clustering is already off.
  */
 private const val CLUSTER_OFF_ZOOM = 18.0
+
+/**
+ * A tapped cluster is fanned out (spiderfied) rather than zoomed into when its
+ * members would still overlap within this many pixels at [CLUSTER_OFF_ZOOM] —
+ * i.e. when zooming can't separate them (breweries at identical coordinates).
+ * Roughly a marker-icon width.
+ */
+private const val CLUSTER_SPIDERFY_MAX_SPREAD_PX = 60.0
 
 /**
  * Returns the zoom level — clamped to [BREWERY_FOCUS_ZOOM, CLUSTER_OFF_ZOOM] —
@@ -361,13 +395,7 @@ fun MapScreen(
     }
 
     val clusterer = remember {
-        object : RadiusMarkerClusterer(context) {
-            // The base class closes item popups on every re-cluster (its
-            // invalidate() forces one on the next draw pass), which would
-            // dismiss the popup right after the rebuild effect restores it.
-            // The rebuild effect owns the shared info window's lifecycle.
-            override fun hideInfoWindows() {}
-        }.apply {
+        BreweryClusterer(context).apply {
             // RadiusMarkerClusterer requires a cluster icon before first draw.
             val size = 96
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
@@ -407,6 +435,22 @@ fun MapScreen(
     DisposableEffect(mapView, spiderfyOverlay) {
         // Topmost overlay so it intercepts taps before the clusterer.
         mapView.overlays.add(spiderfyOverlay)
+        // Tapping a cluster: fan it out if its members would still overlap when
+        // fully zoomed in (identical coordinates), otherwise zoom in to expand
+        // it. The default does nothing useful (an empty cluster info window).
+        clusterer.onClusterTap = onClusterTap@{ cluster, mv ->
+            val box = cluster.boundingBox
+            val mPerPx = 156_543.03392 *
+                cos(Math.toRadians(cluster.position.latitude)) /
+                (1 shl CLUSTER_OFF_ZOOM.toInt())
+            val spreadPx = box.diagonalLengthInMeters / mPerPx
+            if (spreadPx < CLUSTER_SPIDERFY_MAX_SPREAD_PX) {
+                val members = (0 until cluster.size).map { cluster.getItem(it) }
+                spiderfyOverlay.spiderfy(members, mv)
+            } else {
+                mv.zoomToBoundingBox(box, true, 100, CLUSTER_OFF_ZOOM, 600L)
+            }
+        }
         // Any pan/zoom dismisses the fan immediately (the 300ms-delayed viewport
         // listener would let it linger through a drag).
         val collapseOnMove = object : MapListener {
@@ -428,6 +472,7 @@ fun MapScreen(
         }
         mapView.addMapListener(collapseOnMove)
         onDispose {
+            clusterer.onClusterTap = null
             mapView.removeMapListener(collapseOnMove)
             mapView.overlays.remove(spiderfyOverlay)
         }

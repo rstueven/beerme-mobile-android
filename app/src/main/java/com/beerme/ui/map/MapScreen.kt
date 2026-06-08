@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Point
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
@@ -376,6 +377,62 @@ fun MapScreen(
         }
     }
 
+    // Spiderfy stacked pins: above the clustering-off zoom, breweries sharing a
+    // location draw on top of each other and a tap can only reach the topmost.
+    // This overlay fans them out so each is individually selectable.
+    val spiderfyOverlay = remember(mapView, clusterer) {
+        SpiderfyOverlay(
+            density = context.resources.displayMetrics.density,
+            findStack = { p ->
+                // Only meaningful once clustering is off; below that a tap on a
+                // cluster belongs to the clusterer (which zooms in).
+                if (mapView.zoomLevelDouble < CLUSTER_OFF_ZOOM) {
+                    emptyList()
+                } else {
+                    val proj = mapView.projection
+                    val tip = Point()
+                    clusterer.items.filter { m ->
+                        proj.toPixels(m.position, tip)
+                        val w = m.icon?.intrinsicWidth ?: 0
+                        val h = m.icon?.intrinsicHeight ?: 0
+                        p.x >= tip.x - w / 2 && p.x <= tip.x + w / 2 &&
+                            p.y >= tip.y - h && p.y <= tip.y
+                    }
+                }
+            },
+            onLeafChosen = { marker -> marker.showInfoWindow() }
+        )
+    }
+
+    DisposableEffect(mapView, spiderfyOverlay) {
+        // Topmost overlay so it intercepts taps before the clusterer.
+        mapView.overlays.add(spiderfyOverlay)
+        // Any pan/zoom dismisses the fan immediately (the 300ms-delayed viewport
+        // listener would let it linger through a drag).
+        val collapseOnMove = object : MapListener {
+            override fun onScroll(event: ScrollEvent?): Boolean {
+                if (spiderfyOverlay.isActive) {
+                    spiderfyOverlay.collapse()
+                    mapView.invalidate()
+                }
+                return false
+            }
+
+            override fun onZoom(event: ZoomEvent?): Boolean {
+                if (spiderfyOverlay.isActive) {
+                    spiderfyOverlay.collapse()
+                    mapView.invalidate()
+                }
+                return false
+            }
+        }
+        mapView.addMapListener(collapseOnMove)
+        onDispose {
+            mapView.removeMapListener(collapseOnMove)
+            mapView.overlays.remove(spiderfyOverlay)
+        }
+    }
+
     // On the first fix, fit the view to the breweries nearest the user
     // (re-run once breweries arrive). On subsequent fixes the map follows
     // the location, keeping whatever zoom level is selected, for as long as
@@ -416,6 +473,8 @@ fun MapScreen(
     // off the main thread.
     LaunchedEffect(breweries, viewport) {
         val currentViewport = viewport ?: return@LaunchedEffect
+        // The rebuild replaces the marker instances the fan holds references to.
+        if (spiderfyOverlay.isActive) spiderfyOverlay.collapse()
         val markers = withContext(Dispatchers.Default) {
             val (box, zoom) = currentViewport
             if (zoom < MIN_MARKER_ZOOM) {

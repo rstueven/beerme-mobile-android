@@ -3,6 +3,8 @@ package com.beerme.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Point
@@ -10,6 +12,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.view.MotionEvent
+import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -85,6 +88,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.beerme.BuildConfig
+import com.beerme.R
 import com.beerme.data.model.BeerWithBrewery
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryStatus
@@ -236,6 +240,20 @@ private val tileSource = if (BuildConfig.LOCATIONIQ_API_KEY.isNotEmpty()) {
     TileSourceFactory.MAPNIK
 }
 
+/**
+ * Hands the brewery's coordinates to an external navigation app via an
+ * ACTION_VIEW intent. The Google Maps "dir" URL resolves to the Maps app when
+ * installed (and a browser otherwise), where the user picks the travel mode
+ * (driving/transit/biking/walking). No location permission is needed: the maps
+ * app fills in the current location as the origin.
+ */
+private fun launchDirections(context: Context, lat: Double, lon: Double) {
+    val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$lat,$lon")
+    runCatching {
+        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+    }
+}
+
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
@@ -349,18 +367,29 @@ fun MapScreen(
     // marker (35k+ breweries) was the source of the OOM/ANR issues.
     val currentOnBreweryClick by rememberUpdatedState(onBreweryClick)
     val sharedInfoWindow = remember {
-        object : MarkerInfoWindow(org.osmdroid.library.R.layout.bonuspack_bubble, mapView) {
+        // Custom layout (brewery_info_window) keeps the standard bonuspack view
+        // IDs — so MarkerInfoWindow still auto-fills title/address/subdescription
+        // — and adds a directions button handled separately below.
+        object : MarkerInfoWindow(R.layout.brewery_info_window, mapView) {
             @SuppressLint("ClickableViewAccessibility")
             override fun onOpen(item: Any?) {
                 super.onOpen(item)
-                val breweryId = (item as? Marker)?.relatedObject as? String
+                val marker = item as? Marker
+                val breweryId = marker?.relatedObject as? String
                 // Replace BasicInfoWindow's default touch listener (which only
                 // closes the bubble) with navigation to the brewery details.
+                // The directions button is clickable and so consumes its own
+                // taps before they reach this root listener.
                 mView.setOnTouchListener { _, event ->
                     if (event.action == MotionEvent.ACTION_UP) {
                         breweryId?.let(currentOnBreweryClick)
                     }
                     true
+                }
+                mView.findViewById<View>(R.id.bubble_directions).setOnClickListener {
+                    marker?.position?.let { p ->
+                        launchDirections(context, p.latitude, p.longitude)
+                    }
                 }
             }
         }

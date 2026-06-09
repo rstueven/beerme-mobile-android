@@ -112,6 +112,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 
@@ -365,6 +366,24 @@ fun MapScreen(
         }
     }
 
+    // While a brewery bubble is open, a single tap anywhere on the map dismisses
+    // it. Taps on the bubble itself are consumed by its View (see onOpen above),
+    // so any tap reaching this overlay is necessarily outside the bubble. It
+    // returns false, letting the same tap fall through to the clusterer below —
+    // so tapping another marker closes this bubble and opens that one in one
+    // gesture, while tapping empty map just closes it.
+    val dismissBubbleOverlay = remember(sharedInfoWindow) {
+        object : Overlay() {
+            override fun onSingleTapConfirmed(e: MotionEvent, mapView: MapView): Boolean {
+                if (sharedInfoWindow.isOpen) {
+                    sharedInfoWindow.close()
+                    mapView.invalidate()
+                }
+                return false
+            }
+        }
+    }
+
     // Blue dot marking the device's current location, drawn above the
     // brewery markers and not tappable.
     val locationMarker = remember {
@@ -476,6 +495,11 @@ fun MapScreen(
             mapView.removeMapListener(collapseOnMove)
             mapView.overlays.remove(spiderfyOverlay)
         }
+    }
+
+    DisposableEffect(mapView, dismissBubbleOverlay) {
+        mapView.overlays.add(dismissBubbleOverlay)
+        onDispose { mapView.overlays.remove(dismissBubbleOverlay) }
     }
 
     // On the first fix, fit the view to the breweries nearest the user

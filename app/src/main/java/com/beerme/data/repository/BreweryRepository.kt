@@ -128,7 +128,7 @@ class BreweryRepository(
     }
 
     private companion object {
-        /** Cap on rows returned per search type, to keep the result list tidy. */
-        const val SEARCH_LIMIT = 8
+        /** Cap on rows returned per search type, to bound broad queries. */
+        const val SEARCH_LIMIT = 500
     }
 }

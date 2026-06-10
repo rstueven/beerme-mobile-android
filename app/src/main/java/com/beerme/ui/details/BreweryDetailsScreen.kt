@@ -2,8 +2,10 @@ package com.beerme.ui.details
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Directions
@@ -33,13 +36,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
 import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryService
@@ -119,11 +131,27 @@ fun BreweryDetailsScreen(
 @Composable
 fun BreweryHeader(brewery: Brewery) {
     val context = LocalContext.current
+    var showFullImage by remember { mutableStateOf(false) }
+    val imageUrl = brewery.image
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        // Premises photo, when the feed has one: a tappable thumbnail that
+        // opens full-screen (see the dialog below).
+        if (!imageUrl.isNullOrBlank()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "${brewery.name} premises",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { showFullImage = true }
+            )
+        }
         // Status is shown only when it isn't "Open" (the common, unremarkable case).
         BreweryStatus.entries.firstOrNull { it.code == brewery.status }
             ?.takeUnless { it == BreweryStatus.OPEN }
@@ -208,6 +236,29 @@ fun BreweryHeader(brewery: Brewery) {
                     }
                 }
             )
+        }
+    }
+
+    // Full-screen view of the premises photo; tap anywhere (or back) to dismiss.
+    if (showFullImage && !imageUrl.isNullOrBlank()) {
+        Dialog(
+            onDismissRequest = { showFullImage = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.9f))
+                    .clickable { showFullImage = false },
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = "${brewery.name} premises",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ErrorOutline
@@ -85,7 +86,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.beerme.BuildConfig
 import com.beerme.R
 import com.beerme.data.model.BeerWithBrewery
 import com.beerme.data.model.Brewery
@@ -108,15 +108,11 @@ import org.osmdroid.events.DelayedMapListener
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
-import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 
 /**
@@ -219,32 +215,13 @@ private fun zoomToIsolateBrewery(
     return (threshold + 1.0).coerceIn(BREWERY_FOCUS_ZOOM, cap)
 }
 
-/**
- * LocationIQ street tiles when an API key is configured (locationiq.apiKey in
- * local.properties), otherwise the default OpenStreetMap tile server.
- */
-private val tileSource = if (BuildConfig.LOCATIONIQ_API_KEY.isNotEmpty()) {
-    XYTileSource(
-        "LocationIQStreets",
-        0, 19, 256,
-        ".png?key=${BuildConfig.LOCATIONIQ_API_KEY}",
-        arrayOf(
-            "https://a-tiles.locationiq.com/v3/streets/r/",
-            "https://b-tiles.locationiq.com/v3/streets/r/",
-            "https://c-tiles.locationiq.com/v3/streets/r/"
-        ),
-        "© LocationIQ © OpenStreetMap contributors"
-    )
-} else {
-    TileSourceFactory.MAPNIK
-}
-
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel,
     onBreweryClick: (String) -> Unit,
     onBeerClick: (String) -> Unit,
+    onPlanRoute: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -289,9 +266,7 @@ fun MapScreen(
 
     @SuppressLint("ClickableViewAccessibility")
     val mapView = remember {
-        MapView(context).apply {
-            setTileSource(tileSource)
-            setMultiTouchControls(true)
+        createBaseMapView(context).apply {
             if (!savedLat.isNaN() && !savedLon.isNaN() && !savedZoom.isNaN()) {
                 // Restore the camera from a previous visit to this screen.
                 controller.setZoom(savedZoom)
@@ -300,20 +275,6 @@ fun MapScreen(
                 controller.setZoom(4.0)
                 controller.setCenter(GeoPoint(39.8283, -98.5795))
             }
-            val density = resources.displayMetrics.density
-            // Lift the zoom buttons (36dp bitmaps) half their height so the
-            // system navigation bar doesn't cover them.
-            zoomController.display.setAdditionalPixelMargins(0f, 0f, 0f, 18f * density)
-            overlays.add(ScaleBarOverlay(this).apply {
-                setAlignBottom(true)
-                unitsOfMeasure = ScaleBarOverlay.UnitsOfMeasure.imperial
-                setScaleBarOffset((10 * density).toInt(), (48 * density).toInt())
-            })
-            // Tile-source attribution (required by LocationIQ's terms).
-            overlays.add(CopyrightOverlay(context).apply {
-                setCopyrightNotice(tileSource.copyrightNotice)
-                setOffset((10 * density).toInt(), (28 * density).toInt())
-            })
             setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     isFollowing = false
@@ -656,7 +617,11 @@ fun MapScreen(
         drawerContent = {
             AppDrawerContent(
                 statusFilters = statusFilters,
-                onToggleStatus = { viewModel.toggleStatusFilter(it) }
+                onToggleStatus = { viewModel.toggleStatusFilter(it) },
+                onPlanRoute = {
+                    scope.launch { drawerState.close() }
+                    onPlanRoute()
+                }
             )
         }
     ) {
@@ -814,7 +779,8 @@ fun MapScreen(
 @Composable
 private fun AppDrawerContent(
     statusFilters: Set<String>,
-    onToggleStatus: (String) -> Unit
+    onToggleStatus: (String) -> Unit,
+    onPlanRoute: () -> Unit
 ) {
     var settingsExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -826,6 +792,13 @@ private fun AppDrawerContent(
         )
         HorizontalDivider()
         Spacer(modifier = Modifier.height(8.dp))
+        NavigationDrawerItem(
+            label = { Text("Plan a Route") },
+            icon = { Icon(Icons.AutoMirrored.Filled.AltRoute, contentDescription = null) },
+            selected = false,
+            onClick = onPlanRoute,
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
         NavigationDrawerItem(
             label = { Text("Settings") },
             icon = { Icon(Icons.Filled.Settings, contentDescription = null) },

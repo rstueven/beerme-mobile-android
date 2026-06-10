@@ -37,6 +37,9 @@ class BreweryRepository(
 ) {
     val breweries: Flow<List<Brewery>> = breweryDao.getAllBreweries()
 
+    /** All breweries currently in the database, as a one-shot snapshot. */
+    suspend fun breweriesSnapshot(): List<Brewery> = breweries.first()
+
     private val _syncPhase = MutableStateFlow<SyncPhase>(SyncPhase.Idle)
     val syncPhase: StateFlow<SyncPhase> = _syncPhase
 

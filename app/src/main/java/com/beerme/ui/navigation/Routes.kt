@@ -11,3 +11,6 @@ data class BreweryDetailsRoute(val breweryId: String) : NavKey
 
 @Serializable
 data class BeerDetailsRoute(val beerId: String) : NavKey
+
+@Serializable
+object RoutePlannerRoute : NavKey

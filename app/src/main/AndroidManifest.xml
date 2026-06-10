@@ -7,6 +7,17 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!--
+        Android 11+ package visibility: lets the directions intent resolve to
+        an installed maps app (it falls back to a browser otherwise).
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" android:host="www.google.com" />
+        </intent>
+    </queries>
+
     <application
         android:name=".BeerMeApplication"
         android:allowBackup="true"

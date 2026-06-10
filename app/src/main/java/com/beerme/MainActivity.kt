@@ -33,6 +33,9 @@ import com.beerme.ui.map.MapViewModel
 import com.beerme.ui.navigation.BeerDetailsRoute
 import com.beerme.ui.navigation.BreweryDetailsRoute
 import com.beerme.ui.navigation.MapRoute
+import com.beerme.ui.navigation.RoutePlannerRoute
+import com.beerme.ui.route.RoutePlannerScreen
+import com.beerme.ui.route.RoutePlannerViewModel
 import com.beerme.ui.theme.BeerMeMobileTheme
 
 class MainActivity : ComponentActivity() {
@@ -90,7 +93,28 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                         },
                         onBeerClick = { id ->
                             backStack.add(BeerDetailsRoute(id))
+                        },
+                        onPlanRoute = {
+                            backStack.add(RoutePlannerRoute)
                         }
+                    )
+                }
+                entry<RoutePlannerRoute> {
+                    val viewModel: RoutePlannerViewModel = viewModel(
+                        factory = object : ViewModelProvider.Factory {
+                            @Suppress("UNCHECKED_CAST")
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return RoutePlannerViewModel(
+                                    appContainer.repository,
+                                    appContainer.geocodingRepository,
+                                    appContainer.directionsRepository
+                                ) as T
+                            }
+                        }
+                    )
+                    RoutePlannerScreen(
+                        viewModel = viewModel,
+                        onBack = popBackStack
                     )
                 }
                 entry<BreweryDetailsRoute>(

@@ -6,10 +6,12 @@ import androidx.room.Room
 import com.beerme.BuildConfig
 import com.beerme.data.local.AppDatabase
 import com.beerme.data.remote.BreweryApiService
+import com.beerme.data.remote.DirectionsApiService
 import com.beerme.data.remote.FlexibleDoubleAdapter
 import com.beerme.data.remote.FlexibleIntAdapter
 import com.beerme.data.remote.GeocodingApiService
 import com.beerme.data.repository.BreweryRepository
+import com.beerme.data.repository.DirectionsRepository
 import com.beerme.data.repository.GeocodingRepository
 import com.beerme.data.repository.UserPreferencesRepository
 import com.squareup.moshi.Moshi
@@ -75,12 +77,31 @@ class AppContainer(context: Context) {
         }
     }
 
+    // LocationIQ routing shares the OkHttp client and base URL with geocoding.
+    // Null when no API key is configured, which disables route planning.
+    private val directionsApiService: DirectionsApiService? by lazy {
+        if (BuildConfig.LOCATIONIQ_API_KEY.isEmpty()) {
+            null
+        } else {
+            Retrofit.Builder()
+                .baseUrl("https://api.locationiq.com/")
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+                .create(DirectionsApiService::class.java)
+        }
+    }
+
     val userPreferencesRepository: UserPreferencesRepository by lazy {
         UserPreferencesRepository(context.dataStore)
     }
 
     val geocodingRepository: GeocodingRepository by lazy {
         GeocodingRepository(geocodingApiService, BuildConfig.LOCATIONIQ_API_KEY)
+    }
+
+    val directionsRepository: DirectionsRepository by lazy {
+        DirectionsRepository(directionsApiService, BuildConfig.LOCATIONIQ_API_KEY)
     }
 
     val repository: BreweryRepository by lazy {

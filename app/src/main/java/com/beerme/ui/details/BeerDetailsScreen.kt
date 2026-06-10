@@ -34,9 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.beerme.data.model.Beer
 import com.beerme.data.model.TastingNote
+import com.beerme.ui.ZoomableThumbnail
+import com.beerme.ui.theme.BeerMeMobileTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +49,7 @@ fun BeerDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     val beer by viewModel.beer.collectAsState()
+    val breweryName by viewModel.breweryName.collectAsState()
     val notes by viewModel.tastingNotes.collectAsState()
 
     Scaffold(
@@ -53,11 +57,22 @@ fun BeerDetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = beer?.name ?: "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Column {
+                        Text(
+                            text = beer?.name ?: "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        // Brewery name as a subtitle directly under the beer name.
+                        breweryName?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodyLarge,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -83,12 +98,7 @@ fun BeerDetailsScreen(
                     BeerHeader(b)
                 }
                 item {
-                    Text(
-                        text = "Tasting Notes",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    TastingNotesHeader(score = b.score)
                 }
                 if (notes.isEmpty()) {
                     item {
@@ -110,27 +120,67 @@ fun BeerDetailsScreen(
 
 @Composable
 fun BeerHeader(beer: Beer) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        beer.style?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        // Style and ABV at the top-left.
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            beer.style?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
             beer.abv?.let {
                 Text(text = "ABV: $it%", style = MaterialTheme.typography.bodyLarge)
             }
-            beer.score?.let {
+        }
+        // Beermat (coaster) image on the right, when the feed has one: a
+        // tappable thumbnail that opens full-screen.
+        beer.beermatFile?.takeIf { it.isNotBlank() }?.let { beermatUrl ->
+            ZoomableThumbnail(
+                url = beermatUrl,
+                contentDescription = "${beer.name} beermat"
+            )
+        }
+    }
+}
+
+/**
+ * Section header for the tasting notes, with the beer's overall (average) score
+ * shown on the right, aligned with the "Tasting Notes" title.
+ */
+@Composable
+fun TastingNotesHeader(score: Double?) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Tasting Notes",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+        score?.let {
+            Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "BeerMe score: ${"%.1f".format(it)}/20",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "Score",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "${"%.1f".format(it)}/20",
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -218,5 +268,31 @@ private fun TastingAspect(label: String, score: Double?, maxScore: Int, text: St
             ),
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+private val previewBeer = Beer(
+    id = "1",
+    breweryId = "1",
+    name = "Dark Times",
+    style = "Baltic-Style Porter",
+    abv = 7.8,
+    score = 16.0,
+    beermatFile = "https://example.com/beermat.png"
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun BeerHeaderPreview() {
+    BeerMeMobileTheme {
+        BeerHeader(previewBeer)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TastingNotesHeaderPreview() {
+    BeerMeMobileTheme {
+        TastingNotesHeader(score = 16.0)
     }
 }

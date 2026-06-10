@@ -29,5 +29,7 @@ data class Beer(
     @Json(name = "abv") val abv: Double?,
     @FlexibleDouble
     @Json(name = "score") val score: Double? = null,
-    @Json(name = "updated") val updated: String? = null
+    @Json(name = "updated") val updated: String? = null,
+    // URL of the beer's beermat (coaster) image, shown on the tasting-notes page.
+    @Json(name = "beermatFile") val beermatFile: String? = null
 )

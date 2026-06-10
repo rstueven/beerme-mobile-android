@@ -6,7 +6,7 @@ import com.beerme.data.model.Beer
 import com.beerme.data.model.Brewery
 import com.beerme.data.model.TastingNote
 
-@Database(entities = [Brewery::class, Beer::class, TastingNote::class], version = 4, exportSchema = false)
+@Database(entities = [Brewery::class, Beer::class, TastingNote::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun breweryDao(): BreweryDao
     abstract fun beerDao(): BeerDao

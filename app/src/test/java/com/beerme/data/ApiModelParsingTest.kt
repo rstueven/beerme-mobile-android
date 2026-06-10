@@ -63,7 +63,8 @@ class ApiModelParsingTest {
     fun `parses beer list sample`() {
         val json = """
             [{"id":"65537","brewery_id":"17243","name":"Pizza Time!","style":"American-Style India Pale Ale",
-              "abv":"7.20","updated":"2026-05-31","score":"20.000000"},
+              "abv":"7.20","updated":"2026-05-31","score":"20.000000",
+              "beermatFile":"https://beerme.com/graphics/beermat/65537.png"},
              {"id":"65538","brewery_id":"13556","name":"Schlitz","style":"American-Style Lager",
               "abv":null,"updated":"2026-06-05"}]
         """.trimIndent()
@@ -76,8 +77,10 @@ class ApiModelParsingTest {
         assertEquals("17243", pizza.breweryId)
         assertEquals(7.20, pizza.abv!!, 1e-9)
         assertEquals(20.0, pizza.score!!, 1e-9)
+        assertEquals("https://beerme.com/graphics/beermat/65537.png", pizza.beermatFile)
         assertNull(beers[1].abv)
         assertNull(beers[1].score)
+        assertNull(beers[1].beermatFile)
     }
 
     @Test

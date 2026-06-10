@@ -8,6 +8,7 @@ import com.beerme.data.repository.BreweryRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class BeerDetailsViewModel(
@@ -17,6 +18,16 @@ class BeerDetailsViewModel(
 
     val beer: StateFlow<Beer?> = flow {
         emit(repository.getBeerById(beerId))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
+    // Name of the brewery that makes this beer (Beer only carries the id), shown
+    // beneath the beer name. Null if the brewery isn't in the local database.
+    val breweryName: StateFlow<String?> = beer.map { b ->
+        b?.breweryId?.let { repository.getBreweryById(it)?.name }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

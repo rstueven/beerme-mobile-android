@@ -6,6 +6,7 @@ import com.beerme.data.model.BreweryService
 import com.beerme.data.model.TastingNote
 import com.beerme.data.model.getAvailableServices
 import com.beerme.data.remote.FlexibleDoubleAdapter
+import com.beerme.data.remote.FlexibleIntAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -21,6 +22,7 @@ class ApiModelParsingTest {
 
     private val moshi = Moshi.Builder()
         .add(FlexibleDoubleAdapter())
+        .add(FlexibleIntAdapter())
         .add(KotlinJsonAdapterFactory())
         .build()
 
@@ -28,7 +30,7 @@ class ApiModelParsingTest {
     fun `parses brewery list sample`() {
         val json = """
             [{"id":"35436","name":"Lady Brewery","address":"Grandagarður 93, Reykjavík, Iceland",
-              "latitude":"64.1556368","longitude":"-21.9419939","status":"1","updated":"2026-04-18",
+              "latitude":"64.1556368","longitude":"-21.9419939","geoprecision":"6","status":"1","updated":"2026-04-18",
               "services":145,"phone":"+354 6624864","hours":"Thursday-Friday 11am-8pm.","web":"www.ladybrewery.com/"},
              {"id":"35434","name":"Slieve Bloom Brewing","address":"Main Street, The Walk, Co. Offaly, Ireland",
               "latitude":"53.09784","longitude":"-7.7191","status":"8","updated":"2026-04-18","services":0}]
@@ -44,6 +46,8 @@ class ApiModelParsingTest {
         assertEquals(-21.9419939, lady.longitude!!, 1e-9)
         assertEquals("1", lady.status)
         assertEquals("2026-04-18", lady.updated)
+        // geoprecision arrives as a JSON string and parses to an Int
+        assertEquals(6, lady.geoprecision)
         assertEquals(
             listOf(BreweryService.OPEN, BreweryService.GIFTSHOP, BreweryService.RETAIL),
             lady.getAvailableServices()
@@ -52,6 +56,7 @@ class ApiModelParsingTest {
         // Optional fields absent in the second record
         assertNull(breweries[1].phone)
         assertNull(breweries[1].hours)
+        assertNull(breweries[1].geoprecision)
     }
 
     @Test

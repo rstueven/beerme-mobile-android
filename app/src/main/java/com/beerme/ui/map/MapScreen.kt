@@ -3,8 +3,6 @@ package com.beerme.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Point
@@ -94,6 +92,7 @@ import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryStatus
 import com.beerme.data.repository.PlaceResult
 import com.beerme.data.repository.SyncPhase
+import com.beerme.ui.launchDirections
 import com.beerme.ui.theme.BeerAmber
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -240,20 +239,6 @@ private val tileSource = if (BuildConfig.LOCATIONIQ_API_KEY.isNotEmpty()) {
     TileSourceFactory.MAPNIK
 }
 
-/**
- * Hands the brewery's coordinates to an external navigation app via an
- * ACTION_VIEW intent. The Google Maps "dir" URL resolves to the Maps app when
- * installed (and a browser otherwise), where the user picks the travel mode
- * (driving/transit/biking/walking). No location permission is needed: the maps
- * app fills in the current location as the origin.
- */
-private fun launchDirections(context: Context, lat: Double, lon: Double) {
-    val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$lat,$lon")
-    runCatching {
-        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-    }
-}
-
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
@@ -366,6 +351,9 @@ fun MapScreen(
     // One shared info window for all markers. Inflating a MarkerInfoWindow per
     // marker (35k+ breweries) was the source of the OOM/ANR issues.
     val currentOnBreweryClick by rememberUpdatedState(onBreweryClick)
+    // The directions button on a bubble looks the brewery up by id at tap time,
+    // so it needs the latest list (the bubble is built once and reused).
+    val currentBreweries by rememberUpdatedState(breweries)
     val sharedInfoWindow = remember {
         // Custom layout (brewery_info_window) keeps the standard bonuspack view
         // IDs — so MarkerInfoWindow still auto-fills title/address/subdescription
@@ -387,9 +375,8 @@ fun MapScreen(
                     true
                 }
                 mView.findViewById<View>(R.id.bubble_directions).setOnClickListener {
-                    marker?.position?.let { p ->
-                        launchDirections(context, p.latitude, p.longitude)
-                    }
+                    currentBreweries.firstOrNull { it.id == breweryId }
+                        ?.let { launchDirections(context, it) }
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.beerme.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.beerme.data.remote.FlexibleDouble
+import com.beerme.data.remote.FlexibleInt
 import com.squareup.moshi.Json
 
 /**
@@ -24,6 +25,10 @@ data class Brewery(
     @Json(name = "latitude") val latitude: Double?,
     @FlexibleDouble
     @Json(name = "longitude") val longitude: Double?,
+    // How precisely the brewery is geolocated. Below 8 the coordinates are only
+    // approximate, so directions are launched with a warning (see launchDirections).
+    @FlexibleInt
+    @Json(name = "geoprecision") val geoprecision: Int? = null,
     @Json(name = "status") val status: String?,
     @Json(name = "services") val services: Int = 0,
     @Json(name = "phone") val phone: String?,

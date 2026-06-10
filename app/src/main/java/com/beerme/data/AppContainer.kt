@@ -7,6 +7,7 @@ import com.beerme.BuildConfig
 import com.beerme.data.local.AppDatabase
 import com.beerme.data.remote.BreweryApiService
 import com.beerme.data.remote.FlexibleDoubleAdapter
+import com.beerme.data.remote.FlexibleIntAdapter
 import com.beerme.data.remote.GeocodingApiService
 import com.beerme.data.repository.BreweryRepository
 import com.beerme.data.repository.GeocodingRepository
@@ -36,6 +37,7 @@ class AppContainer(context: Context) {
 
     private val moshi = Moshi.Builder()
         .add(FlexibleDoubleAdapter())
+        .add(FlexibleIntAdapter())
         .add(KotlinJsonAdapterFactory())
         .build()
 

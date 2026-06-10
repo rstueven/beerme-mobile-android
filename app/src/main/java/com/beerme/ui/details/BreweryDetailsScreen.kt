@@ -45,6 +45,7 @@ import com.beerme.data.model.Brewery
 import com.beerme.data.model.BreweryService
 import com.beerme.data.model.BreweryStatus
 import com.beerme.data.model.getAvailableServices
+import com.beerme.ui.launchDirections
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,25 +144,13 @@ fun BreweryHeader(brewery: Brewery) {
         }
         // Directions to the brewery, opened in an external navigation app where
         // the user picks the travel mode (driving/transit/biking/walking).
-        val lat = brewery.latitude
-        val lon = brewery.longitude
-        if (lat != null && lon != null) {
+        val hasDestination = !brewery.address.isNullOrBlank() ||
+            (brewery.latitude != null && brewery.longitude != null)
+        if (hasDestination) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .clickable {
-                        runCatching {
-                            context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(
-                                        "https://www.google.com/maps/dir/?api=1" +
-                                            "&destination=$lat,$lon"
-                                    )
-                                )
-                            )
-                        }
-                    }
+                    .clickable { launchDirections(context, brewery) }
                     .padding(vertical = 4.dp)
             ) {
                 Icon(

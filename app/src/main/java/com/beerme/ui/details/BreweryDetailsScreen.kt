@@ -283,24 +283,30 @@ fun BeerListItem(
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = beer.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            beer.style?.let {
-                Text(text = it, style = MaterialTheme.typography.bodyMedium)
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                beer.abv?.let {
-                    Text(text = "ABV: $it%", style = MaterialTheme.typography.bodySmall)
-                }
+            Row(verticalAlignment = Alignment.Top) {
+                Text(
+                    text = beer.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
                 beer.score?.let {
                     Text(
-                        text = "Score: ${"%.1f".format(it)}/20",
-                        style = MaterialTheme.typography.bodySmall,
+                        text = "${"%.1f".format(it)}/20",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = beer.style ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                beer.abv?.let {
+                    Text(text = "ABV: $it%", style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }

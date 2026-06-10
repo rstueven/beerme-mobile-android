@@ -2,6 +2,7 @@ package com.beerme.ui.details
 
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -145,33 +146,26 @@ fun BreweryHeader(brewery: Brewery) {
                         }
                     )
                 }
-            brewery.address?.let {
-                Text(text = it, style = MaterialTheme.typography.bodyLarge)
-            }
-            // Directions to the brewery, opened in an external navigation app where
-            // the user picks the travel mode (driving/transit/biking/walking).
-            val hasDestination = !brewery.address.isNullOrBlank() ||
-                (brewery.latitude != null && brewery.longitude != null)
-            if (hasDestination) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable { launchDirections(context, brewery) }
-                        .padding(vertical = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Directions,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Directions",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary,
-                        textDecoration = TextDecoration.Underline
-                    )
+            // The directions icon sits to the left of the address; tapping it
+            // opens an external navigation app where the user picks the travel
+            // mode (driving/transit/biking/walking).
+            brewery.address?.let { address ->
+                val hasDestination = address.isNotBlank() ||
+                    (brewery.latitude != null && brewery.longitude != null)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (hasDestination) {
+                        Icon(
+                            imageVector = Icons.Filled.Directions,
+                            contentDescription = "Directions",
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier
+                                .clickable { launchDirections(context, brewery) }
+                                .padding(vertical = 4.dp)
+                                .size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(text = address, style = MaterialTheme.typography.bodyLarge)
                 }
             }
             if (brewery.status != BreweryStatus.CLOSED.code) {
@@ -210,7 +204,7 @@ fun BreweryHeader(brewery: Brewery) {
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
                         runCatching {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                         }
                     }
                 )

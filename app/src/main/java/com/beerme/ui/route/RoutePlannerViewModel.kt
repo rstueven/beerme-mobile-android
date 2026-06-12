@@ -25,6 +25,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -135,12 +136,19 @@ class RoutePlannerViewModel(
 
     fun setRadiusMiles(miles: Int) {
         _radiusMiles.value = miles.coerceIn(MIN_RADIUS_MILES, MAX_RADIUS_MILES)
-        // Re-filter against the cached polyline; no new routing call.
-        cachedDecimatedRoute?.let { filterCandidates(it) }
+        // The label updates instantly; debounce the re-filter so rapid +/- taps
+        // only recompute candidates once the radius settles. No new routing call.
+        val route = cachedDecimatedRoute ?: return
+        radiusDebounceJob?.cancel()
+        radiusDebounceJob = viewModelScope.launch {
+            delay(RADIUS_DEBOUNCE_MS)
+            filterCandidates(route)
+        }
     }
 
     private var cachedDecimatedRoute: List<GeoPoint>? = null
     private var routeJob: Job? = null
+    private var radiusDebounceJob: Job? = null
 
     /** Recompute from the endpoints (camera re-fits to the resulting route). */
     fun computeRoute() = fetchRoute(fitCamera = true)
@@ -269,5 +277,6 @@ class RoutePlannerViewModel(
         const val MIN_QUERY_LENGTH = 2
         const val SEARCH_DEBOUNCE_MS = 200L
         const val PLACE_DEBOUNCE_MS = 350L
+        const val RADIUS_DEBOUNCE_MS = 400L
     }
 }

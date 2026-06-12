@@ -23,9 +23,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -308,34 +310,52 @@ fun RoutePlannerScreen(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
                 shape = MaterialTheme.shapes.medium,
                 tonalElevation = 3.dp,
                 shadowElevation = 3.dp
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
+                Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
                     EndpointRow(
                         label = "Start",
                         value = start?.label,
                         onClick = { pickerField = EndpointField.START }
                     )
-                    Spacer(Modifier.size(8.dp))
+                    Spacer(Modifier.size(2.dp))
                     EndpointRow(
                         label = "End",
                         value = end?.label,
                         onClick = { pickerField = EndpointField.END }
                     )
-                    Spacer(Modifier.size(8.dp))
-                    Text(
-                        text = "Within $radiusMiles miles of the route",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Slider(
-                        value = radiusMiles.toFloat(),
-                        onValueChange = { viewModel.setRadiusMiles(it.toInt()) },
-                        valueRange = 1f..50f,
-                        steps = 48
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Within",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        IconButton(
+                            onClick = { viewModel.setRadiusMiles(radiusMiles - 1) },
+                            enabled = radiusMiles > 1,
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(Icons.Filled.Remove, contentDescription = "Decrease radius")
+                        }
+                        Text(
+                            text = "$radiusMiles",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
+                        IconButton(
+                            onClick = { viewModel.setRadiusMiles(radiusMiles + 1) },
+                            enabled = radiusMiles < 50,
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Increase radius")
+                        }
+                        Text(
+                            text = "miles of the route",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
 
@@ -400,7 +420,7 @@ fun RoutePlannerScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .navigationBarsPadding()
-                                .padding(16.dp),
+                                .padding(horizontal = 16.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -459,7 +479,7 @@ private fun EndpointRow(label: String, value: String?, onClick: () -> Unit) {
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

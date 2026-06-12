@@ -31,11 +31,24 @@ class DirectionsRepository(
     private val apiService: DirectionsApiService?,
     private val apiKey: String
 ) {
-    suspend fun route(start: GeoPoint, end: GeoPoint): RouteResult {
+    /**
+     * Driving route from [start] to [end], optionally detouring through
+     * [waypoints] (in the order given). OSRM keeps via-points in sequence, so the
+     * caller is responsible for ordering them sensibly along the trip.
+     */
+    suspend fun route(
+        start: GeoPoint,
+        end: GeoPoint,
+        waypoints: List<GeoPoint> = emptyList()
+    ): RouteResult {
         val service = apiService ?: return RouteResult.Unavailable
         if (apiKey.isEmpty()) return RouteResult.Unavailable
-        // OSRM wants lon,lat order.
-        val coords = "${start.longitude},${start.latitude};${end.longitude},${end.latitude}"
+        // OSRM wants lon,lat order, points separated by ';'.
+        val coords = buildString {
+            append("${start.longitude},${start.latitude}")
+            waypoints.forEach { append(";${it.longitude},${it.latitude}") }
+            append(";${end.longitude},${end.latitude}")
+        }
         return try {
             val response = service.directions(coords, apiKey)
             val route = response.routes?.firstOrNull()

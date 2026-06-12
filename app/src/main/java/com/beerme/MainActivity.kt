@@ -107,7 +107,8 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                                 return RoutePlannerViewModel(
                                     appContainer.repository,
                                     appContainer.geocodingRepository,
-                                    appContainer.directionsRepository
+                                    appContainer.directionsRepository,
+                                    appContainer.userPreferencesRepository
                                 ) as T
                             }
                         }

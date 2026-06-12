@@ -23,11 +23,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,13 +70,18 @@ import com.beerme.data.repository.RouteResult
 import com.beerme.ui.launchRouteDirections
 import com.beerme.ui.map.createBaseMapView
 import com.beerme.ui.theme.BeerAmber
+import com.beerme.util.METERS_PER_MILE
+import com.beerme.util.RouteBrewery
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import java.util.Locale
 
 private const val ROUTE_PADDING_PX = 120
 
@@ -97,6 +104,7 @@ fun RoutePlannerScreen(
     val computing by viewModel.computing.collectAsState()
     val userMessage by viewModel.userMessage.collectAsState()
     val userLocation by viewModel.userLocation.collectAsState()
+    val fitRequest by viewModel.fitRequest.collectAsState()
 
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -112,6 +120,10 @@ fun RoutePlannerScreen(
 
     // Which field's picker is open (null = closed).
     var pickerField by remember { mutableStateOf<EndpointField?>(null) }
+
+    // The candidate whose info bubble is showing (null = none). Held by value so
+    // it survives the candidate list being rebuilt on a re-route.
+    var infoBrewery by remember { mutableStateOf<RouteBrewery?>(null) }
 
     val density = context.resources.displayMetrics.density
     val primaryArgb = MaterialTheme.colorScheme.primary.toArgb()
@@ -138,6 +150,10 @@ fun RoutePlannerScreen(
         Polyline(mapView).apply {
             outlinePaint.color = primaryArgb
             outlinePaint.strokeWidth = 10f
+            // Suppress osmdroid's default (empty) bubble; let taps on the line
+            // fall through to the map-tap handler that dismisses the info card.
+            setInfoWindow(null)
+            setOnClickListener { _, _, _ -> false }
         }
     }
     val startMarker = remember {
@@ -161,6 +177,21 @@ fun RoutePlannerScreen(
 
     // Candidate markers, rebuilt when the candidate set changes.
     val candidateMarkers = remember { mutableListOf<Marker>() }
+
+    // Tapping the empty map dismisses the info bubble. Markers consume their own
+    // taps (returning true), so this only fires on background taps.
+    val eventsOverlay = remember {
+        MapEventsOverlay(object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                infoBrewery = null
+                return false
+            }
+            override fun longPressHelper(p: GeoPoint?): Boolean = false
+        })
+    }
+    LaunchedEffect(eventsOverlay) {
+        if (!mapView.overlays.contains(eventsOverlay)) mapView.overlays.add(0, eventsOverlay)
+    }
 
     DisposableEffect(mapView, lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -196,12 +227,19 @@ fun RoutePlannerScreen(
             endMarker.position = e.geoPoint
             if (!mapView.overlays.contains(endMarker)) mapView.overlays.add(endMarker)
         }
-        if (success != null && success.route.points.isNotEmpty()) {
-            // Fit the camera to the whole route.
-            val box = BoundingBox.fromGeoPointsSafe(success.route.points)
-            runCatching { mapView.zoomToBoundingBox(box, true, ROUTE_PADDING_PX) }
-        }
         mapView.invalidate()
+    }
+
+    // Fit the camera to the whole route, but only when the endpoints change
+    // (fitRequest is bumped there) — not on every add/remove re-route.
+    LaunchedEffect(fitRequest) {
+        if (fitRequest == 0) return@LaunchedEffect
+        val pts = (viewModel.route.value as? RouteResult.Success)?.route?.points ?: return@LaunchedEffect
+        if (pts.isNotEmpty()) {
+            runCatching {
+                mapView.zoomToBoundingBox(BoundingBox.fromGeoPointsSafe(pts), true, ROUTE_PADDING_PX)
+            }
+        }
     }
 
     // Rebuild candidate markers when the candidate set changes.
@@ -219,7 +257,7 @@ fun RoutePlannerScreen(
                 setInfoWindow(null)
                 relatedObject = rb.brewery.id
                 setOnMarkerClickListener { _, _ ->
-                    viewModel.toggleSelection(rb.brewery.id)
+                    infoBrewery = rb
                     true
                 }
             }
@@ -337,39 +375,52 @@ fun RoutePlannerScreen(
                 }
             }
 
-            // Bottom bar: selected count + Get directions.
-            if (start != null && end != null && route is RouteResult.Success) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth(),
-                    tonalElevation = 3.dp,
-                    shadowElevation = 6.dp
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .navigationBarsPadding()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+            // Bottom stack: brewery info bubble (when one is tapped) above the
+            // selected-count + Get directions bar.
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                infoBrewery?.let { rb ->
+                    BreweryInfoCard(
+                        routeBrewery = rb,
+                        isSelected = rb.brewery.id in selectedIds,
+                        onToggle = { viewModel.toggleSelection(rb.brewery.id) },
+                        onClose = { infoBrewery = null }
+                    )
+                }
+                if (start != null && end != null && route is RouteResult.Success) {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        tonalElevation = 3.dp,
+                        shadowElevation = 6.dp
                     ) {
-                        Text(
-                            text = "${selectedIds.size} of 9 stops",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Button(
-                            onClick = {
-                                start?.let { s ->
-                                    end?.let { e ->
-                                        launchRouteDirections(
-                                            context, s, e, viewModel.orderedSelectedStops()
-                                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .navigationBarsPadding()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "${selectedIds.size} of 9 stops",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Button(
+                                onClick = {
+                                    start?.let { s ->
+                                        end?.let { e ->
+                                            launchRouteDirections(
+                                                context, s, e, viewModel.orderedSelectedStops()
+                                            )
+                                        }
                                     }
                                 }
+                            ) {
+                                Text("Get directions")
                             }
-                        ) {
-                            Text("Get directions")
                         }
                     }
                 }
@@ -536,6 +587,66 @@ private fun EndpointPickerSheet(
                 }
             }
             Spacer(Modifier.size(8.dp))
+        }
+    }
+}
+
+/**
+ * The tapped brewery's info bubble: identifies which marker was tapped and lets
+ * the user add it to (or remove it from) the route. Sits above the stops bar.
+ */
+@Composable
+private fun BreweryInfoCard(
+    routeBrewery: RouteBrewery,
+    isSelected: Boolean,
+    onToggle: () -> Unit,
+    onClose: () -> Unit
+) {
+    val brewery = routeBrewery.brewery
+    val miles = routeBrewery.distanceFromRouteMeters / METERS_PER_MILE
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 3.dp,
+        shadowElevation = 6.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = brewery.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                brewery.address?.let { address ->
+                    Text(
+                        text = address,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Text(
+                    text = String.format(Locale.US, "%.1f mi from route", miles),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            if (isSelected) {
+                OutlinedButton(onClick = onToggle) { Text("Remove") }
+            } else {
+                Button(onClick = onToggle) { Text("Add") }
+            }
+            IconButton(onClick = onClose) {
+                Icon(Icons.Filled.Close, contentDescription = "Close")
+            }
         }
     }
 }

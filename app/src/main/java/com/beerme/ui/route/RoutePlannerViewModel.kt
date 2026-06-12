@@ -11,6 +11,7 @@ import com.beerme.data.repository.DirectionsRepository
 import com.beerme.data.repository.GeocodingRepository
 import com.beerme.data.repository.PlaceResult
 import com.beerme.data.repository.RouteResult
+import com.beerme.data.repository.UserPreferencesRepository
 import com.beerme.util.METERS_PER_MILE
 import com.beerme.util.RouteBrewery
 import com.beerme.util.breweriesNearRoute
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -49,7 +51,8 @@ enum class EndpointField { START, END }
 class RoutePlannerViewModel(
     private val breweryRepository: BreweryRepository,
     private val geocodingRepository: GeocodingRepository,
-    private val directionsRepository: DirectionsRepository
+    private val directionsRepository: DirectionsRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _start = MutableStateFlow<Endpoint?>(null)
@@ -78,6 +81,12 @@ class RoutePlannerViewModel(
 
     private val _userLocation = MutableStateFlow<GeoPoint?>(null)
     val userLocation: StateFlow<GeoPoint?> = _userLocation.asStateFlow()
+
+    // Bumped only when the camera should re-fit to the whole route (i.e. the
+    // endpoints changed). Adding/removing a stop redraws the route in place
+    // without yanking the camera around on every tap.
+    private val _fitRequest = MutableStateFlow(0)
+    val fitRequest: StateFlow<Int> = _fitRequest.asStateFlow()
 
     // ---- Endpoint picker -------------------------------------------------
 
@@ -133,13 +142,28 @@ class RoutePlannerViewModel(
     private var cachedDecimatedRoute: List<GeoPoint>? = null
     private var routeJob: Job? = null
 
-    fun computeRoute() {
+    /** Recompute from the endpoints (camera re-fits to the resulting route). */
+    fun computeRoute() = fetchRoute(fitCamera = true)
+
+    /**
+     * Fetches the driving route from start through the currently-selected stops
+     * (ordered along the trip) to end, then re-filters candidate breweries
+     * against the new geometry. Selected stops are via-points on the route, so
+     * they always survive the re-filter; detours can pull in breweries the
+     * straight-line route missed and drop ones it used to pass.
+     */
+    private fun fetchRoute(fitCamera: Boolean) {
         val start = _start.value ?: return
         val end = _end.value ?: return
         routeJob?.cancel()
         routeJob = viewModelScope.launch {
             _computing.value = true
-            val result = directionsRepository.route(start.geoPoint, end.geoPoint)
+            val waypoints = orderedSelectedStops().mapNotNull { b ->
+                val lat = b.latitude
+                val lon = b.longitude
+                if (lat != null && lon != null) GeoPoint(lat, lon) else null
+            }
+            val result = directionsRepository.route(start.geoPoint, end.geoPoint, waypoints)
             _route.value = result
             if (result is RouteResult.Success) {
                 val decimated = withContext(Dispatchers.Default) {
@@ -147,6 +171,7 @@ class RoutePlannerViewModel(
                 }
                 cachedDecimatedRoute = decimated
                 filterCandidates(decimated)
+                if (fitCamera) _fitRequest.value += 1
             } else {
                 cachedDecimatedRoute = null
                 _candidates.value = emptyList()
@@ -162,8 +187,13 @@ class RoutePlannerViewModel(
         filterJob?.cancel()
         filterJob = viewModelScope.launch {
             val radiusMeters = _radiusMiles.value * METERS_PER_MILE
+            // Honor the user's map status filter (Open/Planned/Closed/…). Read
+            // the persisted value directly, not a WhileSubscribed StateFlow.
+            val statusFilters = userPreferencesRepository.statusFilters.first()
             val near = withContext(Dispatchers.Default) {
-                breweriesNearRoute(decimatedRoute, breweryRepository.breweriesSnapshot(), radiusMeters)
+                val visible = breweryRepository.breweriesSnapshot()
+                    .filter { it.status in statusFilters }
+                breweriesNearRoute(decimatedRoute, visible, radiusMeters)
             }
             _candidates.value = near
             // Drop selections that are no longer near the route.
@@ -183,6 +213,8 @@ class RoutePlannerViewModel(
             }
             _selectedIds.value = current + breweryId
         }
+        // Re-route through the new set of stops and re-filter candidates.
+        fetchRoute(fitCamera = false)
     }
 
     /** Selected breweries, ordered by their position along the route. */

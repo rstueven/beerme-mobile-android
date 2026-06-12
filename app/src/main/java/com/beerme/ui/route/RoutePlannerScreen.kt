@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -603,7 +604,9 @@ private fun EndpointPickerSheet(
 
             LazyColumn(modifier = Modifier.heightIn(max = 320.dp)) {
                 if (tab == 0) {
-                    items(places, key = { it.latitude.toString() + it.longitude }) { place ->
+                    // Index key: the geocoder can return entries with identical
+                    // coordinates, so lat/lon is not unique enough for LazyColumn.
+                    itemsIndexed(places, key = { index, _ -> index }) { _, place ->
                         ListItem(
                             headlineContent = { Text(place.name) },
                             supportingContent = place.address?.let {

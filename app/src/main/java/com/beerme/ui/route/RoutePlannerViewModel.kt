@@ -142,7 +142,8 @@ class RoutePlannerViewModel(
         radiusDebounceJob?.cancel()
         radiusDebounceJob = viewModelScope.launch {
             delay(RADIUS_DEBOUNCE_MS)
-            filterCandidates(route)
+            // Re-fit so candidates at the new radius all stay in frame.
+            filterCandidates(route, fitCamera = true)
         }
     }
 
@@ -178,8 +179,8 @@ class RoutePlannerViewModel(
                     decimate(result.route.points)
                 }
                 cachedDecimatedRoute = decimated
-                filterCandidates(decimated)
-                if (fitCamera) _fitRequest.value += 1
+                // Fit after candidates resolve so the camera can include them.
+                filterCandidates(decimated, fitCamera)
             } else {
                 cachedDecimatedRoute = null
                 _candidates.value = emptyList()
@@ -191,7 +192,7 @@ class RoutePlannerViewModel(
 
     private var filterJob: Job? = null
 
-    private fun filterCandidates(decimatedRoute: List<GeoPoint>) {
+    private fun filterCandidates(decimatedRoute: List<GeoPoint>, fitCamera: Boolean = false) {
         filterJob?.cancel()
         filterJob = viewModelScope.launch {
             val radiusMeters = _radiusMiles.value * METERS_PER_MILE
@@ -207,6 +208,8 @@ class RoutePlannerViewModel(
             // Drop selections that are no longer near the route.
             val stillValid = near.mapTo(HashSet()) { it.brewery.id }
             _selectedIds.value = _selectedIds.value.intersect(stillValid)
+            // Fit now that candidates are known, so they're all in frame.
+            if (fitCamera) _fitRequest.value += 1
         }
     }
 

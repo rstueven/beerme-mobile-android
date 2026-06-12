@@ -43,7 +43,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,12 +53,14 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -84,8 +85,12 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import java.util.Locale
-
-private const val ROUTE_PADDING_PX = 120
+import kotlin.math.atan
+import kotlin.math.cos
+import kotlin.math.ln
+import kotlin.math.pow
+import kotlin.math.sinh
+import kotlin.math.tan
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -126,6 +131,11 @@ fun RoutePlannerScreen(
     // The candidate whose info bubble is showing (null = none). Held by value so
     // it survives the candidate list being rebuilt on a re-route.
     var infoBrewery by remember { mutableStateOf<RouteBrewery?>(null) }
+
+    // Heights (px) of the overlapping top panel and bottom bar, measured at
+    // layout time, so the camera fit can pad enough to clear them.
+    var topInsetPx by remember { mutableIntStateOf(0) }
+    var bottomInsetPx by remember { mutableIntStateOf(0) }
 
     val density = context.resources.displayMetrics.density
     val primaryArgb = MaterialTheme.colorScheme.primary.toArgb()
@@ -232,16 +242,31 @@ fun RoutePlannerScreen(
         mapView.invalidate()
     }
 
-    // Fit the camera to the whole route, but only when the endpoints change
-    // (fitRequest is bumped there) — not on every add/remove re-route.
+    // Fit the camera to the endpoints, the route, and every candidate so nothing
+    // is clipped — with asymmetric padding: enough at top/bottom to clear the
+    // overlapping panels, but only a thin side margin (a uniform border would
+    // make width the limiter and zoom out far more than needed). Fires when
+    // fitRequest is bumped (endpoints set or radius settled), not on every
+    // add/remove re-route.
     LaunchedEffect(fitRequest) {
         if (fitRequest == 0) return@LaunchedEffect
-        val pts = (viewModel.route.value as? RouteResult.Success)?.route?.points ?: return@LaunchedEffect
-        if (pts.isNotEmpty()) {
-            runCatching {
-                mapView.zoomToBoundingBox(BoundingBox.fromGeoPointsSafe(pts), true, ROUTE_PADDING_PX)
-            }
+        val pts = ArrayList<GeoPoint>()
+        (viewModel.route.value as? RouteResult.Success)?.route?.points?.let { pts.addAll(it) }
+        viewModel.candidates.value.forEach { rb ->
+            val lat = rb.brewery.latitude ?: return@forEach
+            val lon = rb.brewery.longitude ?: return@forEach
+            pts.add(GeoPoint(lat, lon))
         }
+        viewModel.start.value?.let { pts.add(it.geoPoint) }
+        viewModel.end.value?.let { pts.add(it.geoPoint) }
+        val gap = (8 * density).toInt()
+        fitMapToPoints(
+            mapView = mapView,
+            points = pts,
+            topInsetPx = topInsetPx + gap,
+            bottomInsetPx = bottomInsetPx + gap,
+            sideMarginPx = (16 * density).toInt()
+        )
     }
 
     // Rebuild candidate markers when the candidate set changes.
@@ -265,6 +290,11 @@ fun RoutePlannerScreen(
             }
             candidateMarkers.add(marker)
             mapView.overlays.add(marker)
+        }
+        // Keep the start (green) and end (red) markers above the candidates so
+        // they're never buried in a dense cluster.
+        listOf(startMarker, endMarker).forEach { marker ->
+            if (mapView.overlays.remove(marker)) mapView.overlays.add(marker)
         }
         mapView.invalidate()
     }
@@ -305,11 +335,12 @@ fun RoutePlannerScreen(
         ) {
             AndroidView(modifier = Modifier.fillMaxSize(), factory = { mapView })
 
-            // Top control panel: start/end fields + radius slider.
+            // Top control panel: start/end fields + radius stepper.
             Surface(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
+                    .onSizeChanged { topInsetPx = it.height }
                     .padding(horizontal = 8.dp, vertical = 6.dp),
                 shape = MaterialTheme.shapes.medium,
                 tonalElevation = 3.dp,
@@ -401,6 +432,7 @@ fun RoutePlannerScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
+                    .onSizeChanged { bottomInsetPx = it.height }
             ) {
                 infoBrewery?.let { rb ->
                     BreweryInfoCard(
@@ -419,7 +451,6 @@ fun RoutePlannerScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .navigationBarsPadding()
                                 .padding(horizontal = 16.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -708,4 +739,67 @@ private fun dotBitmap(colorArgb: Int, density: Float, ringPx: Float = 4f): Bitma
     canvas.drawCircle(center, center, center - ringPx,
         Paint(Paint.ANTI_ALIAS_FLAG).apply { color = colorArgb })
     return bitmap
+}
+
+/** Web Mercator y in [0,1] (0 = north edge, 1 = south edge) for a latitude. */
+private fun mercatorY(latDeg: Double): Double {
+    val lat = Math.toRadians(latDeg.coerceIn(-85.05, 85.05))
+    return (1.0 - ln(tan(lat) + 1.0 / cos(lat)) / Math.PI) / 2.0
+}
+
+private fun mercatorYToLat(y: Double): Double =
+    Math.toDegrees(atan(sinh(Math.PI * (1.0 - 2.0 * y))))
+
+/**
+ * Frames [points] with asymmetric padding: [topInsetPx]/[bottomInsetPx] reserve
+ * space for the overlapping panels, [sideMarginPx] is a thin left/right margin.
+ * Computed in Web Mercator so the side margin stays small (a uniform border, as
+ * [org.osmdroid.views.MapView.zoomToBoundingBox] requires, would let the wide
+ * dimension dictate the zoom and back the camera out far more than needed).
+ */
+private fun fitMapToPoints(
+    mapView: MapView,
+    points: List<GeoPoint>,
+    topInsetPx: Int,
+    bottomInsetPx: Int,
+    sideMarginPx: Int
+) {
+    if (points.isEmpty()) return
+    val w = mapView.width
+    val h = mapView.height
+    if (w <= 0 || h <= 0) {
+        runCatching {
+            mapView.zoomToBoundingBox(
+                BoundingBox.fromGeoPointsSafe(points), true,
+                maxOf(topInsetPx, bottomInsetPx) + sideMarginPx
+            )
+        }
+        return
+    }
+    var north = -90.0; var south = 90.0; var east = -180.0; var west = 180.0
+    for (p in points) {
+        if (p.latitude > north) north = p.latitude
+        if (p.latitude < south) south = p.latitude
+        if (p.longitude > east) east = p.longitude
+        if (p.longitude < west) west = p.longitude
+    }
+    val lonSpan = (east - west).coerceAtLeast(1e-6)
+    val yNorth = mercatorY(north)
+    val ySouth = mercatorY(south)
+    val ySpan = (ySouth - yNorth).coerceAtLeast(1e-9)
+    val usableW = (w - 2 * sideMarginPx).coerceAtLeast(1)
+    val usableH = (h - topInsetPx - bottomInsetPx).coerceAtLeast(1)
+    // World pixel size (256·2^zoom) that fits the span in each usable dimension.
+    val mapSizeForWidth = usableW * 360.0 / lonSpan
+    val mapSizeForHeight = usableH / ySpan
+    val minZoom = mapView.minZoomLevel
+    val maxZoom = mapView.maxZoomLevel
+    val zoom = (ln(minOf(mapSizeForWidth, mapSizeForHeight) / 256.0) / ln(2.0))
+        .coerceIn(minZoom, maxZoom)
+    val mapSize = 256.0 * 2.0.pow(zoom)
+    // Offset the centre so the points land in the visible band between insets.
+    val delta = (topInsetPx - bottomInsetPx) / 2.0
+    val centerY = ((yNorth + ySouth) / 2.0 - delta / mapSize).coerceIn(0.0, 1.0)
+    val center = GeoPoint(mercatorYToLat(centerY), (east + west) / 2.0)
+    runCatching { mapView.controller.animateTo(center, zoom, 500L) }
 }

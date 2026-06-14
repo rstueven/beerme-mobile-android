@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.ExpandLess
@@ -222,6 +223,7 @@ fun MapScreen(
     onBreweryClick: (String) -> Unit,
     onBeerClick: (String) -> Unit,
     onPlanRoute: () -> Unit,
+    onSuggestBrewery: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -621,6 +623,10 @@ fun MapScreen(
                 onPlanRoute = {
                     scope.launch { drawerState.close() }
                     onPlanRoute()
+                },
+                onSuggestBrewery = {
+                    scope.launch { drawerState.close() }
+                    onSuggestBrewery()
                 }
             )
         }
@@ -780,7 +786,8 @@ fun MapScreen(
 private fun AppDrawerContent(
     statusFilters: Set<String>,
     onToggleStatus: (String) -> Unit,
-    onPlanRoute: () -> Unit
+    onPlanRoute: () -> Unit,
+    onSuggestBrewery: () -> Unit
 ) {
     var settingsExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -797,6 +804,13 @@ private fun AppDrawerContent(
             icon = { Icon(Icons.AutoMirrored.Filled.AltRoute, contentDescription = null) },
             selected = false,
             onClick = onPlanRoute,
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+        NavigationDrawerItem(
+            label = { Text("Suggest a Brewery") },
+            icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+            selected = false,
+            onClick = onSuggestBrewery,
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
         NavigationDrawerItem(

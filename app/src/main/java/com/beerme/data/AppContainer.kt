@@ -12,6 +12,7 @@ import com.beerme.data.remote.FlexibleIntAdapter
 import com.beerme.data.remote.GeocodingApiService
 import com.beerme.data.repository.BreweryRepository
 import com.beerme.data.repository.DirectionsRepository
+import com.beerme.data.repository.FeedbackRepository
 import com.beerme.data.repository.GeocodingRepository
 import com.beerme.data.repository.UserPreferencesRepository
 import com.squareup.moshi.Moshi
@@ -112,5 +113,9 @@ class AppContainer(context: Context) {
             apiService,
             userPreferencesRepository
         )
+    }
+
+    val feedbackRepository: FeedbackRepository by lazy {
+        FeedbackRepository(apiService)
     }
 }

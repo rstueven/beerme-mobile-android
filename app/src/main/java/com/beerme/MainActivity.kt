@@ -28,10 +28,13 @@ import com.beerme.ui.details.BeerDetailsScreen
 import com.beerme.ui.details.BeerDetailsViewModel
 import com.beerme.ui.details.BreweryDetailsScreen
 import com.beerme.ui.details.BreweryDetailsViewModel
+import com.beerme.ui.feedback.FeedbackScreen
+import com.beerme.ui.feedback.FeedbackViewModel
 import com.beerme.ui.map.MapScreen
 import com.beerme.ui.map.MapViewModel
 import com.beerme.ui.navigation.BeerDetailsRoute
 import com.beerme.ui.navigation.BreweryDetailsRoute
+import com.beerme.ui.navigation.FeedbackRoute
 import com.beerme.ui.navigation.MapRoute
 import com.beerme.ui.navigation.RoutePlannerRoute
 import com.beerme.ui.route.RoutePlannerScreen
@@ -96,6 +99,9 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                         },
                         onPlanRoute = {
                             backStack.add(RoutePlannerRoute)
+                        },
+                        onSuggestBrewery = {
+                            backStack.add(FeedbackRoute())
                         }
                     )
                 }
@@ -138,6 +144,28 @@ fun BeerMeApp(appContainer: com.beerme.data.AppContainer) {
                         onBeerClick = { beerId ->
                             backStack.add(BeerDetailsRoute(beerId))
                         },
+                        onReport = {
+                            backStack.add(FeedbackRoute(key.breweryId))
+                        },
+                        onBack = popBackStack
+                    )
+                }
+                entry<FeedbackRoute> { key ->
+                    val viewModel: FeedbackViewModel = viewModel(
+                        factory = object : ViewModelProvider.Factory {
+                            @Suppress("UNCHECKED_CAST")
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                return FeedbackViewModel(
+                                    key.breweryId,
+                                    BuildConfig.VERSION_NAME,
+                                    appContainer.feedbackRepository,
+                                    appContainer.repository
+                                ) as T
+                            }
+                        }
+                    )
+                    FeedbackScreen(
+                        viewModel = viewModel,
                         onBack = popBackStack
                     )
                 }

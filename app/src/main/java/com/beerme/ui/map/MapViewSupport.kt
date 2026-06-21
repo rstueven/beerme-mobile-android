@@ -1,6 +1,8 @@
 package com.beerme.ui.map
 
 import android.content.Context
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.beerme.BuildConfig
 import org.osmdroid.tileprovider.tilesource.ITileSource
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -41,13 +43,31 @@ fun createBaseMapView(context: Context): MapView = MapView(context).apply {
     setMultiTouchControls(true)
     val density = resources.displayMetrics.density
     zoomController.display.setAdditionalPixelMargins(0f, 0f, 0f, 18f * density)
-    overlays.add(ScaleBarOverlay(this).apply {
+
+    val scaleBar = ScaleBarOverlay(this).apply {
         setAlignBottom(true)
         unitsOfMeasure = ScaleBarOverlay.UnitsOfMeasure.imperial
-        setScaleBarOffset((10 * density).toInt(), (48 * density).toInt())
-    })
-    overlays.add(CopyrightOverlay(context).apply {
+    }
+    overlays.add(scaleBar)
+
+    val copyright = CopyrightOverlay(context).apply {
         setCopyrightNotice(beerMeTileSource.copyrightNotice)
-        setOffset((10 * density).toInt(), (28 * density).toInt())
-    })
+    }
+    overlays.add(copyright)
+
+    // The map draws edge-to-edge (under the system bars), so anchor the scale bar
+    // and the required tile attribution above the navigation bar. Otherwise the
+    // nav bar covers the copyright notice, which the OSM/LocationIQ attribution
+    // terms require to stay visible. Re-applied on every inset change (rotation,
+    // gesture vs. 3-button nav).
+    val sideOffset = (10 * density).toInt()
+    val scaleBarBase = (28 * density).toInt()
+    val copyrightBase = (4 * density).toInt()
+    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+        val navBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+        scaleBar.setScaleBarOffset(sideOffset, scaleBarBase + navBottom)
+        copyright.setOffset(sideOffset, copyrightBase + navBottom)
+        insets
+    }
+    ViewCompat.requestApplyInsets(this)
 }

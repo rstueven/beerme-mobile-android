@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.beerme.data.model.Brewery
+import com.beerme.data.model.BreweryService
 import com.beerme.data.repository.BreweryRepository
 import com.beerme.data.repository.DirectionsRepository
 import com.beerme.data.repository.GeocodingRepository
@@ -202,6 +203,8 @@ class RoutePlannerViewModel(
             val near = withContext(Dispatchers.Default) {
                 val visible = breweryRepository.breweriesSnapshot()
                     .filter { it.status in statusFilters }
+                    // Only route to breweries the public can actually visit.
+                    .filter { (it.services and BreweryService.OPEN.mask) != 0 }
                 breweriesNearRoute(decimatedRoute, visible, radiusMeters)
             }
             _candidates.value = near
